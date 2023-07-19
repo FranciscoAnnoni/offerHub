@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1013173920863",
+    "project_id": "offerhub-proyectofinal",
+    "storage_bucket": "offerhub-proyectofinal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013173920863:android:3783b255f5c757ae8a27ea",
+        "android_client_info": {
+          "package_name": "com.example.offerhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013173920863-ahalj1sr8fj16fqtqb1aikg727ccf5f1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLC6z8q31wxtfbkdttzWzpIF3PNLL0asw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013173920863-ahalj1sr8fj16fqtqb1aikg727ccf5f1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
