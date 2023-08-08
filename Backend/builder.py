@@ -1,18 +1,13 @@
 import firebase_admin
 from firebase_admin import credentials, db
 
-cred = credentials.Certificate("offerhub-proyectofinal-firebase-adminsdk-szyk2-b5857b6480.json")
+cred = credentials.Certificate("../certificados/offerhub-proyectofinal-firebase-adminsdk-szyk2-b5857b6480.json")
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://offerhub-proyectofinal-default-rtdb.firebaseio.com/'})
-
-class Promocion:
-    def __init__(self, nombre, banco):
-        self.nombre = nombre
-        self.banco = banco
 
 def escribirDB(clase, datos):
     ref = db.reference("/" + clase)
     for dato in datos:
-        ref.push({'nombre': dato.nombre, 'banco': dato.banco})
+        ref.push(dato)
 
 # Crear instancias de Promocion
 """
