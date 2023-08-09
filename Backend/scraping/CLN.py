@@ -9,7 +9,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager 
+import sys
+sys.path.append('../')
+import builder as builder 
+sys.path.append('../modelos')
+from Promocion import Promocion
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -18,6 +24,7 @@ options.add_argument("--window-size=1920,1200")
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 wait = WebDriverWait(driver, 900000)
 promocionesTotales = 0
+
 # Navegar hasta la página de beneficios 
 driver.get('https://club.lanacion.com.ar/beneficios')
 
@@ -42,8 +49,6 @@ while i < cantElementos:
 
     i = len(seccion_categorias)
 
-
-
 #de la lista obtenida muestra link asociado y texto de cada elemento
 for boton in seccion_categorias:
     titulo = boton.find_element(By.XPATH, './/a').get_attribute("title")
@@ -67,8 +72,8 @@ for boton in seccion_categorias:
     for containerPromo in containersPromos:
         a+=1
         print("\n\t\t---Promo "+str(a)+"---")
-        promoCompleta = containerPromo.find_element(By.XPATH, './/h2[contains(@class,"title --m")]').text
-        oferta = promoCompleta[:3]
+        oferta = containerPromo.find_element(By.XPATH, './/h2[contains(@class,"title --m")]').text
+        #oferta = promoCompleta[:3]
         
 
         x=[i for i in oferta] 
@@ -117,15 +122,21 @@ for boton in seccion_categorias:
 
         print("\t\t  Vigencia: " + vigencia[0])
 
+        vigenciaTexto = vigencia[0].split(" ")
+
         # TYC 
+        tyc = ""
         driver.execute_script("arguments[0].scrollIntoView(true);", containerPromo.find_element(By.XPATH, './/div[contains(@class,"accordion card-footer")]').find_element(By.CLASS_NAME, value = "header"))
         time.sleep(1)
         driver.execute_script("window.scrollBy(0, -250)")
         time.sleep(1)
-        containerPromo.find_element(By.XPATH, './/div[contains(@class,"accordion card-footer")]').find_element(By.CLASS_NAME, value = "header").click()       
-        tyc = containerPromo.find_element(By.XPATH, './/div[contains(@class,"accordion card-footer --open")]').find_element(By.XPATH, './/p[contains(@class,"paragraph --fourxs")]').text
+        containerPromo.find_element(By.XPATH, './/div[contains(@class,"accordion card-footer")]').find_element(By.CLASS_NAME, value = "header").click()     
+
+        while len(tyc) == 0:           
+            tyc = containerPromo.find_element(By.XPATH, './/div[contains(@class,"accordion card-footer --open")]').find_element(By.XPATH, './/p[contains(@class,"paragraph --fourxs")]').text
+        
         print("\t\t  TyC: " + tyc)
-        longitud = len(tyc)
+        
            
 
         # TRAIGO DIAS DE LA SEMANA
@@ -153,6 +164,17 @@ for boton in seccion_categorias:
             print(texto)
         
         promocionesTotales += 1
+
+        promocion = Promocion()
+        promocion.titulo = titulo+": "+oferta
+        promocion.proveedor = "Club La Nación"
+        promocion.url = url
+        promocion.setearFecha("vigenciaDesde",vigenciaTexto[3])
+        promocion.setearFecha("vigenciaHasta",vigenciaTexto[6])
+        promocion.dias = diasDisponibles
+        promocion.tyc = tyc
+        promocion.categoria = categoria
+        promocion.guardar()
 
     # TRAIGO SUCURSALES
     print("\t\t  Sucursales:")
