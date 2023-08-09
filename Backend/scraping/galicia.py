@@ -3,11 +3,22 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService 
+from webdriver_manager.chrome import ChromeDriverManager 
+import sys
+sys.path.append('../')
+import builder as builder
+sys.path.append('../modelos')
+from Promocion import Promocion
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions() 
+options.add_argument('--headless')
+options.add_argument("--window-size=1920,1200")
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 # Navegar hasta la página de beneficios 
 driver.get('https://beneficios.galicia.ar/')
@@ -50,10 +61,9 @@ while i < len(seccion_categorias):
             nombreYCategoria = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@style,"min-height: 189px;")]')))
             nombreComercio = nombreYCategoria.find_element(By.XPATH, './/p').get_attribute("title")
             categoria = nombreYCategoria.find_elements(By.XPATH, './/p')[1].get_attribute("title")
-            urlPromociones = driver.current_url
+            
 
             print("\n\n\t--- Inicio Comercio "+ nombreComercio +" ---")
-            print("\tURL Promociones: "+urlPromociones)
             print("\tCategoria: "+categoria)
 
             print("\n\t\tInicio Promos:")
@@ -64,26 +74,34 @@ while i < len(seccion_categorias):
                 #print("\t\t  Descripción: " + _ ).text) NO TIENEN LAS DE GALICIA
 
                 #TRAIGO VIGENCIA
-                vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[1].text
+                vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[1].text.split(" ")
 
                 #TRAIGO OFERTA               
                 oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"jsx-309925303 grid-item-base grid-item--spacing grid-item--xs-12")]')))[1].text
 
+                reintegro = None
+                
                 if "%" in oferta and "cuotas" in oferta:
                         #A la hora de guardar las promos si las queremos separar lo hacemos x acá. Ahora no hace nada.
                         print("\t\t  Descuento: " + oferta)
                         print("\t\t  " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text)
+                        reintegro = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text
                 elif "cuotas" in oferta:
                         print("\t\t  Cuotas: " + oferta)
                 elif "%" in oferta:
                         print("\t\t  Descuento: " + oferta)
                         print("\t\t  " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text)
+                        reintegro = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text
                 else: 
                      print("\t\t CHEQUEAR")
                      sleep(100000)
                      
                 #Esto va acá adrede, no mover nada
-                print("\t\t  Vigencia: " + vigencia)
+                print("\t\t  Vigencia: " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[1].text)
+
+                urlPromocion = driver.current_url
+                print("\tURL Promociones: "+urlPromocion)
+
 
                 #TRAIGO DIAS SEMANA
 
@@ -179,6 +197,18 @@ while i < len(seccion_categorias):
                 subpromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"jsx-309925303 grid-item-base grid-item--spacing px-0")]')))
                 p += 1
                 promocionesTotales += 1
+
+                promocion = Promocion()
+                promocion.titulo=nombreComercio+": "+oferta
+                promocion.proveedor="Galicia"
+                promocion.url=urlPromocion
+                promocion.tope=reintegro
+                promocion.setearFecha("vigenciaDesde",vigencia[2])
+                promocion.setearFecha("vigenciaHasta",vigencia[4])
+                promocion.dias=diasSemana
+                promocion.tyc=tyc
+                promocion.categoria=categoria
+                promocion.guardar()
 
             try:
                 botonesVolverAPromos[1].click()

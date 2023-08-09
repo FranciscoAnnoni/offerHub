@@ -4,6 +4,7 @@ from dateutil.parser import parse
 class Promocion:
     # titulo
     # proveedor
+    # categoria
     # url
     # tope
     # vigenciaDesde
