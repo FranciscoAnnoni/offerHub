@@ -1,15 +1,29 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService 
+from webdriver_manager.chrome import ChromeDriverManager 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
+import sys
+sys.path.append('../')
+import builder as builder
+sys.path.append('../modelos')
 import config as config
+from Comercio import Comercio
+from CategoriaPromocion import CategoriaPromocion
+from Promocion import Promocion
+
 config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions() 
+options.add_argument('--headless')
+options.add_argument("--window-size=1920,1200")
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 # Navegar hasta la página de beneficios 
 
@@ -21,7 +35,7 @@ telefono=driver.find_element(By.XPATH, '//a[contains(@class,"phone")]').get_attr
 horarioDeAtencion=driver.find_element(By.XPATH, '//div[contains(@class,"business-hours-wrapper")]').find_element(By.XPATH, './/div[contains(@class,"business-hours")]').get_attribute("innerHTML").replace("<br>"," - ")
 print("Telefono: "+telefono)
 print("Horario de Atencion: "+horarioDeAtencion)
-driver.get('https://365.clarin.com/buscar/')
+driver.get('https://365.clarin.com/buscar')
 #Buscar cuantos elementos tiene la pagina de beneficios
 cantElementos = int(driver.find_element(By.XPATH, '//div[contains(@id,"clarin365mostrando")]').find_element(By.XPATH, '//strong').text)
 print("Cantidad de Promociones: "+str(cantElementos))
@@ -29,7 +43,7 @@ print("Cantidad de Promociones: "+str(cantElementos))
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 i = 0
-while i < cantElementos:
+while False:#i < cantElementos:
 
     #obtiene todos los elementos con la clase pedida
     seccion_categorias = driver.find_elements(By.XPATH, '//a[contains(@class,"clarin-365-card")]')
@@ -38,7 +52,7 @@ while i < cantElementos:
 
     driver.execute_script("window.scrollBy(0, 1000)")
     time.sleep(3)
-
+seccion_categorias = driver.find_elements(By.XPATH, '//a[contains(@class,"clarin-365-card")]')
 #de la lista obtenida muestra link asociado y texto de cada elemento
 for boton in seccion_categorias:
     titulo=boton.find_element(By.XPATH, './/h1').text
@@ -58,29 +72,40 @@ for boton in seccion_categorias:
         print("\t\tURL Comercio: "+urlComercio)
     except NoSuchElementException:
         urlComercio=None
+    comercio = Comercio()
+    comercio.nombre=titulo
+    comercio.url=urlComercio
+    comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
+    idComercio=comercio.guardar()
     containersPromos=driver.find_elements(By.XPATH, '//div[contains(@class,"clarin-ficha-beneficio")]')
     print("\t\tInicio Promos:")
     i=0
     for containerPromo in containersPromos:
         i+=1
+        promocion = Promocion()
         print("\t\t---Promo "+str(i)+"---")
         porcentaje=containerPromo.find_element(By.XPATH, './/div[contains(@class,"benefit")]').get_attribute("textContent")
         print("\t\tPorcentaje: "+porcentaje)
         descripcion=containerPromo.find_element(By.XPATH, './/div[contains(@class,"description")]').get_attribute("textContent")
         print("\t\tDescripcion: "+descripcion)
+        diasSemana = {"LU", "MA", "MI", "JU", "VI", "SA", "DO"}
+        dias=[]
+        i=0
+        print("\tDias: ")
         diasContainer=containerPromo.find_element(By.XPATH, './/div[contains(@class,"apply-days-wrapper")]')
         dias=diasContainer.find_elements(By.XPATH, './/li[contains(@class,"active")]')
         if len(dias)>0:
-            dias="-".join(map(lambda el:el.text,dias))
+            dias=list(map(lambda el:el.text,dias))
         else:
-            dias=diasContainer.find_element(By.XPATH, './/span[contains(@class,"every-day")]').get_attribute("textContent")
-        print("\t\tDias: "+dias)
+            dias=list(diasSemana)
+        for dia in dias:
+            print("\t\t"+dia)
         tarjetas=containerPromo.find_elements(By.XPATH, './/div[contains(@class,"card-365")]')
         print("\t\tTarjetas: ")
         for tarjeta in tarjetas:
             print("\t\t\t"+tarjeta.find_element(By.XPATH, './/p').get_attribute("innerHTML")) 
         tycContainer=containerPromo.find_element(By.XPATH, './/div[contains(@class,"terms-and-conditions-wrapper")]')  
-        vigencia=tycContainer.find_element(By.XPATH, './/p').text
+        vigencia=tycContainer.find_element(By.XPATH, './/p').text.replace("Válido hasta el ","")
         print("\t\tVigencia: "+vigencia)
         tycBtn=tycContainer.find_element(By.XPATH, './/button')
         driver.implicitly_wait(2)
@@ -110,6 +135,19 @@ for boton in seccion_categorias:
             driver.execute_script('document.querySelector(".scrollable").remove()')
         except NoSuchElementException:
             sucursales=None
+         
+        promocion.titulo=titulo+": "+porcentaje
+        promocion.proveedor="Clarin 365"
+        promocion.comercio=idComercio
+        promocion.url=url
+        if vigencia:
+            promocion.setearFecha("vigenciaHasta",vigencia)
+        promocion.setearCategoria(categoria)
+        promocion.dias=dias
+        promocion.tyc=tyc
+        promocion.descripcion=descripcion
+        promocion.guardar()
+
         #driver.find_element(By.XPATH,"//html").click()
 
     driver.close()
