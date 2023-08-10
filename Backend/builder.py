@@ -24,20 +24,16 @@ def obtenerIdPorContenido(coleccion, campo, valor):
             if campo in data and (data[campo].lower() == valor_minuscula or valor_minuscula in data[campo].lower()):
                 return key
 
-    return None  # Si no se encontró el documento
-# Crear instancias de Promocion
-"""
-promo1 = Promocion("Sofi", "Galicia")
-promo2 = Promocion("Axel", "Santander")
-promociones = [promo1, promo2]
+    return None  
 
-# Escribir en la base de datos
-escribirDB("Promocion", promociones)
-"""
+def eliminar(coleccion, campo=None, valor=None):
+    ref = db.reference(coleccion)
+    snapshot = ref.get()
 
-# Realizar una consulta filtrando por el campo "banco"
-ref = db.reference("/Promocion")
-resultados = ref.order_by_child("nombre").equal_to("Juan").get()
+    if snapshot:
+        for key, data in snapshot.items():
+            if campo is None or (campo == "key" and key == valor) or (campo in data and data[campo] == valor):
+                ref.child(key).delete()
 
-for key, value in resultados.items():
-    print(key, "=>", value)
+def eliminarPorId(coleccion,id):
+	self.eliminar(coleccion, "key", id)

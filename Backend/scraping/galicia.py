@@ -11,8 +11,11 @@ import sys
 sys.path.append('../')
 import builder as builder
 sys.path.append('../modelos')
+import config as config
 from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
+
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 

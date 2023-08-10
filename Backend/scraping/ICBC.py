@@ -9,12 +9,15 @@ sys.path.append('../')
 import builder as builder
 sys.path.append('../modelos')
 from Promocion import Promocion
+import config as config
 from Comercio import Comercio
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 from CategoriaPromocion import CategoriaPromocion
+
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
