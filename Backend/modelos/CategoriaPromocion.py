@@ -40,3 +40,16 @@ class CategoriaPromocion:
         SERVICIOS: [SERVICIOS],
         OTROS: [OTROS, "varios", "otras compras", "servicios", "otros beneficios"]
     }
+
+    @staticmethod
+    def obtenerCategoria(nombreCategoria):
+        categoria_encontrada = False
+        for clave, valores in CategoriaPromocion.SINONIMOS.items():
+            if nombreCategoria.lower() in valores:
+                
+                categoria_encontrada = True
+                return clave
+
+        if not categoria_encontrada:
+            return CategoriaPromocion.OTROS
+

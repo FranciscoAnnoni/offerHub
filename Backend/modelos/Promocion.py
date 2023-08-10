@@ -17,15 +17,7 @@ class Promocion:
         setattr(self, atributo,fecha_objeto.strftime("%Y-%m-%d"))
 
     def setearCategoria(self, nombreCategoria):
-        categoria_encontrada = False
-        for clave, valores in CategoriaPromocion.SINONIMOS.items():
-            if nombreCategoria.lower() in valores:
-                self.categoria = clave
-                categoria_encontrada = True
-                break
-
-        if not categoria_encontrada:
-            self.categoria = CategoriaPromocion.OTROS
+        self.categoria=CategoriaPromocion.obtenerCategoria(nombreCategoria)
 
     def guardar(self):
         builder.escribirDB("Promocion",[vars(self)])

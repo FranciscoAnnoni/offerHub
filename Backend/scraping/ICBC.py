@@ -9,10 +9,12 @@ sys.path.append('../')
 import builder as builder
 sys.path.append('../modelos')
 from Promocion import Promocion
+from Comercio import Comercio
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
+from CategoriaPromocion import CategoriaPromocion
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -81,6 +83,11 @@ for boton in seccion_categorias:
         print("\tURL Comercio: "+urlComercio)
     except NoSuchElementException:
         urlComercio=None
+    comercio = Comercio()
+    comercio.nombre=titulo
+    comercio.url=urlComercio
+    comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
+    idComercio=comercio.guardar()
     try:
         descripcion=driver.find_element(By.XPATH, '//li[contains(@class,"description")]').get_attribute("innerHTML")
     except NoSuchElementException:
@@ -88,11 +95,11 @@ for boton in seccion_categorias:
     print("\tDescripcion: "+descripcion)
     segmentos=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_elements(By.XPATH, './/div[contains(@class,"ticket-group-internal")]')
     tope=boton.find_element(By.XPATH, '//li[contains(@class,"tope")]').get_attribute("innerHTML")
-    diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
     actives=driver.execute_script('return Array.from(document.querySelectorAll(".days span")).map(function(e){ return e.classList[0];}).join()').split(",")
     dias=[]
     i=0
-    print("\tDias: ")
+    print(" ")
     for active in actives:
         if active=="active":
             dias.append(diasSemana[i])
@@ -144,6 +151,7 @@ for boton in seccion_categorias:
                 if len(clarification) > 0:
                     descripcion=descripcion+(" | " if len(descripcion) > 0 else "")+clarification
             promocion.titulo=titulo+": "+tituloPromo
+            promocion.comercio=idComercio
             promocion.proveedor="ICBC"
             promocion.url=url
             promocion.tope=tope
