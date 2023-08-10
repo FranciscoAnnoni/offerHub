@@ -65,7 +65,7 @@ for boton in seccion_categorias:
     print("\t---Inicio Comercio "+titulo+"---")
     print("\t"+titulo)
     print("\tURL Promo: "+url)
-    categoria=url.split("/")[4].replace("-"," ").title()
+    categoria=url.split("/")[4].replace("-"," ")
     print("\tCategoria: "+categoria)
     boton.click()
     time.sleep(2)
@@ -149,6 +149,7 @@ for boton in seccion_categorias:
             promocion.tope=tope
             promocion.setearFecha("vigenciaDesde",vigencia[0])
             promocion.setearFecha("vigenciaHasta",vigencia[1])
+            promocion.setearCategoria(categoria)
             promocion.dias=dias
             promocion.tyc=tyc
             promocion.descripcion=descripcion

@@ -1,0 +1,6 @@
+
+.DS_Store
+
+Backend/__pycache__/
+
+Backend/modelos/__pycache__/
