@@ -3,17 +3,24 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService 
+from webdriver_manager.chrome import ChromeDriverManager 
+import sys
+sys.path.append('../')
+import builder as builder 
+sys.path.append('../modelos')
+from Promocion import Promocion
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
-"""chrome_options = Options()
-chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(options=chrome_options)"""
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions() 
+options.add_argument('--headless')
+options.add_argument("--window-size=1920,1200")
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+wait = WebDriverWait(driver, 900000)
 #Si no abre en ventana completa rompe
-driver.maximize_window()
 
 
 # Navegar hasta la página de beneficios 
@@ -50,13 +57,15 @@ for categoria in categorias:
         promocion.click()
         urlPromocion = driver.current_url
 
-        nombreComercio = wait.until(EC.presence_of_all_elements_located((By.XPATH, './/div[contains(@class,"card-beneficio__comercio detalle-comercio ng-binding")]')))
+        comercio = wait.until(EC.presence_of_all_elements_located((By.XPATH, './/div[contains(@class,"card-beneficio__comercio detalle-comercio ng-binding")]')))
         sleep(1)
 
-        if len(nombreComercio[0].text) == 0:
-             print("\n\n\t--- Inicio Comercio "+nombreComercio[1].text+" ---")
+        if len(comercio[0].text) == 0:
+             nombreComercio = comercio[1].text
+             print("\n\n\t--- Inicio Comercio "+nombreComercio+" ---")
         else:
-            print("\n\n\t--- Inicio Comercio "+nombreComercio[0].text+" ---")
+            nombreComercio = comercio[0].text
+            print("\n\n\t--- Inicio Comercio "+nombreComercio+" ---")
             
         print("\tURL Promo: "+urlPromocion)
         print("\tCategoria: "+nombreCategoria)
@@ -86,6 +95,8 @@ for categoria in categorias:
             vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h6[contains(@class,"legales__titulo ng-binding")]')))[1].text
 
         print("\tVigencia: " + vigencia)
+
+        vigenciaTexto = vigencia.split(" ")
 
         #TRAIGO DIAS SEMANA
 
@@ -150,6 +161,18 @@ for categoria in categorias:
         
         print("\t\t  TyC: " + tyc)
 
+        if len(tyc) == 0: sleep(80000)
+
+        promocion = Promocion()
+        promocion.titulo = nombreComercio+": "+oferta
+        promocion.proveedor = "Banco Ciudad"
+        promocion.url = urlPromocion
+        promocion.setearFecha("vigenciaDesde",vigenciaTexto[4])
+        promocion.setearFecha("vigenciaHasta",vigenciaTexto[7])
+        promocion.dias = diasDisponibles
+        promocion.tyc = tyc
+        promocion.categoria = nombreCategoria
+        promocion.guardar()
 
         #Con esto se vuelve a las promociones
         botonVuelta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//i[contains(@class,"modal__boton-cerrar icon-bcba_general_arrow_l")]')))
@@ -160,6 +183,8 @@ for categoria in categorias:
             botonVuelta[0].click()
         else:
             botonVuelta[1].click()
+
+        
 
     wait.until(EC.presence_of_element_located((By.XPATH, '//label[contains(@class,"limpiar-filtros")]'))).click()
 
