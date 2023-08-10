@@ -14,14 +14,17 @@ def escribirDB(clase, datos):
 
     return ids_guardados
 
-def obtenerIdPorContenido(coleccion, campo, valor):
+def obtenerIdPorContenido(coleccion, condiciones):
     ref = db.reference(coleccion)
     snapshot = ref.get()
 
     if snapshot:
-        valor_minuscula = valor.lower()
         for key, data in snapshot.items():
-            if campo in data and (data[campo].lower() == valor_minuscula or valor_minuscula in data[campo].lower()):
+            cumple_condiciones = all(
+                campo in data and (data[campo].lower() == valor.lower() or valor.lower() in data[campo].lower())
+                for campo, valor in condiciones.items()
+            )
+            if cumple_condiciones:
                 return key
 
     return None  

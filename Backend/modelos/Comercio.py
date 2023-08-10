@@ -5,7 +5,7 @@ class Comercio:
     # url
     # categoria
     def guardar(self):
-        idComercio=self.obtenerIdComercioPorNombre()
+        idComercio=builder.obtenerIdPorContenido("Comercio",{"nombre":self.nombre,"categoria":self.categoria})
         if idComercio==None:
             return builder.escribirDB("Comercio",[vars(self)])[0]
         else:
@@ -15,5 +15,5 @@ class Comercio:
         return self.obtenerIdComercioPorNombre() != None
 
     def obtenerIdComercioPorNombre(self):
-        return builder.obtenerIdPorContenido("Comercio","nombre",self.nombre)
+        return builder.obtenerIdPorContenido("Comercio",{"nombre":self.nombre})
     
