@@ -14,6 +14,8 @@ sys.path.append('../modelos')
 import config as config
 from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
+from Comercio import Comercio
+from CategoriaPromocion import CategoriaPromocion
 
 config.setearEntorno()
 
@@ -65,122 +67,129 @@ for categoria in categorias:
 
         if len(comercio[0].text) == 0:
              nombreComercio = comercio[1].text
-             print("\n\n\t--- Inicio Comercio "+nombreComercio+" ---")
         else:
             nombreComercio = comercio[0].text
-            print("\n\n\t--- Inicio Comercio "+nombreComercio+" ---")
             
-        print("\tURL Promo: "+urlPromocion)
-        print("\tCategoria: "+nombreCategoria)
+        if len(nombreComercio) != 0:
+            print("\n\n\t--- Inicio Comercio "+nombreComercio+" ---")
+            print("\tURL Promo: "+urlPromocion)
+            print("\tCategoria: "+nombreCategoria)
 
-        #TRAIGO OFERTA               
-        oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[0].text
+            comercio = Comercio()
+            comercio.nombre=nombreComercio
+            comercio.categoria=CategoriaPromocion.obtenerCategoria(nombreCategoria)
+            idComercio=comercio.guardar()
 
-        if len(oferta) < 3:
-                oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[2].text
-        if len(oferta) < 3:
-                oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[1].text
-        if len(oferta) < 3:
-                oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[3].text
+            #TRAIGO OFERTA               
+            oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[0].text
 
-        if "%" in oferta:
-                        print("\tDescuento: " + oferta)
-        elif "cuotas" in oferta:
-                        print("\tCuotas: " + oferta)
-        elif "x" in oferta:
-                        print("\tPromocion: " + oferta)
-        else: 
-                     print("\tPromocion: 2x1")
+            if len(oferta) < 3:
+                    oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[2].text
+            if len(oferta) < 3:
+                    oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[1].text
+            if len(oferta) < 3:
+                    oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[3].text
 
-        #TRAIGO VIGENCIA
-        vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h6[contains(@class,"legales__titulo ng-binding")]')))[0].text
-        if len(vigencia) < 3:
-            vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h6[contains(@class,"legales__titulo ng-binding")]')))[1].text
+            if "%" in oferta:
+                            print("\tDescuento: " + oferta)
+            elif "cuotas" in oferta:
+                            print("\tCuotas: " + oferta)
+            elif "x" in oferta:
+                            print("\tPromocion: " + oferta)
+            else: 
+                        print("\tPromocion: 2x1")
 
-        print("\tVigencia: " + vigencia)
+            #TRAIGO VIGENCIA
+            vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h6[contains(@class,"legales__titulo ng-binding")]')))[0].text
+            if len(vigencia) < 3:
+                vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h6[contains(@class,"legales__titulo ng-binding")]')))[1].text
 
-        vigenciaTexto = vigencia.split(" ")
+            print("\tVigencia: " + vigencia)
 
-        #TRAIGO DIAS SEMANA
+            vigenciaTexto = vigencia.split(" ")
 
-        dias = driver.find_elements(By.XPATH, '//span[contains(@ng-class,"beneficioDetalle.dias")]')
-        dias = dias[:7]
+            #TRAIGO DIAS SEMANA
 
-        diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-        diasDisponibles = []
-        
-        contadorDia = 0      
+            dias = driver.find_elements(By.XPATH, '//span[contains(@ng-class,"beneficioDetalle.dias")]')
+            dias = dias[:7]
 
-        for dia in dias:
-            a = dia.get_attribute("class")
-        
-            if len(a) != 0:
-                diasDisponibles.append(diasSemana[contadorDia])
+            diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+            diasDisponibles = []
+            
+            contadorDia = 0      
 
-            contadorDia += 1
+            for dia in dias:
+                a = dia.get_attribute("class")
+            
+                if len(a) != 0:
+                    diasDisponibles.append(diasSemana[contadorDia])
 
-        texto = "\tDías disponibles: "
-        for dia in diasDisponibles:
-            texto = texto + dia + ", "
-        texto = texto[:-2]
+                contadorDia += 1
 
-        if texto == "\tDías disponibles":
-            print("\tDías disponibles: Todos los días")
-        else:
-            print(texto)
+            texto = "\tDías disponibles: "
+            for dia in diasDisponibles:
+                texto = texto + dia + ", "
+            texto = texto[:-2]
 
-        #TRAIGO TARJETAS
-        print("\tTarjeta requerida: ")
+            if texto == "\tDías disponibles":
+                print("\tDías disponibles: Todos los días")
+            else:
+                print(texto)
 
-        distribuidorasDePago = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@style,"display: flex;")]')))
-        tarjetasRequeridas = distribuidorasDePago[0].find_elements(By.XPATH, './/img[contains(@ng-src,"/beneficios_rest/beneficios/tarjeta/")]')
-        if len(tarjetasRequeridas) == 0: tarjetasRequeridas = distribuidorasDePago[1].find_elements(By.XPATH, './/img[contains(@ng-src,"/beneficios_rest/beneficios/tarjeta/")]')
+            #TRAIGO TARJETAS
+            print("\tTarjeta requerida: ")
 
-        for tarjeta in tarjetasRequeridas:
-            distribuidora = tarjeta.get_attribute("alt")
+            distribuidorasDePago = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@style,"display: flex;")]')))
+            tarjetasRequeridas = distribuidorasDePago[0].find_elements(By.XPATH, './/img[contains(@ng-src,"/beneficios_rest/beneficios/tarjeta/")]')
+            if len(tarjetasRequeridas) == 0: tarjetasRequeridas = distribuidorasDePago[1].find_elements(By.XPATH, './/img[contains(@ng-src,"/beneficios_rest/beneficios/tarjeta/")]')
 
-            if distribuidora == "VISA": print("\t\t Tarjeta Banco Ciudad Visa")
-            elif distribuidora == "MASTERCARD": print("\t\t Tarjeta Banco Ciudad Mastercard")
-            elif distribuidora == "CABAL": print("\t\t Tarjeta Banco Ciudad Cabal")
-            elif distribuidora == "MODO": print("\t\t Tarjeta Banco Ciudad a través de la aplicación MODO")
-            elif distribuidora == "VISA DEBITO": print("\t\t Tarjeta Banco Ciudad Visa Débito")
-            elif distribuidora == "MAESTRO": print("\t\t Tarjeta Banco Ciudad Maestro")
-            else: sleep(10000)
+            for tarjeta in tarjetasRequeridas:
+                distribuidora = tarjeta.get_attribute("alt")
 
-        # TRAIGO SUCURSALES
-        print("\tSucursales disponibles: ")
-        sucursales = wait.until(EC.presence_of_element_located((By.XPATH, '//ul[contains(@id,"lista-sucursales-detalle")]'))).find_elements(By.XPATH, './/li[contains(@ng-repeat,"sucursal in sucursalesCercanas")]')
+                if distribuidora == "VISA": print("\t\t Tarjeta Banco Ciudad Visa")
+                elif distribuidora == "MASTERCARD": print("\t\t Tarjeta Banco Ciudad Mastercard")
+                elif distribuidora == "CABAL": print("\t\t Tarjeta Banco Ciudad Cabal")
+                elif distribuidora == "MODO": print("\t\t Tarjeta Banco Ciudad a través de la aplicación MODO")
+                elif distribuidora == "VISA DEBITO": print("\t\t Tarjeta Banco Ciudad Visa Débito")
+                elif distribuidora == "MAESTRO": print("\t\t Tarjeta Banco Ciudad Maestro")
+                else: sleep(10000)
 
-        if len(sucursales) == 0: print("\t\tNo hay sucursales especificadas")
-        
-        for sucursal in sucursales:
-            print("\t\t"+sucursal.find_element(By.XPATH, './/p[contains(@class,"ng-binding")]').text+", "+sucursal.find_element(By.XPATH, './/p[@class="ng-binding"]').text)
+            # TRAIGO SUCURSALES
+            print("\tSucursales disponibles: ")
+            sucursales = wait.until(EC.presence_of_element_located((By.XPATH, '//ul[contains(@id,"lista-sucursales-detalle")]'))).find_elements(By.XPATH, './/li[contains(@ng-repeat,"sucursal in sucursalesCercanas")]')
 
-        #TRAIGO TYC
+            if len(sucursales) == 0: print("\t\tNo hay sucursales especificadas")
+            
+            for sucursal in sucursales:
+                print("\t\t"+sucursal.find_element(By.XPATH, './/p[contains(@class,"ng-binding")]').text+", "+sucursal.find_element(By.XPATH, './/p[@class="ng-binding"]').text)
 
-        tyc = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"legales col-xs-12")]')))[0].find_element(By.XPATH, './/p[contains(@ng-bind-html,"beneficioDetalle.legales")]').text
-        
-        if len(tyc) == 0: tyc = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"legales col-xs-12")]')))[1].find_element(By.XPATH, './/p[contains(@ng-bind-html,"beneficioDetalle.legales")]').text
-        
-        print("\t\t  TyC: " + tyc)
+            #TRAIGO TYC
 
-        if len(tyc) == 0: sleep(80000)
+            tyc = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"legales col-xs-12")]')))[0].find_element(By.XPATH, './/p[contains(@ng-bind-html,"beneficioDetalle.legales")]').text
+            
+            if len(tyc) == 0: tyc = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"legales col-xs-12")]')))[1].find_element(By.XPATH, './/p[contains(@ng-bind-html,"beneficioDetalle.legales")]').text
+            
+            print("\t\t  TyC: " + tyc)
 
-        promocion = Promocion()
-        promocion.titulo = nombreComercio+": "+oferta
-        promocion.proveedor = "Banco Ciudad"
-        promocion.url = urlPromocion
-        promocion.setearFecha("vigenciaDesde",vigenciaTexto[4])
-        promocion.setearFecha("vigenciaHasta",vigenciaTexto[7])
-        promocion.dias = diasDisponibles
-        promocion.tyc = tyc
-        promocion.categoria = nombreCategoria
-        promocion.guardar()
+            if len(tyc) == 0: sleep(80000)
+
+            promocion = Promocion()
+            promocion.titulo = nombreComercio+": "+oferta
+            promocion.proveedor = "Banco Ciudad"
+            promocion.comercio=idComercio
+            promocion.url = urlPromocion
+            promocion.setearFecha("vigenciaDesde",vigenciaTexto[4])
+            promocion.setearFecha("vigenciaHasta",vigenciaTexto[7])
+            promocion.dias = diasDisponibles
+            promocion.tyc = tyc
+            promocion.setearCategoria(nombreCategoria)
+            promocion.guardar()
+            promocionesTotales += 1
 
         #Con esto se vuelve a las promociones
         botonVuelta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//i[contains(@class,"modal__boton-cerrar icon-bcba_general_arrow_l")]')))
         
-        promocionesTotales += 1
+        
 
         if "Vol" in botonVuelta[0].find_element(By.XPATH, './/span').text:
             botonVuelta[0].click()

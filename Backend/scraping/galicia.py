@@ -14,6 +14,8 @@ sys.path.append('../modelos')
 import config as config
 from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
+from Comercio import Comercio
+from CategoriaPromocion import CategoriaPromocion
 
 config.setearEntorno()
 
@@ -64,6 +66,11 @@ while i < len(seccion_categorias):
             nombreYCategoria = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@style,"min-height: 189px;")]')))
             nombreComercio = nombreYCategoria.find_element(By.XPATH, './/p').get_attribute("title")
             categoria = nombreYCategoria.find_elements(By.XPATH, './/p')[1].get_attribute("title")
+
+            comercio = Comercio()
+            comercio.nombre=nombreComercio
+            comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
+            idComercio=comercio.guardar()
             
 
             print("\n\n\t--- Inicio Comercio "+ nombreComercio +" ---")
@@ -204,13 +211,14 @@ while i < len(seccion_categorias):
                 promocion = Promocion()
                 promocion.titulo=nombreComercio+": "+oferta
                 promocion.proveedor="Galicia"
+                promocion.comercio=idComercio
                 promocion.url=urlPromocion
                 promocion.tope=reintegro
                 promocion.setearFecha("vigenciaDesde",vigencia[2])
                 promocion.setearFecha("vigenciaHasta",vigencia[4])
                 promocion.dias=diasSemana
                 promocion.tyc=tyc
-                promocion.categoria=categoria
+                promocion.setearCategoria(categoria)
                 promocion.guardar()
 
             try:

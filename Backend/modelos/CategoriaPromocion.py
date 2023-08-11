@@ -1,52 +1,56 @@
 from enum import Enum
+#hacer pip install unidecode
+from unidecode import unidecode
+
 
 class CategoriaPromocion:
-    GASTRONOMIA = "gastronomia"
-    VEHICULOS = "vehiculos"
-    SALUDYBIENESTAR = "salud y bienestar"
-    HOGAR = "hogar"
-    VIAJESYTURISMO = "viajes y turismo"
-    ENTRETENIMIENTO = "entretenimiento"
-    INDUMENTARIA = "indumentaria"
-    SUPERMERCADOS = "supermercados"
-    ELECTRONICA = "electronica"
-    EDUCACION = "educacion"
-    NIÑOS = "niños" 
-    REGALOS = "regalos"
-    BEBIDAS = "bebidas"
-    JOYERIA = "joyeria"
-    LIBRERIA = "libreria"
-    MASCOTAS = "mascotas"
-    SERVICIOS = "servicios"
-    OTROS = "otros"
+    GASTRONOMIA = "Gastronomía"
+    VEHICULOS = "Vehículos"
+    SALUDYBIENESTAR = "Salud y Bienestar"
+    HOGAR = "Hogar"
+    VIAJESYTURISMO = "Viajes y Turismo"
+    ENTRETENIMIENTO = "Entretenimiento"
+    INDUMENTARIA = "Indumentaria"
+    SUPERMERCADOS = "Supermercados"
+    ELECTRONICA = "Electrónica"
+    EDUCACION = "Educación"
+    NIÑOS = "Niños" 
+    REGALOS = "Regalos"
+    BEBIDAS = "Bebidas"
+    JOYERIA = "Joyería"
+    LIBRERIA = "Librerías"
+    MASCOTAS = "Mascotas"
+    SERVICIOS = "Servicios"
+    OTROS = "Otros"
 
     SINONIMOS = {
-        GASTRONOMIA: [GASTRONOMIA, "resto", "heladerias", "desayuno"],
-        VEHICULOS: [VEHICULOS, "auto", "combustible", "automotor", "automotores", "bicicleterias", "automovil"],
-        SALUDYBIENESTAR: [SALUDYBIENESTAR, "belleza", "cuidado personal", "bienestar", "farmacias", "farmacia", "perfumerias"],
+        GASTRONOMIA: ["resto", "heladerias", "desayuno", "gastronomia"],
+        VEHICULOS: ["vehiculos", "auto", "combustible", "automotor", "automotores", "bicicleterias", "automovil"],
+        SALUDYBIENESTAR: ["belleza", "cuidado personal", "bienestar", "farmacias", "farmacia", "perfumerias", "salud y bienestar"],
         HOGAR: [HOGAR, "casa", "hogar y decoracion", "cuidado personal", "deco y hogar"],
-        VIAJESYTURISMO: [VIAJESYTURISMO, "turismo", "viajes"],
-        ENTRETENIMIENTO: [ENTRETENIMIENTO, "espectaculos"],
-        INDUMENTARIA: [INDUMENTARIA, "moda", "moda y accesorios"],
-        SUPERMERCADOS: [SUPERMERCADOS, "super"],
-        ELECTRONICA: [ELECTRONICA, "tecnologia", "electro and tecnologia", "electro y gaming"],
-        EDUCACION: [EDUCACION, "capacitacion"],
-        NIÑOS: [NIÑOS, "ninos", "juguetes", "jugueterias"],
-        REGALOS: [REGALOS],
-        BEBIDAS: [BEBIDAS, "vinos bodega", "vinoteca"],
-        JOYERIA: [JOYERIA],
-        LIBRERIA: [LIBRERIA, "librerias"],
-        MASCOTAS: [MASCOTAS],
-        SERVICIOS: [SERVICIOS],
+        VIAJESYTURISMO: ["viajes y turismo", "turismo", "viajes"],
+        ENTRETENIMIENTO: ["entretenimiento", "espectaculos"],
+        INDUMENTARIA: ["indumentaria", "moda", "moda y accesorios"],
+        SUPERMERCADOS: ["supermercados", "super"],
+        ELECTRONICA: ["electronica", "tecnologia", "electro and tecnologia", "electro y gaming"],
+        EDUCACION: ["educacion", "capacitacion"],
+        NIÑOS: ["niños", "ninos", "juguetes", "jugueterias"],
+        REGALOS: ["regalos"],
+        BEBIDAS: ["bebidas", "vinos bodega", "vinoteca"],
+        JOYERIA: ["joyeria"],
+        LIBRERIA: ["libreria", "librerias"],
+        MASCOTAS: ["mascotas"],
+        SERVICIOS: ["servicios"],
         OTROS: [OTROS, "varios", "otras compras", "servicios", "otros beneficios"]
     }
 
     @staticmethod
-    def obtenerCategoria(nombreCategoria):
+    def obtenerCategoria(categoria):
+        nombreCategoria = unidecode(categoria.lower()) #Le saca las mayúsculas y las tíldes
         categoria_encontrada = False
+        
         for clave, valores in CategoriaPromocion.SINONIMOS.items():
-            if nombreCategoria.lower() in valores:
-                
+            if nombreCategoria in valores:              
                 categoria_encontrada = True
                 return clave
 

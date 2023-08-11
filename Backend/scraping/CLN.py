@@ -17,6 +17,8 @@ sys.path.append('../modelos')
 import config as config
 from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
+from Comercio import Comercio
+from CategoriaPromocion import CategoriaPromocion
 
 config.setearEntorno()
 
@@ -65,6 +67,11 @@ for boton in seccion_categorias:
     driver.switch_to.window(driver.window_handles[1])
     driver.get(url)
     time.sleep(2)
+
+    comercio = Comercio()
+    comercio.nombre=titulo
+    comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
+    idComercio=comercio.guardar()
     
     containersPromos= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//article[contains(@class,"cln-ficha-card --roboto")]')))
     
@@ -170,13 +177,14 @@ for boton in seccion_categorias:
 
         promocion = Promocion()
         promocion.titulo = titulo+": "+oferta
+        promocion.comercio=idComercio
         promocion.proveedor = "Club La Nación"
         promocion.url = url
         promocion.setearFecha("vigenciaDesde",vigenciaTexto[3])
         promocion.setearFecha("vigenciaHasta",vigenciaTexto[6])
         promocion.dias = diasDisponibles
         promocion.tyc = tyc
-        promocion.categoria = categoria
+        promocion.setearCategoria(categoria)
         promocion.guardar()
 
     # TRAIGO SUCURSALES
