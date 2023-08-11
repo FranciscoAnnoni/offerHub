@@ -16,8 +16,10 @@ from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
 from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
+from Tarjeta import Tarjeta
+from Entidad import Entidad
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -32,6 +34,11 @@ sleep(2)
 wait = WebDriverWait(driver, 900000)
 
 print("-----Inicio Scraping (Banco Galicia)-----")
+
+entidad = Entidad()
+entidad.nombre = "Banco Galicia"
+entidad.tipo = "Bancaria"
+idEntidad = entidad.guardar()
 
 #Buscar las categorías que haya
 seccion_categorias = driver.find_element(By.XPATH, '//div[contains(@class,"sc-eYGnOm ihspQh")]').find_elements(By.XPATH, '//div[contains(@class,"sc-eVspGN dnkXOU brk-card brk-card-row pb-16 brk-card-click no-Hover sc-faSwKo bZRWcC")]')
@@ -153,15 +160,43 @@ while i < len(seccion_categorias):
                 except NoSuchElementException:
                     pagoEspecial = ""
 
-
+                tarjetasDisponibles = []
                 for tarjeta in tarjetas:
+
+                    tarjetaDisponible = Tarjeta()
+                    tarjetaDisponible.entidad = idEntidad                    
+                    
                     nombreTarjeta = "\t\t\t  " + tarjeta.find_element(By.XPATH, './/img').get_attribute("alt")
-                    if "Débito" in nombreTarjeta: nombreTarjeta = "\t\t\t  Tarjeta Visa Débito"
-                    else: nombreTarjeta = nombreTarjeta + " Crédito"
-                    if "Eminent" in pagoEspecial: nombreTarjeta = nombreTarjeta + " Eminent"
-                    if "QR" in pagoEspecial: nombreTarjeta = nombreTarjeta + " (Pagando con QR)"
-                    if "Contacto" in pagoEspecial: nombreTarjeta = nombreTarjeta + " (Pagando Sin Contacto NFC)"
+
+                    procesadoras = ["American Express", "Mastercard", "Visa"]
+                    segmentos = ["Eminent", "QR", "Contacto"]
+
+                    if "Débito" in nombreTarjeta:
+                        nombreTarjeta = "\t\t\t  Tarjeta Visa Débito"
+                        tarjetaDisponible.procesadora = "Visa"
+                        tarjetaDisponible.tipoTarjeta = "Débito"
+                    else:
+                         nombreTarjeta = nombreTarjeta + " Crédito"
+                         tarjetaDisponible.tipoTarjeta = "Crédito"
+
+                    for procesadora in procesadoras:
+                         if procesadora in nombreTarjeta:
+                              tarjetaDisponible.procesadora = procesadora
+                    
+                    if "Eminent" in pagoEspecial:
+                        nombreTarjeta = nombreTarjeta + " Eminent"
+                        tarjetaDisponible.segmento = "Eminent"
+                    elif "QR" in pagoEspecial:
+                        nombreTarjeta = nombreTarjeta + " (Pagando con QR)"
+                        tarjetaDisponible.segmento = "Pago con QR"
+                    elif "Contacto" in pagoEspecial:
+                        nombreTarjeta = nombreTarjeta + " (Pagando Sin Contacto NFC)"
+                        tarjetaDisponible.segmento = "Pago Sin Contacto NFC"
+                    else:
+                         tarjetaDisponible.segmento = "No posee"
+
                     print(nombreTarjeta)
+                    tarjetasDisponibles.append(tarjetaDisponible.guardar())
 
                 # TRAIGO SUCURSALES
 
@@ -210,9 +245,10 @@ while i < len(seccion_categorias):
 
                 promocion = Promocion()
                 promocion.titulo=nombreComercio+": "+oferta
-                promocion.proveedor="Galicia"
+                promocion.proveedor=idComercio
                 promocion.comercio=idComercio
                 promocion.url=urlPromocion
+                promocion.tarjetas = tarjetasDisponibles
                 promocion.tope=reintegro
                 promocion.setearFecha("vigenciaDesde",vigencia[2])
                 promocion.setearFecha("vigenciaHasta",vigencia[4])

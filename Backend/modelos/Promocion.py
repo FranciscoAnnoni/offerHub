@@ -22,4 +22,12 @@ class Promocion:
 
     def guardar(self):
         builder.escribirDB("Promocion",[vars(self)])
+
+    
+    """def guardar(self):
+        idPromocion=builder.obtenerIdPorContenido("Tarjeta",{"titulo":self.titulo,"vigenciaDesde":self.vigenciaDesde, "vigenciaHasta":self.vigenciaHasta})
+        if idPromocion==None:
+            return builder.escribirDB("Promocion",[vars(self)])[0]
+        else:
+            return idPromocion"""
     
