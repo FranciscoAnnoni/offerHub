@@ -8,6 +8,7 @@ class Promocion:
     # url
     # tope
     # vigenciaDesde
+    # tarjetas
     # vigenciaHasta
     # dias
     # tyc

@@ -10,3 +10,5 @@ def eliminarDatosPrevios():
     if TESTING:
         builder.eliminar("Promocion")
         builder.eliminar("Comercio")
+        builder.eliminar("Tarjeta")
+        builder.eliminar("Entidad")

@@ -19,6 +19,8 @@ from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
 from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
+from Tarjeta import Tarjeta
+from Entidad import Entidad
 
 config.setearEntorno()
 
@@ -34,6 +36,12 @@ promocionesTotales = 0
 driver.get('https://club.lanacion.com.ar/beneficios')
 
 print("-----Inicio Scraping (Club La Nación)-----")
+
+entidad = Entidad()
+entidad.nombre = "Club La Nación"
+entidad.tipo = "Fidelidad"
+idEntidad = entidad.guardar()
+
 #Buscar cuantos elementos tiene la pagina de beneficios
 cantElementos = int(driver.find_element(By.XPATH, '//strong').get_attribute("innerHTML"))
 print(cantElementos)
@@ -61,12 +69,19 @@ for boton in seccion_categorias:
     print("\n\n\t--- Inicio Comercio "+titulo+" ---")
     print("\t"+titulo)
     print("\tURL Promo: "+url)
-    categoria=url.split("/")[4].replace("-"," ").title()
-    print("\tCategoria: "+categoria)
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
     driver.get(url)
     time.sleep(2)
+
+    
+
+    categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[3].text
+    # Esto lo hago por como está hecha la página
+    condicion = "Otros" == categoria or "Tiendas" in categoria or "Transportes" in categoria or "cocina" in categoria or "gourmet" in categoria
+    if condicion: categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[2].text
+    
+    print("\tCategoria: "+categoria)
 
     comercio = Comercio()
     comercio.nombre=titulo
@@ -96,32 +111,56 @@ for boton in seccion_categorias:
         print("\t\t  Descripción: " + containerPromo.find_element(By.XPATH, './/p[contains(@class,"paragraph --mb-24 --fourxs")]').text)
         
         # TRAIGO LAS TARJETAS
-
         tarjetas = []
+        tarjetasTexto = []
         textoTarjetas = "\t\t  Tarjeta requerida: "
         try:
-            tarjetaBlack = containerPromo.find_element(By.XPATH, './/span[contains(@class,"badge --mr-8 --black --small")]').text
-            
-            
-            if len(tarjetaBlack) > 0:
-                tarjetas.append("Black")
+            black = containerPromo.find_element(By.XPATH, './/span[contains(@class,"badge --mr-8 --black --small")]').text
+              
+            if len(black) > 0:
+                tarjetaBlack = Tarjeta()
+                tarjetaBlack.entidad = idEntidad
+                tarjetaBlack.procesadora = "No posee"
+                tarjetaBlack.segmento = "Black"
+                tarjetaBlack.tipoTarjeta = "Fidelidad"
+                
+                tarjetas.append(tarjetaBlack.guardar())
+
+                tarjetasTexto.append("Black")
 
         except NoSuchElementException:
-            tarjetaBlack = None
+            black = None
 
         try:
-            tarjetaPremium = containerPromo.find_element(By.XPATH, './/span[contains(@class,"badge --mr-8 --premium --small")]').text
-            tarjetas.append(tarjetaPremium)
+            premium = containerPromo.find_element(By.XPATH, './/span[contains(@class,"badge --mr-8 --premium --small")]').text
+            tarjetasTexto.append(premium)
+
+            tarjetaPremium = Tarjeta()
+            tarjetaPremium.entidad = idEntidad
+            tarjetaPremium.procesadora = "No posee"
+            tarjetaPremium.segmento = "Premium"
+            tarjetaPremium.tipoTarjeta = "Fidelidad"
+
+            tarjetas.append(tarjetaPremium.guardar())
+            
         except NoSuchElementException:
-            tarjetaPremium = None
+            premium = None
 
         try:
-            tarjetaClassic = containerPromo.find_element(By.XPATH, './/span[contains(@class,"badge --mr-8 --classic --small")]').text
-            tarjetas.append(tarjetaClassic)
-        except NoSuchElementException:
-            tarjetaClassic = None
+            classic = containerPromo.find_element(By.XPATH, './/span[contains(@class,"badge --mr-8 --classic --small")]').text
+            tarjetasTexto.append(classic)
 
-        for tarjeta in tarjetas:
+            tarjetaClassic = Tarjeta()
+            tarjetaClassic.entidad = idEntidad
+            tarjetaClassic.procesadora = "No posee"
+            tarjetaClassic.segmento = "Classic"
+            tarjetaClassic.tipoTarjeta = "Fidelidad"
+
+            tarjetas.append(tarjetaClassic.guardar())
+        except NoSuchElementException:
+            classic = None
+
+        for tarjeta in tarjetasTexto:
             textoTarjetas = textoTarjetas + tarjeta + ", "
         textoTarjetas = textoTarjetas[:-2]
         print(textoTarjetas)
@@ -178,7 +217,8 @@ for boton in seccion_categorias:
         promocion = Promocion()
         promocion.titulo = titulo+": "+oferta
         promocion.comercio=idComercio
-        promocion.proveedor = "Club La Nación"
+        promocion.proveedor = idEntidad
+        promocion.tarjetas = tarjetas
         promocion.url = url
         promocion.setearFecha("vigenciaDesde",vigenciaTexto[3])
         promocion.setearFecha("vigenciaHasta",vigenciaTexto[6])
