@@ -1,5 +1,6 @@
 import requests
 import base64
+from geopy.geocoders import Nominatim
 
 def imagenABase64(urlImagen):
     try:
@@ -11,4 +12,19 @@ def imagenABase64(urlImagen):
         else:
             return None
     except Exception as e:
+        return None
+
+def obtenerCoordenadas(direccion):
+    geolocator = Nominatim(user_agent="mi_app_de_geolocalizacion")
+    
+    try:
+        location = geolocator.geocode(direccion, country_codes="AR")
+        if location:
+            latitud = location.latitude
+            longitud = location.longitude
+            return latitud, longitud
+        else:
+            return None
+    except Exception as e:
+        print("Error:", e)
         return None
