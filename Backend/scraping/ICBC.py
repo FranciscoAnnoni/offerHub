@@ -10,6 +10,7 @@ import builder as builder
 sys.path.append('../modelos')
 from Promocion import Promocion
 import config as config
+import utilidades as utilidades
 from Comercio import Comercio
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -88,6 +89,7 @@ for boton in seccion_categorias:
         urlComercio=None
     comercio = Comercio()
     comercio.nombre=titulo
+    comercio.logo=utilidades.imagenABase64(logo)
     comercio.url=urlComercio
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
     idComercio=comercio.guardar()
@@ -172,35 +174,3 @@ for boton in seccion_categorias:
 # Cerrar el navegador
 driver.quit()
 
-"""
-# Iterar sobre las categorías y obtener la información de las promociones
-for categoria in categorias:
-    # Obtener el nombre de la categoría
-    nombre_categoria = categoria.find_element(By.CSS_SELECTOR, '.beneficios-item__title').text
-    print('Categoría:', nombre_categoria)
-
-    # Hacer clic en la categoría para mostrar las promociones
-    categoria.click()
-
-    # Esperar a que se carguen las promociones
-    driver.implicitly_wait(5)  # Esperar 5 segundos (puedes ajustar este valor según sea necesario)
-
-    # Encontrar las promociones de la categoría
-    promociones = driver.find_elements(By.CSS_SELECTOR, '.beneficios-landing__item')
-
-    # Iterar sobre las promociones y obtener la información deseada
-    for promocion in promociones:
-        titulo = promocion.find_element(By.CSS_SELECTOR, '.beneficios-landing__title').text
-        descripcion = promocion.find_element(By.CSS_SELECTOR, '.beneficios-landing__description').text
-
-        print('Título:', titulo)
-        print('Descripción:', descripcion)
-        print('---')
-
-    # Regresar a la página de todas las categorías
-    boton_volver = driver.find_element(By.XPATH, '//a[text()="Volver"]')
-    boton_volver.click()
-
-# Cerrar el navegador
-driver.quit()
-"""
