@@ -2,11 +2,12 @@ import builder as builder
 
 class Sucursal:
     # direccion
-    # coordenadas
+    # latitud (coordenadas)
+    # longitud (coordenadas)
     # idComercio
 
     def guardar(self):
-        idSucursal=builder.obtenerIdPorContenido("Sucursal",{"coordenadas":self.coordenadas, "idComercio":self.idComercio})
+        idSucursal=builder.obtenerIdPorContenido("Sucursal",{"latitud":self.latitud,"longitud":self.longitud, "idComercio":self.idComercio})
         if idSucursal==None:
             return builder.escribirDB("Sucursal",[vars(self)])[0]
         else:
