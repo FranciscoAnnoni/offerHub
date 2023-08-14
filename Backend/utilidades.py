@@ -1,6 +1,9 @@
 import requests
 import base64
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
+import time
+
 
 def imagenABase64(urlImagen):
     try:
@@ -16,15 +19,18 @@ def imagenABase64(urlImagen):
 
 def obtenerCoordenadas(direccion):
     geolocator = Nominatim(user_agent="mi_app_de_geolocalizacion")
-    
+
     try:
         location = geolocator.geocode(direccion, country_codes="AR")
-        if location:
-            latitud = location.latitude
-            longitud = location.longitude
-            return latitud, longitud
-        else:
-            return None
-    except Exception as e:
-        print("Error:", e)
-        return None
+        
+    except (GeocoderTimedOut, GeocoderUnavailable) as e:
+        location = None
+        
+    if location:
+        latitud = location.latitude
+        longitud = location.longitude
+    else:
+        latitud = "No posee coordenadas"
+        longitud = "No posee coordenadas"
+    
+    return latitud, longitud

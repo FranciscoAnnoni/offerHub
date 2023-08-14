@@ -12,3 +12,5 @@ def eliminarDatosPrevios():
         builder.eliminar("Comercio")
         builder.eliminar("Tarjeta")
         builder.eliminar("Entidad")
+        builder.eliminar("Sucursal")
+        

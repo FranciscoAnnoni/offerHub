@@ -8,6 +8,7 @@ class Promocion:
     # url
     # tope
     # vigenciaDesde
+    # condiciones
     # tarjetas
     # vigenciaHasta
     # dias

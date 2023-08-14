@@ -18,8 +18,12 @@ from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
 from Tarjeta import Tarjeta
 from Entidad import Entidad
+import utilidades as utilidades
+from utilidades import obtenerCoordenadas
+from Sucursal import Sucursal
 
-#config.setearEntorno()
+
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -63,6 +67,8 @@ while i < len(seccion_categorias):
         #Este for es para entrar a todas las promos de la página
         while o < len(promosXPagina):
             promosXPagina = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"jsx-856446149 brk-card-content")]')))
+            # TRAIGO IMAGEN COMERCIO
+            urlImagen = promosXPagina[o].find_element(By.XPATH, '//div[contains(@class,"sc-dovKpQ gNNuPM")]').find_element(By.XPATH, '//img').get_attribute("src")
             promosXPagina[o].click()
             
 
@@ -77,6 +83,7 @@ while i < len(seccion_categorias):
             comercio = Comercio()
             comercio.nombre=nombreComercio
             comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
+            comercio.logo=utilidades.imagenABase64(urlImagen)
             idComercio=comercio.guardar()
             
 
@@ -85,7 +92,8 @@ while i < len(seccion_categorias):
 
             print("\n\t\tInicio Promos:")
             while p < len(subpromos):
-                subpromos[p].click()           
+                subpromos[p].click()
+                condiciones = []     
 
                 print("\n\t\t---Promo "+str(p+1)+"---")
                 #print("\t\t  Descripción: " + _ ).text) NO TIENEN LAS DE GALICIA
@@ -188,10 +196,12 @@ while i < len(seccion_categorias):
                         tarjetaDisponible.segmento = "Eminent"
                     elif "QR" in pagoEspecial:
                         nombreTarjeta = nombreTarjeta + " (Pagando con QR)"
-                        tarjetaDisponible.segmento = "Pago con QR"
+                        condiciones.append("Pago con QR")
+                        tarjetaDisponible.segmento = "No posee"
                     elif "Contacto" in pagoEspecial:
                         nombreTarjeta = nombreTarjeta + " (Pagando Sin Contacto NFC)"
-                        tarjetaDisponible.segmento = "Pago Sin Contacto NFC"
+                        condiciones.append("Pago Sin Contacto NFC")
+                        tarjetaDisponible.segmento = "No posee"
                     else:
                          tarjetaDisponible.segmento = "No posee"
 
@@ -211,9 +221,18 @@ while i < len(seccion_categorias):
                     while cantidadSucursalesLeidas < cantidadTotalSucursales:
                         sucursales = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-leiOXd bQKZZO")]')))
 
-                        for sucursal in sucursales:
-                            direccion = sucursal.find_elements(By.XPATH, './/p')
+                        for direccionSucursal in sucursales:
+                            direccion = direccionSucursal.find_elements(By.XPATH, './/p')
                             print( "\t\t\t  " + direccion[0].text + ", " + direccion[1].text)
+                            sucursal = Sucursal()
+                            sucursal.direccion = direccion[0].text + ", " + direccion[1].text
+                            latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
+                            sucursal.latitud = str(latitud_resultado)
+                            sucursal.longitud = str(longitud_resultado)
+                            sucursal.idComercio = idComercio
+                            sucursal.guardar()
+
+                            
                             cantidadSucursalesLeidas += 1
                         
                         wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-hFnywE cTmfzt")]')))[1].click()
@@ -245,8 +264,9 @@ while i < len(seccion_categorias):
 
                 promocion = Promocion()
                 promocion.titulo=nombreComercio+": "+oferta
-                promocion.proveedor=idComercio
+                promocion.proveedor=idEntidad
                 promocion.comercio=idComercio
+                promocion.condiciones = condiciones
                 promocion.url=urlPromocion
                 promocion.tarjetas = tarjetasDisponibles
                 promocion.tope=reintegro

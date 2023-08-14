@@ -21,6 +21,10 @@ from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
 from Tarjeta import Tarjeta
 from Entidad import Entidad
+import utilidades as utilidades
+from utilidades import obtenerCoordenadas
+from Sucursal import Sucursal
+
 
 config.setearEntorno()
 
@@ -62,10 +66,13 @@ while i < cantElementos:
 
     i = len(seccion_categorias)
 
+
+
 #de la lista obtenida muestra link asociado y texto de cada elemento
 for boton in seccion_categorias:
     titulo = boton.find_element(By.XPATH, './/a').get_attribute("title")
     url = boton.find_element(By.XPATH, './/a').get_attribute("href")
+    urlImagen = boton.find_element(By.XPATH, './/img').get_attribute("src")
     print("\n\n\t--- Inicio Comercio "+titulo+" ---")
     print("\t"+titulo)
     print("\tURL Promo: "+url)
@@ -86,6 +93,7 @@ for boton in seccion_categorias:
     comercio = Comercio()
     comercio.nombre=titulo
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
+    comercio.logo=utilidades.imagenABase64(urlImagen)
     idComercio=comercio.guardar()
     
     containersPromos= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//article[contains(@class,"cln-ficha-card --roboto")]')))
@@ -215,8 +223,8 @@ for boton in seccion_categorias:
         promocionesTotales += 1
 
         promocion = Promocion()
-        promocion.titulo = titulo+": "+oferta
-        promocion.comercio=idComercio
+        promocion.titulo = titulo + ": " + oferta
+        promocion.comercio = idComercio
         promocion.proveedor = idEntidad
         promocion.tarjetas = tarjetas
         promocion.url = url
@@ -229,18 +237,22 @@ for boton in seccion_categorias:
 
     # TRAIGO SUCURSALES
     print("\t\t  Sucursales:")
-        
+
     try:
         listaSucursales = containerPromo.find_element(By.XPATH, '//div[contains(@class,"grid-item --col-xs-8 --col-md-12 --col-lg-4 --col-xl-5")]').find_elements(By.XPATH, './/span[contains(@class,"--twoxs")]')
-        for sucursal in listaSucursales:
-            print("\t\t\t  " + sucursal.text) # TRAE MUCHA DATA, DESPUÉS VEMOS COMO LA GUARDAMOS
+        for direccionSucursal in listaSucursales:
+            sucursal = Sucursal()
+            sucursal.direccion = direccionSucursal.text
+            latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
+            sucursal.latitud = str(latitud_resultado)
+            sucursal.longitud = str(longitud_resultado)
+            sucursal.idComercio = idComercio
+            sucursal.guardar()
+            print("\t\t\t  " + direccionSucursal.text) 
 
     except NoSuchElementException:
         listaSucursales = None
         print("\t\t  No cuenta con sucursales")
-
-    #for sucursal in listaSucursales:
-        #print(sucursal.find_element(By.XPATH, './/span[contains(@class,"--twoxs")]').text)
 
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
