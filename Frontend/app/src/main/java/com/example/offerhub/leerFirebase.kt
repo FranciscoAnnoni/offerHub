@@ -20,18 +20,19 @@ import com.google.firebase.database.FirebaseDatabase
 class LecturaBD {
     //val listaProv: MutableList<String> = mutableListOf()
 
-    fun obtenerPromocionesConCategoria(categoria: String, callback: (MutableList<String>) -> Unit) {
+    fun leerBdString(tabla: String,campoFiltro: String,valorFiltro: String,campoRetorno: String,callback: (MutableList<String>) -> Unit){
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com/")
-        val promocionRef = database.getReference("/Promocion")
+        Log.d("prueba",tabla)
+        val promocionRef = database.getReference("/$tabla")
         val lista: MutableList<String> = mutableListOf()
-        promocionRef.orderByChild("categoria").equalTo(categoria).addListenerForSingleValueEvent(object : ValueEventListener {
+        promocionRef.orderByChild("$campoFiltro").equalTo(valorFiltro).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (data in dataSnapshot.children){
-                        val titulo = data.child("titulo").getValue(String::class.java)
-                        Log.d("Promocion", "Titulo: $titulo")
-                        if (titulo != null) {
-                            lista.add(titulo)
+                        val dato = data.child("$campoRetorno").getValue(String::class.java)
+
+                        if (dato != null) {
+                            lista.add(dato)
                         }
                     }
 
@@ -40,37 +41,10 @@ class LecturaBD {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                callback.invoke(lista)
+                Log.d("Error","Error en lectura de bd")
             }
         })
     }
-
-    fun obtenerEntidadesPorNombre(nombre: String, callback: (String) -> Unit) {
-        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val entidadesRef = database.getReference("/Entidad")
-
-        entidadesRef.orderByChild("nombre").equalTo(nombre).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    val entidadSnapshot = dataSnapshot.children.first()
-                    val tipo = entidadSnapshot.child("tipo").getValue(String::class.java)
-                    if (tipo != null) {
-                        callback.invoke(tipo)
-                    } else {
-                        callback.invoke("Vacio")
-                    }
-                } else {
-                    callback.invoke("Vacio")
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                callback.invoke("Vacio")
-            }
-        })
-    }
-
-
 }
 
 
@@ -78,19 +52,11 @@ class LecturaBD {
 //EJEMPLOS LLAMADAS A FUNCIONES
 /*
         var instancia = LecturaBD()
-
-
+        val lista: MutableList<String> = mutableListOf()
         setContentView(R.layout.activity_main)
-
-        val textViewNombre = findViewById<TextView>(R.id.textViewNombre)
-        textViewNombre.text = "Nombre: $nombre"
-        val textViewTipo = findViewById<TextView>(R.id.textViewTipo)
-        instancia.obtenerEntidadesPorNombre(nombre){tipo -> textViewTipo.text = "Tipo: $tipo"}
-
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-
-        instancia.obtenerPromocionesConCategoria("Entretenimiento") { list ->
-            //que hacer con la lista
+        instancia.leerBdString("Promocion","categoria","Gastronomía","titulo"){list -> lista.addAll(list)}
+        for (data in lista){
+        Log.d("Promocion", "titulo: $data")
         }
 
 
