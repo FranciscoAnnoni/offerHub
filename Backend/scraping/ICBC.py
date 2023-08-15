@@ -9,13 +9,16 @@ sys.path.append('../')
 import builder as builder
 sys.path.append('../modelos')
 from Promocion import Promocion
+from Sucursal import Sucursal
 import config as config
 import utilidades as utilidades
 from Comercio import Comercio
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from Tarjeta import Tarjeta
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
+from Entidad import Entidad
 from CategoriaPromocion import CategoriaPromocion
 
 config.setearEntorno()
@@ -33,14 +36,18 @@ print("-----Inicio Scraping (ICBC)-----")
 driver.get('https://www.beneficios.icbc.com.ar/promo')
 #Buscar cuantos elementos tiene la pagina de beneficios
 
-##cantElementos=5
+entidad = Entidad()
+entidad.nombre = "Banco ICBC"
+entidad.tipo = "Bancaria"
+entidad.telefono= "*4652 (HOLA) - Atención de lunes a viernes de 8 a 20 horas."
+idEntidad = entidad.guardar()
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 last_height = driver.execute_script("return document.body.scrollHeight")
-
-while False:##True:
-
+i=0
+while i<2:#False:#True:
    # Scroll down to the bottom.
+   i=i+1
    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
    # Wait to load the page.
@@ -99,6 +106,12 @@ for boton in seccion_categorias:
         descripcion=""
     print("\tDescripcion: "+descripcion)
     segmentos=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_elements(By.XPATH, './/div[contains(@class,"ticket-group-internal")]')
+    condiciones=[]
+    try:
+        exclusivoModo=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, '//div[contains(@class,"exclusivo-modo")]')
+        condiciones=["Exclusivo para pagos con MODO"]
+    except NoSuchElementException:
+        exclusivoModo=False
     tope=boton.find_element(By.XPATH, '//li[contains(@class,"tope")]').get_attribute("innerHTML")
     diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
     actives=driver.execute_script('return Array.from(document.querySelectorAll(".days span")).map(function(e){ return e.classList[0];}).join()').split(",")
@@ -112,14 +125,17 @@ for boton in seccion_categorias:
         i+=1
     print("\tTope: " + tope)
     print("\tTarjetas: ")
+    nombresTarjetas=[]
     tarjetas=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/div[contains(@class,"accept")]').find_elements(By.XPATH, './/span')
     for tarjeta in tarjetas:
         nombreTarjeta=str(tarjeta.get_attribute("class")).replace("visad","Visa Debito").title()
+        nombresTarjetas.append(nombreTarjeta)
         print("\t\t"+nombreTarjeta)
     tyc=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/div[contains(@class,"legal")]').find_element(By.XPATH, './/p').get_attribute("innerHTML")
     print("\tTyC: " + tyc)
     print("\t\tSucursales: ")
     pcias=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_elements(By.XPATH, './/div[contains(@class,"filter-item")]')
+    idsSucursales=[]
     for pcia in pcias:
         nombre=pcia.find_element(By.XPATH, './/h4').text
         print("\t\tProvincia:"+nombre)
@@ -129,14 +145,27 @@ for boton in seccion_categorias:
             direccion=suc.text
             if len(direccion) >0:
                 print("\t\t\tDireccion: "+direccion+" - Localidad: "+nombre)
+                sucursal= Sucursal()
+                sucursal.direccion=direccion
+                sucursal.idComercio=idComercio
+                if nombre.lower() not in direccion.lower() and ("," not in direccion.lower() or "-" not in direccion.lower()):
+                        direccion=direccion+" "+nombre.lower().replace("provincia de ","")
+                sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
+                if sucursal.latitud=="Error de geolocalización":
+                    if nombre.lower() not in direccion.lower():
+                        direccion=direccion+" "+nombre.lower().replace("provincia de ","")
+                        sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
+                idsSucursales.append(sucursal.guardar())
     i=0
     for segmento in segmentos:
         promos=segmento.find_elements(By.XPATH, './/div[contains(@class,"ticket")]')
         for promo in promos:
-            promocion = Promocion()
-
+            
             if 'isClarificacion' not in promo.get_attribute('class').split():
                 if 'div-descuento' not in promo.find_element(By.XPATH, './/div').get_attribute('class').split():
+                    promocion = Promocion()
+                    promocionCondiciones=condiciones
+                    idTarjetas=[]
                     contenido=promo.find_element(By.XPATH, './/div[contains(@class,"content")]')
                     i+=1
                     print("\t\t---Promo "+str(i)+"---")
@@ -147,26 +176,36 @@ for boton in seccion_categorias:
                         nombreSegmento=contenido.find_element(By.XPATH, './/div[contains(@class,"footer")]').text
                         print("\t\tSegmento: "+nombreSegmento)
                     except NoSuchElementException:
-                        nombreSegmento="Todos"
+                        nombreSegmento="Clasico"
                         print("\t\tSegmento: "+nombreSegmento)
+                    for nombreTarjeta in nombresTarjetas:
+                        tarjeta=Tarjeta()
+                        tarjeta.entidad=idEntidad
+                        tarjeta.segmento=nombreSegmento
+                        if "Debito" in nombreTarjeta:
+                            tarjeta.tipoTarjeta="Débito"
+                        else: 
+                            tarjeta.tipoTarjeta="Crédito"
+                        tarjeta.procesadora=nombreTarjeta.replace(" Debito","").replace(" Credito","")
+                        idTarjetas.append(tarjeta.guardar())
                     if 'ticket-payroll' in promo.get_attribute('class').split():
+                        promocionCondiciones.append("SI DEPOSITÁS TU SUELDO EN ICBC")
                         print("\t\tCondicion: SI DEPOSITÁS TU SUELDO EN ICBC")
-            else:
-                clarification=" ".join(promo.get_attribute("innerText").split())
-                if len(clarification) > 0:
-                    descripcion=descripcion+(" | " if len(descripcion) > 0 else "")+clarification
-            promocion.titulo=titulo+": "+tituloPromo
-            promocion.comercio=idComercio
-            promocion.proveedor="ICBC"
-            promocion.url=url
-            promocion.tope=tope
-            promocion.setearFecha("vigenciaDesde",vigencia[0])
-            promocion.setearFecha("vigenciaHasta",vigencia[1])
-            promocion.setearCategoria(categoria)
-            promocion.dias=dias
-            promocion.tyc=tyc
-            promocion.descripcion=descripcion
-            promocion.guardar()
+                    promocion.titulo=titulo+": "+tituloPromo
+                    promocion.comercio=idComercio
+                    promocion.condiciones=promocionCondiciones
+                    promocion.proveedor=idEntidad
+                    promocion.tarjetas=idTarjetas
+                    promocion.url=url
+                    promocion.tope=tope
+                    promocion.setearFecha("vigenciaDesde",vigencia[0])
+                    promocion.setearFecha("vigenciaHasta",vigencia[1])
+                    promocion.setearCategoria(categoria)
+                    promocion.dias=dias
+                    promocion.sucursales=idsSucursales
+                    promocion.tyc=tyc
+                    promocion.descripcion=descripcion
+                    promocion.guardar()
     driver.execute_script('return document.querySelector(".btn-close").click()')
     time.sleep(1)
     
