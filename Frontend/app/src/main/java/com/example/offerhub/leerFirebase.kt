@@ -17,12 +17,21 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 
+class Entidad{
+    // Propiedades (atributos) de la clase
+    var nombre: String?
+    var tipo: String?
+
+    // Constructor primario
+    constructor(nombre: String?, tipo: String?) {
+        this.nombre = nombre
+        this.tipo = tipo
+    }
+}
 class LecturaBD {
-    //val listaProv: MutableList<String> = mutableListOf()
 
     fun leerBdString(tabla: String,campoFiltro: String,valorFiltro: String,campoRetorno: String,callback: (MutableList<String>) -> Unit){
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com/")
-        Log.d("prueba",tabla)
         val promocionRef = database.getReference("/$tabla")
         val lista: MutableList<String> = mutableListOf()
         promocionRef.orderByChild("$campoFiltro").equalTo(valorFiltro).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -45,12 +54,45 @@ class LecturaBD {
             }
         })
     }
+
+    fun <T> leerBdClase(tabla: String,campoFiltro: String,valorFiltro: String,callback: (MutableList<T>) -> Unit){
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com/")
+        Log.d("prueba",tabla)
+        val promocionRef = database.getReference("/$tabla")
+
+        val lista: MutableList<T> = mutableListOf()
+        promocionRef.orderByChild("$campoFiltro").equalTo(valorFiltro).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                        for (data in dataSnapshot.children){
+                            when (tabla) {
+                                "Entidad" ->{
+                                    val instancia = Entidad(data.child("nombre").getValue(String::class.java),  data.child("tipo").getValue(String::class.java))
+                                    lista.add(instancia as T)
+                                }
+                               // "tablaB" -> ClaseB("NombreB", "TipoB")
+                                else -> throw IllegalArgumentException("Tabla desconocida")
+                            }
+                           // val instancia = Entidad(nombre, tipo)
+
+                        }
+                    }
+
+                callback.invoke(lista)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d("Error","Error en lectura de bd")
+            }
+        })
+    }
 }
 
 
 
 //EJEMPLOS LLAMADAS A FUNCIONES
 /*
+LeerBdString:
         var instancia = LecturaBD()
         val lista: MutableList<String> = mutableListOf()
         setContentView(R.layout.activity_main)
@@ -59,5 +101,18 @@ class LecturaBD {
         Log.d("Promocion", "titulo: $data")
         }
 
+
+leerBdClase()
+        var instancia = LecturaBD()
+
+        setContentView(R.layout.activity_main)
+        instancia.leerBdClase<Entidad>("Entidad","tipo","Bancaria"){list ->
+            for (item in list) {
+                when (item) {
+                    is Entidad -> println("Instancia de Entidad: ${item.nombre}")
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
 
  */
