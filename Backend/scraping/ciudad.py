@@ -23,7 +23,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 
 
-#config.setearEntorno()
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -45,7 +45,7 @@ print("-----Inicio Scraping (Banco Ciudad)-----")
 entidad = Entidad()
 entidad.nombre = "Banco Ciudad"
 entidad.tipo = "Bancaria"
-#idEntidad = entidad.guardar()
+idEntidad = entidad.guardar()
 
 
 #Buscar las categorías que haya
@@ -166,31 +166,31 @@ for categoria in categorias:
             distribuidora = tarjetaRequerida.get_attribute("alt")
 
             tarjeta = Tarjeta()
-            #tarjeta.entidad = idEntidad
+            tarjeta.entidad = idEntidad
             tarjeta.segmento = "No posee"
             tarjeta.tipoTarjeta = "Crédito"
 
             if distribuidora == "VISA":
                     print("\t\t Tarjeta Banco Ciudad Visa")
                     tarjeta.procesadora = "Visa"
-                    #tarjetas.append(tarjeta.guardar())
+                    tarjetas.append(tarjeta.guardar())
             elif distribuidora == "MASTERCARD":
                     print("\t\t Tarjeta Banco Ciudad Mastercard")
                     tarjeta.procesadora = "Mastercard"
-                    #tarjetas.append(tarjeta.guardar())
+                    tarjetas.append(tarjeta.guardar())
             elif distribuidora == "CABAL":
                     print("\t\t Tarjeta Banco Ciudad Cabal")
                     tarjeta.procesadora = "Cabal"
-                    #tarjetas.append(tarjeta.guardar())
+                    tarjetas.append(tarjeta.guardar())
             elif distribuidora == "VISA DEBITO":
                     print("\t\t Tarjeta Banco Ciudad Visa Débito")
                     tarjeta.tipoTarjeta = "Débito"
                     tarjeta.procesadora = "Visa"
-                    #tarjetas.append(tarjeta.guardar())
+                    tarjetas.append(tarjeta.guardar())
             elif distribuidora == "MAESTRO":
                     print("\t\t Tarjeta Banco Ciudad Maestro")
                     tarjeta.procesadora = "Maestro"
-                    #tarjetas.append(tarjeta.guardar())
+                    tarjetas.append(tarjeta.guardar())
             elif distribuidora == "MODO":
                     condiciones.append("Pagando a través de MODO")
                     if len(tarjetasRequeridas) == 1:
@@ -203,7 +203,7 @@ for categoria in categorias:
             comercio.nombre=nombreComercio
             comercio.categoria=CategoriaPromocion.obtenerCategoria(nombreCategoria)
             comercio.logo=utilidades.imagenABase64(urlImagen)
-            #idComercio=comercio.guardar()
+            idComercio=comercio.guardar()
 
             # TRAIGO SUCURSALES
             print("\tSucursales disponibles: ")
@@ -219,8 +219,8 @@ for categoria in categorias:
                 latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
                 sucursal.latitud = str(latitud_resultado)
                 sucursal.longitud = str(longitud_resultado)
-                #sucursal.idComercio = idComercio
-                #sucursal.guardar()
+                sucursal.idComercio = idComercio
+                sucursal.guardar()
                 print("\t\t"+sucursal.direccion)
 
             #TRAIGO TYC
@@ -234,10 +234,10 @@ for categoria in categorias:
             if len(tyc) == 0: sleep(80000)
         
             promocion = Promocion()
-            #promocion.proveedor=idEntidad
+            promocion.proveedor=idEntidad
             promocion.titulo = nombreComercio+": "+oferta
             promocion.proveedor = "Banco Ciudad"
-            #promocion.comercio=idComercio
+            promocion.comercio=idComercio
             promocion.url = urlPromocion
             promocion.tarjetas = tarjetas
             promocion.setearFecha("vigenciaDesde",vigenciaTexto[4])
@@ -246,7 +246,7 @@ for categoria in categorias:
             promocion.tyc = tyc
             promocion.setearCategoria(nombreCategoria)
             promocion.condiciones = condiciones
-            #promocion.guardar()
+            promocion.guardar()
             promocionesTotales += 1
 
         #Con esto se vuelve a las promociones
