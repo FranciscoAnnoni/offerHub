@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Color Definitions -->
+    <color name="voletaNegro">#1F1B33</color>
+    <color name="violeta">#4B2A7F</color>
+    <color name="violetaClaro">#7D3DD0</color>
+    <color name="violetaMasClaro">#9747FF</color>
+    <color name="fondo">#FAF4EA</color>
+
+
+    <style name="SplashTheme" parent="android:Theme.Material.Light">
+        <item name="android:background">@drawable/spash_screen</item>
+    </style>
+
+    <style name="violetbutton">
+        <item name="android:background">@color/violetaClaro</item>
+        <item name="android:textColor">@color/fondo</item>
+    </style>
+
+</resources>
