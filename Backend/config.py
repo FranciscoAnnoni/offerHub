@@ -7,8 +7,7 @@ CERT_PATH="../certificados/oh-backend-848a1-firebase-adminsdk-20hoh-1c1b598f66.j
 DB_URL='https://oh-backend-848a1-default-rtdb.firebaseio.com/'
 
 def setearEntorno():
-    return
-    #eliminarDatosPrevios()
+    eliminarDatosPrevios()
     # Aca se agregarian todas las funciones que queramos correr para setear el entorno antes de correr cada scraping
 
 def eliminarDatosPrevios():
