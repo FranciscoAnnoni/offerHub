@@ -6,7 +6,7 @@
     <color name="violeta">#4B2A7F</color>
     <color name="violetaClaro">#7D3DD0</color>
     <color name="violetaMasClaro">#9747FF</color>
-    <color name="fondo">#FAF4EA</color>
+    <color name="fondo">#F2F0F3</color>
 
 
     <style name="SplashTheme" parent="android:Theme.Material.Light">
@@ -17,5 +17,16 @@
         <item name="android:background">@color/violetaClaro</item>
         <item name="android:textColor">@color/fondo</item>
     </style>
+
+    <style name="EditTextRounded">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:elevation">3dp</item> <!-- Agrega elevación para la sombra -->
+        <item name="android:translationZ">1.5dp</item> <!-- Cambia la elevación para la sombra -->
+    </style>
+
 
 </resources>
