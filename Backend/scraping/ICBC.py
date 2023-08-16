@@ -199,6 +199,9 @@ for boton in seccion_categorias:
                     else:
                         promocion.tope=""
                     promocion.setearTipoPromocion(tituloPromo,promocion.tope)
+                    numeros=promocion.obtenerPorcentajeYCantCuotas(tituloPromo)
+                    promocion.porcentaje=numeros["porcentaje"]
+                    promocion.cuotas=numeros["cuotas"]
                     promocion.comercio=idComercio
                     promocion.condiciones=promocionCondiciones
                     promocion.proveedor=idEntidad
