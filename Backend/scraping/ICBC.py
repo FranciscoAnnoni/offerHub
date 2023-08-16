@@ -11,6 +11,7 @@ sys.path.append('../modelos')
 from Promocion import Promocion
 from Sucursal import Sucursal
 import config as config
+import re
 import utilidades as utilidades
 from Comercio import Comercio
 from selenium.webdriver.support.ui import WebDriverWait
@@ -45,7 +46,7 @@ idEntidad = entidad.guardar()
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 last_height = driver.execute_script("return document.body.scrollHeight")
 i=0
-while i<2:#False:#True:
+while i<2:#False:
    # Scroll down to the bottom.
    i=i+1
    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -192,12 +193,17 @@ for boton in seccion_categorias:
                         promocionCondiciones.append("SI DEPOSITÁS TU SUELDO EN ICBC")
                         print("\t\tCondicion: SI DEPOSITÁS TU SUELDO EN ICBC")
                     promocion.titulo=titulo+": "+tituloPromo
+                    if "%" in tituloPromo or "descuento" in tituloPromo:
+                        promocion.tope=re.sub(r'<[^>]+>', '', tope)
+
+                    else:
+                        promocion.tope=""
+                    promocion.setearTipoPromocion(tituloPromo,promocion.tope)
                     promocion.comercio=idComercio
                     promocion.condiciones=promocionCondiciones
                     promocion.proveedor=idEntidad
                     promocion.tarjetas=idTarjetas
                     promocion.url=url
-                    promocion.tope=tope
                     promocion.setearFecha("vigenciaDesde",vigencia[0])
                     promocion.setearFecha("vigenciaHasta",vigencia[1])
                     promocion.setearCategoria(categoria)
