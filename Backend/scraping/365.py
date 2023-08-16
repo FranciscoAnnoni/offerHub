@@ -13,8 +13,11 @@ sys.path.append('../')
 import builder as builder
 sys.path.append('../modelos')
 import config as config
+import utilidades as utilidades
+from Tarjeta import Tarjeta
 from Comercio import Comercio
 from Entidad import Entidad
+from Sucursal import Sucursal
 from CategoriaPromocion import CategoriaPromocion
 from Promocion import Promocion
 
@@ -40,11 +43,10 @@ driver.get('https://365.clarin.com/buscar')
 #Buscar cuantos elementos tiene la pagina de beneficios
 cantElementos = int(driver.find_element(By.XPATH, '//div[contains(@id,"clarin365mostrando")]').find_element(By.XPATH, '//strong').text)
 print("Cantidad de Promociones: "+str(cantElementos))
-##cantElementos=5
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 i = 0
-while False:#i < cantElementos:
+while i < cantElementos:
 
     #obtiene todos los elementos con la clase pedida
     seccion_categorias = driver.find_elements(By.XPATH, '//a[contains(@class,"clarin-365-card")]')
@@ -89,22 +91,30 @@ for boton in seccion_categorias:
         print("\t\tPorcentaje: "+porcentaje)
         descripcion=containerPromo.find_element(By.XPATH, './/div[contains(@class,"description")]').get_attribute("textContent")
         print("\t\tDescripcion: "+descripcion)
-        diasSemana = {"LU", "MA", "MI", "JU", "VI", "SA", "DO"}
+        diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
         dias=[]
         i=0
         print("\tDias: ")
         diasContainer=containerPromo.find_element(By.XPATH, './/div[contains(@class,"apply-days-wrapper")]')
         dias=diasContainer.find_elements(By.XPATH, './/li[contains(@class,"active")]')
         if len(dias)>0:
-            dias=list(map(lambda el:el.text,dias))
+            dias=list(sorted(map(lambda el:el.text,dias),key=diasSemana.index()))
         else:
             dias=list(diasSemana)
         for dia in dias:
             print("\t\t"+dia)
         tarjetas=containerPromo.find_elements(By.XPATH, './/div[contains(@class,"card-365")]')
+        idTarjetas=[]
         print("\t\tTarjetas: ")
         for tarjeta in tarjetas:
-            print("\t\t\t"+tarjeta.find_element(By.XPATH, './/p').get_attribute("innerHTML")) 
+            nombreTajeta=tarjeta.find_element(By.XPATH, './/p').get_attribute("innerHTML")
+            print("\t\t\t"+nombreTajeta) 
+            tarjetaNueva = Tarjeta()
+            tarjetaNueva.entidad = idEntidad
+            tarjetaNueva.procesadora = "No posee"
+            tarjetaNueva.segmento = nombreTajeta
+            tarjetaNueva.tipoTarjeta = "Fidelidad"
+            idTarjetas.append(tarjetaNueva.guardar())
         tycContainer=containerPromo.find_element(By.XPATH, './/div[contains(@class,"terms-and-conditions-wrapper")]')  
         vigencia=tycContainer.find_element(By.XPATH, './/p').text.replace("Válido hasta el ","")
         print("\t\tVigencia: "+vigencia)
@@ -115,6 +125,7 @@ for boton in seccion_categorias:
         tyc=driver.find_element(By.XPATH, '//div[contains(@class,"terminos-modal")]').find_element(By.XPATH, './/p').text
         print("\t\tT y C: "+tyc)
         driver.execute_script('document.querySelector(".scrollable").remove()')
+        idSucursales=[]
         try:
             print("\t\tSucursales: ")
             sucBtn=tycContainer.find_element(By.XPATH, './/button[contains(@class,"sucursales-adheridas")]')
@@ -132,17 +143,35 @@ for boton in seccion_categorias:
                 for suc in sucs:
                     direccion=suc.find_element(By.XPATH, './/h2').text
                     localidad=suc.find_element(By.XPATH, './/h3').text
+                    sucursal = Sucursal()
+                    sucursal.direccion = direccion+" "+localidad
+                    sucursal.latitud, sucursal.longitud = utilidades.obtenerCoordenadas(sucursal.direccion)
+                    if sucursal.latitud=="Error de geolocalización":
+                        if nombrePcia.lower() not in direccion.lower():
+                            direccion=sucursal.direccion+" "+nombrePcia.lower().replace("provincia de ","")
+                            sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
+                    sucursal.idComercio = idComercio
+                    idSucursales.append(sucursal.guardar())
                     print("\t\t\tDireccion: "+direccion+" - Localidad: "+localidad)
             driver.execute_script('document.querySelector(".scrollable").remove()')
         except NoSuchElementException:
-            sucursales=None
-         
+            sucursales=None 
         promocion.titulo=titulo+": "+porcentaje
-        promocion.proveedor="Clarin 365"
+        if len(idSucursales) > 0:
+            promocion.sucursales=idSucursales
+        promocion.setearTipoPromocion(porcentaje)
+        numeros=promocion.obtenerPorcentajeYCantCuotas(porcentaje)
+        promocion.porcentaje=numeros["porcentaje"]
+        promocion.tarjetas=idTarjetas
+        promocion.proveedor=idEntidad
         promocion.comercio=idComercio
         promocion.url=url
         if vigencia:
+            promocion.vigenciaDesde=" - "
             promocion.setearFecha("vigenciaHasta",vigencia)
+        else:
+            promocion.vigenciaDesde=" - "
+            promocion.vigenciaHasta=" - "
         promocion.setearCategoria(categoria)
         promocion.dias=dias
         promocion.tyc=tyc
