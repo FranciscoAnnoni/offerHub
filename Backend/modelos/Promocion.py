@@ -16,6 +16,8 @@ class Promocion:
     # dias
     # tyc
     # descripcion
+    # tipoPromocion
+    
     def setearFecha(self,atributo,valor):
         fecha_objeto = parse(valor)
         setattr(self, atributo,fecha_objeto.strftime("%Y-%m-%d"))

@@ -26,7 +26,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -44,7 +44,7 @@ print("-----Inicio Scraping (Club La Nación)-----")
 entidad = Entidad()
 entidad.nombre = "Club La Nación"
 entidad.tipo = "Fidelidad"
-idEntidad = entidad.guardar()
+#idEntidad = entidad.guardar()
 
 #Buscar cuantos elementos tiene la pagina de beneficios
 cantElementos = int(driver.find_element(By.XPATH, '//strong').get_attribute("innerHTML"))
@@ -94,7 +94,7 @@ for boton in seccion_categorias:
     comercio.nombre=titulo
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
     comercio.logo=utilidades.imagenABase64(urlImagen)
-    idComercio=comercio.guardar()
+    #idComercio=comercio.guardar()
     
     containersPromos= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//article[contains(@class,"cln-ficha-card --roboto")]')))
     
@@ -127,12 +127,12 @@ for boton in seccion_categorias:
               
             if len(black) > 0:
                 tarjetaBlack = Tarjeta()
-                tarjetaBlack.entidad = idEntidad
+                #tarjetaBlack.entidad = idEntidad
                 tarjetaBlack.procesadora = "No posee"
                 tarjetaBlack.segmento = "Black"
                 tarjetaBlack.tipoTarjeta = "Fidelidad"
                 
-                tarjetas.append(tarjetaBlack.guardar())
+                #tarjetas.append(tarjetaBlack.guardar())
 
                 tarjetasTexto.append("Black")
 
@@ -144,12 +144,12 @@ for boton in seccion_categorias:
             tarjetasTexto.append(premium)
 
             tarjetaPremium = Tarjeta()
-            tarjetaPremium.entidad = idEntidad
+            #tarjetaPremium.entidad = idEntidad
             tarjetaPremium.procesadora = "No posee"
             tarjetaPremium.segmento = "Premium"
             tarjetaPremium.tipoTarjeta = "Fidelidad"
 
-            tarjetas.append(tarjetaPremium.guardar())
+            #tarjetas.append(tarjetaPremium.guardar())
             
         except NoSuchElementException:
             premium = None
@@ -159,12 +159,12 @@ for boton in seccion_categorias:
             tarjetasTexto.append(classic)
 
             tarjetaClassic = Tarjeta()
-            tarjetaClassic.entidad = idEntidad
+            #tarjetaClassic.entidad = idEntidad
             tarjetaClassic.procesadora = "No posee"
             tarjetaClassic.segmento = "Classic"
             tarjetaClassic.tipoTarjeta = "Fidelidad"
 
-            tarjetas.append(tarjetaClassic.guardar())
+            #tarjetas.append(tarjetaClassic.guardar())
         except NoSuchElementException:
             classic = None
 
@@ -224,8 +224,8 @@ for boton in seccion_categorias:
 
         promocion = Promocion()
         promocion.titulo = titulo + ": " + oferta
-        promocion.comercio = idComercio
-        promocion.proveedor = idEntidad
+        #promocion.comercio = idComercio
+        #promocion.proveedor = idEntidad
         promocion.tarjetas = tarjetas
         promocion.url = url
         promocion.setearFecha("vigenciaDesde",vigenciaTexto[3])
@@ -233,7 +233,7 @@ for boton in seccion_categorias:
         promocion.dias = diasDisponibles
         promocion.tyc = tyc
         promocion.setearCategoria(categoria)
-        promocion.guardar()
+        #promocion.guardar()
 
     # TRAIGO SUCURSALES
     print("\t\t  Sucursales:")
@@ -246,8 +246,8 @@ for boton in seccion_categorias:
             latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
             sucursal.latitud = str(latitud_resultado)
             sucursal.longitud = str(longitud_resultado)
-            sucursal.idComercio = idComercio
-            sucursal.guardar()
+            #sucursal.idComercio = idComercio
+            #sucursal.guardar()
             print("\t\t\t  " + direccionSucursal.text) 
 
     except NoSuchElementException:
