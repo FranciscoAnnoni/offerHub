@@ -46,7 +46,7 @@ idEntidad = entidad.guardar()
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 last_height = driver.execute_script("return document.body.scrollHeight")
 i=0
-while i<2:#False:
+while True:#i<2:#False:
    # Scroll down to the bottom.
    i=i+1
    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
