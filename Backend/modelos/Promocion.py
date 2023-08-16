@@ -1,5 +1,6 @@
 import builder as builder
 from CategoriaPromocion import CategoriaPromocion
+from TipoPromocion import TipoPromocion
 from dateutil.parser import parse
 
 class Promocion:
@@ -21,14 +22,13 @@ class Promocion:
     def setearCategoria(self, nombreCategoria):
         self.categoria=CategoriaPromocion.obtenerCategoria(nombreCategoria)
 
-    def guardar(self):
-        builder.escribirDB("Promocion",[vars(self)])
+    def setearTipoPromocion(self,tituloPromo,tope):
+        self.tipoPromocion=TipoPromocion.obtenerTipoPromocion(tituloPromo,tope)
 
-    
-    """def guardar(self):
-        idPromocion=builder.obtenerIdPorContenido("Tarjeta",{"titulo":self.titulo,"vigenciaDesde":self.vigenciaDesde, "vigenciaHasta":self.vigenciaHasta})
-        if idPromocion==None:
-            return builder.escribirDB("Promocion",[vars(self)])[0]
-        else:
-            return idPromocion"""
+    def guardar(self):
+            idPromocion=builder.obtenerIdPorContenido("Promocion",{"titulo":self.titulo,"url":self.url,"vigenciaDesde":self.vigenciaDesde,"vigenciaHasta":self.vigenciaHasta})
+            if idPromocion==None:
+                return builder.escribirDB("Promocion",[vars(self)])[0]
+            else:
+                return idPromocion
     
