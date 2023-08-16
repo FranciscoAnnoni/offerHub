@@ -14,6 +14,7 @@ import builder as builder
 sys.path.append('../modelos')
 import config as config
 from Comercio import Comercio
+from Entidad import Entidad
 from CategoriaPromocion import CategoriaPromocion
 from Promocion import Promocion
 
@@ -29,12 +30,12 @@ driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
 
 
 print("-----Inicio Scraping (Clarin 365)-----")
-driver.get('https://365.clarin.com/centro-atencion')
-time.sleep(2)
-telefono=driver.find_element(By.XPATH, '//a[contains(@class,"phone")]').get_attribute("innerHTML")
-horarioDeAtencion=driver.find_element(By.XPATH, '//div[contains(@class,"business-hours-wrapper")]').find_element(By.XPATH, './/div[contains(@class,"business-hours")]').get_attribute("innerHTML").replace("<br>"," - ")
-print("Telefono: "+telefono)
-print("Horario de Atencion: "+horarioDeAtencion)
+entidad = Entidad()
+entidad.nombre = "Clarin 365"
+entidad.tipo = "Fidelidad"
+entidad.telefono= "0810-333-0365 - Lunes a Viernes - 8 a 20hs"
+idEntidad = entidad.guardar()
+
 driver.get('https://365.clarin.com/buscar')
 #Buscar cuantos elementos tiene la pagina de beneficios
 cantElementos = int(driver.find_element(By.XPATH, '//div[contains(@id,"clarin365mostrando")]').find_element(By.XPATH, '//strong').text)

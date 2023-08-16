@@ -40,7 +40,7 @@ driver.get('https://www.beneficios.icbc.com.ar/promo')
 entidad = Entidad()
 entidad.nombre = "Banco ICBC"
 entidad.tipo = "Bancaria"
-entidad.telefono= "*4652 (HOLA) - Atención de lunes a viernes de 8 a 20 horas."
+entidad.telefono= "0810-444-4652 - Atención de lunes a viernes de 8 a 20 horas."
 idEntidad = entidad.guardar()
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
