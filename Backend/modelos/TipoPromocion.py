@@ -2,6 +2,7 @@ class TipoPromocion:
     REINTEGRO = "Reintegro"
     DESCUENTO = "Descuento"
     CUOTAS = "Cuotas"
+    DOS_X_UNO = "2x1"
     OTRO = "Otro"
 
     @staticmethod
@@ -14,6 +15,8 @@ class TipoPromocion:
             tipo_promocion = TipoPromocion.DESCUENTO
         elif "cuota" in tituloPromo:
             tipo_promocion = TipoPromocion.CUOTAS
+        elif "2x1" in tituloPromo.replace(" ","") or "2X1" in tituloPromo.replace(" ",""):
+            tipo_promocion = TipoPromocion.DOS_X_UNO
         else:
             tipo_promocion = TipoPromocion.OTRO
 
