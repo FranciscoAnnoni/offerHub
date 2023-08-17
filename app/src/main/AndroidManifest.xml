@@ -20,6 +20,11 @@
             android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:exported="false" />
         <activity
+            android:name=".LoginEmpresa"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
+            android:exported="false" />
+
+        <activity
             android:name=".Login"
             android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:exported="true">
@@ -30,12 +35,14 @@
             </intent-filter>
         </activity>
 
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
 
         </activity> <!-- SUPONGO YO QUE IRAN OTRAS ACTIVIDADES PERO NO SE -->
+
 
     </application>
 

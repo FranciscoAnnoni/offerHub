@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/fondo"
-    tools:context=".Login">
+    tools:context=".Register">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,33 +25,66 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textInicioSesion"
+            android:id="@+id/textRegistrarSesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Inicio de Sesion"
+            android:text="Registrar nueva cuenta"
             android:textColor="@color/violeta"
             android:textSize="42sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo"
             tools:ignore="MissingConstraints" />
 
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/nombre_y_apellido"
+            android:textColor="@color/violetaMasClaro"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.149"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
+            tools:ignore="MissingConstraints" />
+
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password"
+            android:id="@+id/nombre"
             style="@style/EditTextRounded"
             android:layout_width="330dp"
             android:layout_height="54dp"
-            android:layout_marginTop="44dp"
-            android:hint="@string/password"
-            android:inputType="textPassword"
+            android:layout_marginTop="48dp"
+            android:hint="@string/nombre_y_apellido"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.484"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email"
+            app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
+            tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            android:layout_width="59dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/email"
+            android:textColor="@color/violetaMasClaro"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.105"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nombre"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
@@ -64,7 +97,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.484"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInicioSesion"
+            app:layout_constraintTop_toBottomOf="@id/nombre"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -83,31 +116,29 @@
             app:layout_constraintTop_toBottomOf="@id/email"
             tools:ignore="MissingConstraints" />
 
-        <TextView
-            android:layout_width="59dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/email"
-            android:textColor="@color/violetaMasClaro"
-            android:textSize="17sp"
-            android:textStyle="bold"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            style="@style/EditTextRounded"
+            android:layout_width="330dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="44dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.105"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInicioSesion"
+            app:layout_constraintTop_toBottomOf="@id/email"
             tools:ignore="MissingConstraints" />
 
+
         <Button
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_register"
+            android:text="@string/registrar"
             style="@style/Widget.Material3.Button"
             android:layout_width="152dp"
             android:layout_height="53dp"
             android:layout_marginTop="20dp"
             android:backgroundTint="@color/violetaMasClaro"
             android:fontFamily="sans-serif"
-            android:text="@string/continuar"
             android:textColor="@color/white"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -121,12 +152,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="o inicie sesion con"
+            android:text="o Registrarse con"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            app:layout_constraintTop_toBottomOf="@id/btn_register"
             tools:ignore="MissingConstraints" />
 
         <ProgressBar
@@ -136,92 +167,25 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            app:layout_constraintTop_toBottomOf="@id/btn_register"
             tools:ignore="MissingConstraints" />
 
+        <!-- Progress bar -->
 
         <TextView
-            android:id="@+id/loginEmpresa"
-            android:layout_width="308dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="92dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="Registrar o Ingresar como Empresa"
-            android:textColor="@color/violetaMasClaro"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.524"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
+            android:id="@+id/loginNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Sos una Empresa?"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.508"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linea1"
-            tools:ignore="MissingConstraints" />
-
-        <View
-            android:id="@+id/linea1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="80dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
-            tools:ignore="MissingConstraints" />
-
-        <View
-            android:id="@+id/linea2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginEmpresa"
-            tools:ignore="MissingConstraints" />
-
-
-        <Button
-            android:id="@+id/registerNow"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="375dp"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/violetaMasClaro"
-            android:text="Registrar nuevo Usuario"
-            android:textColor="@android:color/white"
+            android:rotationX="-4"
+            android:text="volver"
+            android:textColor="@color/violeta"
             android:textSize="20sp"
-            android:translationY="60dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linea2"
-            tools:ignore="MissingConstraints" />
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.10" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.90" />
-
+        <!--   Acaaaa loco  -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

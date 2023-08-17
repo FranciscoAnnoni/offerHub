@@ -22,8 +22,8 @@ class Login : AppCompatActivity() {
     private lateinit var buttonLogin: Button
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var textView: TextView
-
+    private lateinit var registerView: TextView
+    private lateinit var loginEmpresaView: TextView
 
 
 
@@ -52,14 +52,23 @@ class Login : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         progressBar = findViewById(R.id.progressBar)
 
-        textView = findViewById(R.id.registerNow)
+        registerView = findViewById(R.id.registerNow)
 
-
-        textView.setOnClickListener {
+        registerView.setOnClickListener {
             intent = Intent(this@Login, Register::class.java)
             startActivity(intent)
             finish()
         }
+
+        loginEmpresaView = findViewById(R.id.loginEmpresa)
+
+        loginEmpresaView.setOnClickListener {
+            intent = Intent(this@Login, LoginEmpresa::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
 
         buttonLogin.setOnClickListener{
             progressBar.visibility = View.VISIBLE

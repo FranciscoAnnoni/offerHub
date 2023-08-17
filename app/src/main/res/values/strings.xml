@@ -5,4 +5,5 @@
     <string name="password">Contraseña</string>
     <string name="registrar">Registar</string>
     <string name="continuar">Continuar</string>
+    <string name="nombre_y_apellido">Nombre y Apellido</string>
 </resources>
