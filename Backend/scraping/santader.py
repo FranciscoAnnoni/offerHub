@@ -16,11 +16,15 @@ from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
 from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
+from TarjetasSantander import creadorDeTarjetas
+from TarjetasSantander import setearTarjeta
 from Tarjeta import Tarjeta
 from Entidad import Entidad
 import utilidades as utilidades
 from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
+
+
 
 #config.setearEntorno()
 
@@ -32,14 +36,12 @@ options.add_argument("--window-size=1920,1200")
 driver = webdriver.Chrome()
 
 wait = WebDriverWait(driver, 900000)
-wait2 = WebDriverWait(driver, 5)
-
 #<a beneficioItem
 
 # Navegar hasta la página de beneficios 
 driver.get('https://www.santander.com.ar/banco/online/personas/beneficios/compras')
 
-sleep(1)
+sleep(3)
 
 navegador = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"pager")]'))).find_element(By.XPATH, './/a[contains(@data-nav,"next")]')
 
@@ -47,6 +49,8 @@ entidad = Entidad()
 entidad.nombre = "Banco Santander"
 entidad.tipo = "Bancaria"
 #idEntidad = entidad.guardar()
+
+creadorDeTarjetas("cucumelo") # poner idEntidad
 
 todasTarjetas = []
 promocionesTotales = 0
@@ -176,27 +180,42 @@ while True:
                             print("\t\t  Tarjeta requerida: ")
 
                             for tarjetaTexto in tarjetasTexto:
-                                #tarjeta = Tarjeta()
-                                #tarjeta.entidad = idEntidad
-                                print("\t\t\t"+tarjetaTexto.text)
+                                
+                                tarjetas = []
+                                
+                                tarjetas = setearTarjeta(tarjetaTexto)
+
+                                for tarjeta in tarjetas:
+                                    print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
                                 if tarjetaTexto.text not in todasTarjetas: todasTarjetas.append(tarjetaTexto.text)
                             
                             #MUESTRO TYC
-                            print("\t\t  TyC: " + tyc)
-
-                            try:
-                                boton = driver.find_element(By.XPATH, './/a[contains(@data-comp,"showLocalesAdheridos")]')
-                                if boton: print("lolool"+boton.text)
-                                boton.click()
-                                sleep(5000)
-                            except NoSuchElementException:
-                                boton = None
+                            print("\t\t  TyC: " + tyc)                       
                             
-
                             p+=1
                             promocionesTotales += 1
 
+                #TRAIGO SUCURSALES
+                try:
+                    driver.execute_script("arguments[0].click();", driver.find_element(By.XPATH, './/a[contains(@data-comp,"showLocalesAdheridos")]'))
+                    sleep(0.5)
+                    driver.execute_script("arguments[0].click();", driver.find_elements(By.XPATH, './/a[contains(@class,"bttn border")]')[1])
 
+                    try:
+                        sleep(0.5)
+                        direcciones = driver.find_element(By.XPATH, './/div[contains(@class,"infoList")]').find_element(By.XPATH, './/ul').find_elements(By.XPATH, './/div[contains(@class,"info")]')
+
+                    except NoSuchElementException:
+                        direcciones = []
+
+                except NoSuchElementException:
+                        direcciones = []
+
+                print("\t\t  Sucursales:")
+
+                for direccion in direcciones:
+                    direccionCompleta = direccion.find_element(By.XPATH, './/strong').text + ", " + direccion.find_element(By.XPATH, './/p').text
+                    print("\t\t\t  " + direccionCompleta) 
 
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
@@ -216,4 +235,6 @@ print(todasTarjetas)
 # Cerrar el navegador
 driver.quit()
 print(str(promocionesTotales) + " promociones cargadas correctamente.")
-    
+
+
+
