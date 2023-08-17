@@ -1,27 +1,18 @@
 package com.example.offerhub
-
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import com.google.firebase.database.ValueEventListener
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import android.os.Bundle
+import org.threeten.bp.format.DateTimeFormatter
 import android.util.Base64
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import com.example.offerhub.ui.theme.OfferHubTheme
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
+import org.threeten.bp.LocalDate
 
 class Entidad{
     // Propiedades (atributos) de la clase
@@ -63,9 +54,6 @@ class Comercio{
     //if (bitmap != null) {
     //    imageView.setImageBitmap(bitmap)
     //}
-
-
-
 }
 
 class Tarjeta{
@@ -108,8 +96,8 @@ class Promocion{
     // Propiedades (atributos) de la clase
     var categoria: String?
     var comercio: String?
-    val dias: List<String?>
-    val tarjetas: List<String?>
+    val dias: List<String?>?
+    val tarjetas: List<String?>?
     val proveedor: String?
     val titulo: String?
     val tope: String?
@@ -122,9 +110,9 @@ class Promocion{
 
     // Constructor primario
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(categoria: String?, comercio: String?, dias: List<String?>, tarjetas: List<String?>,
-                proveedor: String?, titulo: String?, tope: String?, tyc: String?, url: String?, vigenciaDesde: String?,
-                vigenciaHasta: String?) {
+    constructor(categoria: String?, comercio: String?, dias: List<String?>?, tarjetas: List<String?>?,
+                proveedor: String?, titulo: String?, tope: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
+                vigenciaHasta: LocalDate?) {
         this.categoria = categoria
         this.comercio = comercio
         this.dias = dias
@@ -134,13 +122,8 @@ class Promocion{
         this.tope=tope
         this.tyc =tyc
         this.url=url
-        val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        this.vigenciaDesde = vigenciaDesde?.let {
-            LocalDate.parse(it, formato)
-        }
-        this.vigenciaHasta = vigenciaHasta?.let {
-            LocalDate.parse(it, formato)
-        }
+        this.vigenciaDesde = vigenciaDesde
+        this.vigenciaHasta = vigenciaHasta
     }
 }
 
@@ -178,6 +161,7 @@ class LecturaBD {
 
         val lista: MutableList<T> = mutableListOf()
         promocionRef.orderByChild("$campoFiltro").equalTo(valorFiltro).addListenerForSingleValueEvent(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                         for (data in dataSnapshot.children){
@@ -186,7 +170,37 @@ class LecturaBD {
                                     val instancia = Entidad(data.child("nombre").getValue(String::class.java),  data.child("tipo").getValue(String::class.java))
                                     lista.add(instancia as T)
                                 }
-                               // "tablaB" -> ClaseB("NombreB", "TipoB")
+                                "Comercio" ->{
+                                    val instancia = Comercio(data.child("nombre").getValue(String::class.java),  data.child("categoria").getValue(String::class.java),data.child("logo").getValue(String::class.java))
+                                    lista.add(instancia as T)
+                                }
+                                "Tarjeta" ->{
+                                    val instancia = Tarjeta(data.child("procesadora").getValue(String::class.java),  data.child("segmento").getValue(String::class.java),data.child("tipoTarjeta").getValue(String::class.java),data.child("entidad").getValue(String::class.java))
+                                    lista.add(instancia as T)
+                                }
+                                "Sucursal" ->{
+                                    val instancia = Sucursal(data.child("direccion").getValue(String::class.java),  data.child("idComercio").getValue(String::class.java),
+                                        data.child("latitud").getValue(String::class.java)?.toDouble(),
+                                        data.child("longitud").getValue(String::class.java)
+                                            ?.toDouble()
+                                    )
+                                    lista.add(instancia as T)
+                                }
+                                "Promocion" ->{
+                                    val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                    val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
+                                    val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                                    val instancia = Promocion(data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                                        data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                        data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                        data.child("proveedor").getValue(String::class.java),data.child("titulo").getValue(String::class.java),
+                                        data.child("tope").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
+                                        data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
+                                        vigenciaHastaString?.let { LocalDate.parse(it, formato) }
+                                    )
+                                    lista.add(instancia as T)
+                                }
+
                                 else -> throw IllegalArgumentException("Tabla desconocida")
                             }
                            // val instancia = Entidad(nombre, tipo)
@@ -218,14 +232,84 @@ LeerBdString:
         }
 
 
-leerBdClase()
+//leerBdClase():
         var instancia = LecturaBD()
 
         setContentView(R.layout.activity_main)
+
+//Entidad:
         instancia.leerBdClase<Entidad>("Entidad","tipo","Bancaria"){list ->
             for (item in list) {
                 when (item) {
                     is Entidad -> println("Instancia de Entidad: ${item.nombre}")
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+//comercio
+        instancia.leerBdClase<Comercio>("Comercio","nombre","Almado"){list ->
+            for (item in list) {
+                when (item) {
+                    is Comercio -> {
+                        println("Instancia de Comercio: ${item.nombre}")
+                        println("Instancia de Comercio: ${item.logo}")
+                        println("Instancia de Comercio: ${item.categoria}")
+                    }
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+
+//Tarjeta:
+        instancia.leerBdClase<Tarjeta>("Tarjeta","procesadora","Visa"){list ->
+            for (item in list) {
+                when (item) {
+                    is Tarjeta -> {
+                        println("Instancia de Tarjeta: ${item.entidad}")
+                        println("Instancia de Tarjeta: ${item.procesadora}")
+                        println("Instancia de Tarjeta: ${item.segmento}")
+                        println("Instancia de Tarjeta: ${item.tipoTarjeta}")
+                    }
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+//Sucursal
+      instancia.leerBdClase<Sucursal>("Sucursal","idComercio","-NbqSvEi9vx2qhpYrZhZ"){list ->
+            for (item in list) {
+                when (item) {
+                    is Sucursal -> {
+                        println("Instancia de Sucursal: ${item.direccion}")
+                        println("Instancia de Sucursal: ${item.idComercio}")
+                        println("Instancia de Sucursal: ${item.latitud}")
+                        println("Instancia de Sucursal: ${item.longitud}")
+                    }
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+//Promocion
+
+        instancia.leerBdClase<Promocion>("Promocion","categoria","Gastronomía"){list ->
+            for (item in list) {
+                when (item) {
+                    is Promocion -> {
+                        println("Instancia de Promocion: ${item.categoria}")
+                        println("Instancia de Promocion: ${item.comercio}")
+                        println("Instancia de Promocion: ${item.dias}")
+                        println("Instancia de Promocion: ${item.tarjetas}")
+                        println("Instancia de Promocion: ${item.proveedor}")
+                        println("Instancia de Promocion: ${item.titulo}")
+                        println("Instancia de Promocion: ${item.tope}")
+                        println("Instancia de Promocion: ${item.tyc}")
+                        println("Instancia de Promocion: ${item.url}")
+                        println("Instancia de Promocion: ${item.vigenciaDesde}")
+                        println("Instancia de Promocion: ${item.vigenciaHasta}")
+                    }
                     else -> throw IllegalArgumentException("Tipo de clase desconocido")
                 }
             }
