@@ -23,7 +23,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 

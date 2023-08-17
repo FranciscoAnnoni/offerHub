@@ -16,8 +16,9 @@ from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
 from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
-from TarjetasSantander import creadorDeTarjetas
-from TarjetasSantander import setearTarjeta
+from normalizadorSantander import creadorDeTarjetas
+from normalizadorSantander import setearTarjeta
+from normalizadorSantander import asignadorCategoria
 from Tarjeta import Tarjeta
 from Entidad import Entidad
 import utilidades as utilidades
@@ -52,7 +53,7 @@ entidad.tipo = "Bancaria"
 
 creadorDeTarjetas("cucumelo") # poner idEntidad
 
-todasTarjetas = []
+todosLosNombres = []
 promocionesTotales = 0
 
 while True:
@@ -83,7 +84,8 @@ while True:
 
                 subpromos = []
 
-                categoria = url.split("/")[5].replace("-"," ").title()
+                categoria = asignadorCategoria(nombreComercio)
+                todosLosNombres.append(nombreComercio)
 
                 print("\n\n\t--- Inicio Comercio "+ nombreComercio +" ---")
                 print("\t\t Categoria: "+categoria)
@@ -179,15 +181,22 @@ while True:
                             #TRAIGO TARJETAS
                             print("\t\t  Tarjeta requerida: ")
 
-                            for tarjetaTexto in tarjetasTexto:
-                                
-                                tarjetas = []
-                                
-                                tarjetas = setearTarjeta(tarjetaTexto)
+                            tarjetas = []
 
-                                for tarjeta in tarjetas:
-                                    print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
-                                if tarjetaTexto.text not in todasTarjetas: todasTarjetas.append(tarjetaTexto.text)
+                            for tarjetaTexto in tarjetasTexto:              
+                            
+                                print("antes: -"+ tarjetaTexto.text+"-")
+                                if len(tarjetaTexto.text) != 0:
+                                    tarjetasRepetidas = tarjetas + setearTarjeta(tarjetaTexto.text)     #tener en cuenta que se pueden repetir    
+                                    tarjetas = list(set(tarjetasRepetidas))
+                                    print(len(tarjetas))
+
+                            for tarjeta in tarjetas:
+                                print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
+                            
+                            if len(tarjetas) == 0:
+                                    print("NO CARGO NINGUNA TARJETA")
+                                    sleep(20000)
                             
                             #MUESTRO TYC
                             print("\t\t  TyC: " + tyc)                       
@@ -231,7 +240,7 @@ while True:
     else:
         break
 
-print(todasTarjetas)
+print(todosLosNombres)
 # Cerrar el navegador
 driver.quit()
 print(str(promocionesTotales) + " promociones cargadas correctamente.")
