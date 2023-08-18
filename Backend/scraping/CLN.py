@@ -26,7 +26,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 
 
-#config.setearEntorno()
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -44,16 +44,16 @@ print("-----Inicio Scraping (Club La Nación)-----")
 entidad = Entidad()
 entidad.nombre = "Club La Nación"
 entidad.tipo = "Fidelidad"
-#idEntidad = entidad.guardar()
+idEntidad = entidad.guardar()
 
 #Buscar cuantos elementos tiene la pagina de beneficios
 cantElementos = int(driver.find_element(By.XPATH, '//strong').get_attribute("innerHTML"))
 print(cantElementos)
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
-i = 0
+i = cantElementos
 error = 0
-#cantElementos = 1
+
 while i < cantElementos:
 
     #obtiene todos los elementos con la clase pedida
@@ -66,6 +66,7 @@ while i < cantElementos:
 
     i = len(seccion_categorias)
 
+seccion_categorias = driver.find_elements(By.XPATH, '//div[contains(@class,"grid-item --col-8 --col-md-6 --col-lg-4 --col-xl-4")]')
 
 
 #de la lista obtenida muestra link asociado y texto de cada elemento
@@ -94,9 +95,29 @@ for boton in seccion_categorias:
     comercio.nombre=titulo
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
     comercio.logo=utilidades.imagenABase64(urlImagen)
-    #idComercio=comercio.guardar()
+    idComercio=comercio.guardar()
     
     containersPromos= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//article[contains(@class,"cln-ficha-card --roboto")]')))
+
+    # TRAIGO SUCURSALES
+    print("\t\t  Sucursales:")
+    sucursales = []
+
+    try:
+        listaSucursales = driver.find_element(By.XPATH, '//div[contains(@class,"grid-item --col-xs-8 --col-md-12 --col-lg-4 --col-xl-5")]').find_elements(By.XPATH, './/span[contains(@class,"--twoxs")]')
+        for direccionSucursal in listaSucursales:
+            sucursal = Sucursal()
+            sucursal.direccion = direccionSucursal.text
+            latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
+            sucursal.latitud = str(latitud_resultado)
+            sucursal.longitud = str(longitud_resultado)
+            sucursal.idComercio = idComercio
+            sucursales.append(sucursal.guardar())
+            print("\t\t\t  " + direccionSucursal.text) 
+
+    except NoSuchElementException:
+        listaSucursales = None
+        print("\t\t  No cuenta con sucursales")
     
     print("\n\t\tInicio Promos:")
     a=0
@@ -105,9 +126,7 @@ for boton in seccion_categorias:
     for containerPromo in containersPromos:
         a+=1
         print("\n\t\t---Promo "+str(a)+"---")
-        oferta = containerPromo.find_element(By.XPATH, './/h2[contains(@class,"title --m")]').text
-        #oferta = promoCompleta[:3]
-        
+        oferta = containerPromo.find_element(By.XPATH, './/h2[contains(@class,"title --m")]').text        
 
         x=[i for i in oferta] 
         if "x" in x:
@@ -127,12 +146,12 @@ for boton in seccion_categorias:
               
             if len(black) > 0:
                 tarjetaBlack = Tarjeta()
-                #tarjetaBlack.entidad = idEntidad
+                tarjetaBlack.entidad = idEntidad
                 tarjetaBlack.procesadora = "No posee"
                 tarjetaBlack.segmento = "Black"
                 tarjetaBlack.tipoTarjeta = "Fidelidad"
                 
-                #tarjetas.append(tarjetaBlack.guardar())
+                tarjetas.append(tarjetaBlack.guardar())
 
                 tarjetasTexto.append("Black")
 
@@ -144,12 +163,12 @@ for boton in seccion_categorias:
             tarjetasTexto.append(premium)
 
             tarjetaPremium = Tarjeta()
-            #tarjetaPremium.entidad = idEntidad
+            tarjetaPremium.entidad = idEntidad
             tarjetaPremium.procesadora = "No posee"
             tarjetaPremium.segmento = "Premium"
             tarjetaPremium.tipoTarjeta = "Fidelidad"
 
-            #tarjetas.append(tarjetaPremium.guardar())
+            tarjetas.append(tarjetaPremium.guardar())
             
         except NoSuchElementException:
             premium = None
@@ -159,12 +178,12 @@ for boton in seccion_categorias:
             tarjetasTexto.append(classic)
 
             tarjetaClassic = Tarjeta()
-            #tarjetaClassic.entidad = idEntidad
+            tarjetaClassic.entidad = idEntidad
             tarjetaClassic.procesadora = "No posee"
             tarjetaClassic.segmento = "Classic"
             tarjetaClassic.tipoTarjeta = "Fidelidad"
 
-            #tarjetas.append(tarjetaClassic.guardar())
+            tarjetas.append(tarjetaClassic.guardar())
         except NoSuchElementException:
             classic = None
 
@@ -224,35 +243,24 @@ for boton in seccion_categorias:
 
         promocion = Promocion()
         promocion.titulo = titulo + ": " + oferta
-        #promocion.comercio = idComercio
-        #promocion.proveedor = idEntidad
+        promocion.setearTipoPromocion(oferta, "")
+        numeros = promocion.obtenerPorcentajeYCantCuotas(oferta)
+        promocion.porcentaje=numeros["porcentaje"]
+        promocion.cuotas=numeros["cuotas"]
+        promocion.comercio = idComercio
+        promocion.topeTexto = ""
+        promocion.topeNro = ""
+        promocion.proveedor = idEntidad
         promocion.tarjetas = tarjetas
+        promocion.condiciones = []
         promocion.url = url
         promocion.setearFecha("vigenciaDesde",vigenciaTexto[3])
         promocion.setearFecha("vigenciaHasta",vigenciaTexto[6])
         promocion.dias = diasDisponibles
         promocion.tyc = tyc
+        promocion.sucursales = sucursales
         promocion.setearCategoria(categoria)
-        #promocion.guardar()
-
-    # TRAIGO SUCURSALES
-    print("\t\t  Sucursales:")
-
-    try:
-        listaSucursales = containerPromo.find_element(By.XPATH, '//div[contains(@class,"grid-item --col-xs-8 --col-md-12 --col-lg-4 --col-xl-5")]').find_elements(By.XPATH, './/span[contains(@class,"--twoxs")]')
-        for direccionSucursal in listaSucursales:
-            sucursal = Sucursal()
-            sucursal.direccion = direccionSucursal.text
-            latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
-            sucursal.latitud = str(latitud_resultado)
-            sucursal.longitud = str(longitud_resultado)
-            #sucursal.idComercio = idComercio
-            #sucursal.guardar()
-            print("\t\t\t  " + direccionSucursal.text) 
-
-    except NoSuchElementException:
-        listaSucursales = None
-        print("\t\t  No cuenta con sucursales")
+        promocion.guardar()     
 
     driver.close()
     driver.switch_to.window(driver.window_handles[0])

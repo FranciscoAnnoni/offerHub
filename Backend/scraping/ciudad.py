@@ -21,6 +21,8 @@ from Entidad import Entidad
 import utilidades as utilidades
 from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
+import re
+
 
 
 config.setearEntorno()
@@ -105,7 +107,27 @@ for categoria in categorias:
                 oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[1].text
         if len(oferta) < 3:
                 oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[3].text
+        
+        #TRAIGO OFERTA 
 
+        descripcion = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"card-beneficio__detalle col-xs-12 detalle-info ng-binding")]')))[0].text
+
+        if len(descripcion) < 3:
+                descripcion = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[1].text
+
+        if "abonando" in descripcion:   regex = r'tope\s+(.+?)\s+abonando' 
+        else:                           regex = r'tope\s+(.+)'
+
+        match = re.search(regex, descripcion)
+        if match:
+            tope = "Tope " + match.group(1)
+        else:
+             tope = ""
+
+        if "." in tope: tope = tope.split(".")[0] + tope.split(".")[1]
+
+        print(tope)
+        
         if "%" in oferta:
                         print("\tDescuento: " + oferta)
         elif "cuotas" in oferta:
@@ -211,6 +233,8 @@ for categoria in categorias:
 
             if len(direcciones) == 0: print("\t\tNo hay sucursales especificadas")
             
+            sucursales = []
+
             for direccion in direcciones:
                 sucursal = Sucursal()
                 ciudad = direccion.find_element(By.XPATH, './/p[@class="ng-binding"]').text.split(", ")
@@ -220,7 +244,7 @@ for categoria in categorias:
                 sucursal.latitud = str(latitud_resultado)
                 sucursal.longitud = str(longitud_resultado)
                 sucursal.idComercio = idComercio
-                sucursal.guardar()
+                sucursales.append(sucursal.guardar())
                 print("\t\t"+sucursal.direccion)
 
             #TRAIGO TYC
@@ -236,7 +260,14 @@ for categoria in categorias:
             promocion = Promocion()
             promocion.proveedor=idEntidad
             promocion.titulo = nombreComercio+": "+oferta
-            promocion.proveedor = "Banco Ciudad"
+            promocion.proveedor = idEntidad
+            promocion.setearTipoPromocion(oferta, "")
+            numeros = promocion.obtenerPorcentajeYCantCuotas(oferta)
+            promocion.porcentaje=numeros["porcentaje"]
+            promocion.cuotas=numeros["cuotas"]
+            promocion.topeTexto = tope
+            promocion.topeNro = re.sub(r'<[^>]+>', '', tope)
+            promocion.sucursales = sucursales
             promocion.comercio=idComercio
             promocion.url = urlPromocion
             promocion.tarjetas = tarjetas
@@ -248,6 +279,8 @@ for categoria in categorias:
             promocion.condiciones = condiciones
             promocion.guardar()
             promocionesTotales += 1
+
+            
 
         #Con esto se vuelve a las promociones
         botonVuelta = []

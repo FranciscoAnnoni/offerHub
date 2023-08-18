@@ -26,14 +26,13 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 import re
 
-#config.setearEntorno()
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
 options.add_argument('--headless')
 options.add_argument("--window-size=1920,1200")
-#driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=options)
 
 wait = WebDriverWait(driver, 900000)
 #<a beneficioItem
@@ -48,11 +47,10 @@ navegador = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains
 entidad = Entidad()
 entidad.nombre = "Banco Santander"
 entidad.tipo = "Bancaria"
-#idEntidad = entidad.guardar()
+idEntidad = entidad.guardar()
 
-creadorDeTarjetas("cucumelo") # poner idEntidad
+creadorDeTarjetas(idEntidad)
 
-todosLosNombres = []
 promocionesTotales = 0
 
 while True:
@@ -84,7 +82,6 @@ while True:
                 subpromos = []
 
                 categoria = asignadorCategoria(nombreComercio)
-                todosLosNombres.append(nombreComercio)
 
                 print("\n\n\t--- Inicio Comercio "+ nombreComercio +" ---")
                 print("\t\t Categoria: "+categoria)
@@ -93,7 +90,7 @@ while True:
                 comercio.nombre=nombreComercio
                 comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
                 comercio.logo=utilidades.imagenABase64(urlImagen)
-                #idComercio=comercio.guardar()
+                idComercio=comercio.guardar()
 
                 condiciones = []      
 
@@ -175,14 +172,19 @@ while True:
                             listaOfertas.append(oferta)
 
                             #TRAIGO REINTEGRO
-                            reintegro = subpromo.find_element(By.XPATH, './/div[contains(@class,"titulo")]').find_element(By.XPATH, './/p').text
-                            if "integro" in reintegro:
-                                if "Sin" in reintegro:
-                                    listaTopes.append("")
-                                else:
-                                    listaTopes.append(reintegro)
-                            else:
-                                listaTopes.append("")
+                            reintegros = subpromo.find_element(By.XPATH, './/div[contains(@class,"titulo")]').find_elements(By.XPATH, './/p[contains(@dir,"ltr")]')
+                            noHayReintegro = True
+                            for reintegtoTexto in reintegros:
+                                reintegro = reintegtoTexto.text
+                                if "lido" in reintegro: sleep(4)
+                                if "integro" in reintegro:
+                                    noHayReintegro = False
+                                    if "Sin" in reintegro:
+                                        listaTopes.append("")
+                                    else:
+                                        listaTopes.append(reintegro)
+                            
+                            if noHayReintegro: listaTopes.append("") 
 
                             # TRAIGO DIAS DE LA SEMANA
                             diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
@@ -221,11 +223,11 @@ while True:
                             for tarjetaTexto in tarjetasTexto:              
                                 if "Contactless" in tarjetaTexto.text: condiciones.append("La Tarjeta debe ser Contactless")
                                 if len(tarjetaTexto.text) != 0:
-                                    tarjetasRepetidas = tarjetas + setearTarjeta(tarjetaTexto.text)     #tener en cuenta que se pueden repetir    
+                                    tarjetasRepetidas = tarjetas
+                                    for tarjeta in setearTarjeta(tarjetaTexto.text):
+                                        print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
+                                        tarjetasRepetidas.append(tarjeta.guardar())
                                     tarjetas = list(set(tarjetasRepetidas))
-
-                            for tarjeta in tarjetas:
-                                print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
                             
                             listaTarjetas.append(tarjetas)
                             
@@ -269,29 +271,27 @@ while True:
                     if "null" not in direccionCompleta:
                         sucursal = Sucursal()
                         sucursal.direccion = direccionCompleta
-                        #latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
-                        #sucursal.latitud = str(latitud_resultado)
-                        #sucursal.longitud = str(longitud_resultado)
-                        #sucursal.idComercio = idComercio
-                        sucursales.append("as") # poner sucursal.guardar()
+                        latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
+                        sucursal.latitud = str(latitud_resultado)
+                        sucursal.longitud = str(longitud_resultado)
+                        sucursal.idComercio = idComercio
+                        sucursales.append(sucursal.guardar())   
                         print("\t\t\t  " + direccionCompleta)
                 
 
                 contador = 0
                 while cantidadPromos != contador:
                     promocion = Promocion()
-                    promocion.tope = listaTopes[contador]
-                    print(promocion.tope)
+                    promocion.topeTexto = listaTopes[contador]
+                    promocion.topeNro = re.sub(r'<[^>]+>', '', listaTopes[contador])
                     promocion.titulo = nombreComercio+": "+ listaOfertas[contador]
-                    print(promocion.titulo)
                     promocion.setearTipoPromocion(listaOfertas[contador], listaTopes[contador])
-
                     numeros = promocion.obtenerPorcentajeYCantCuotas(listaOfertas[contador])
                     promocion.porcentaje=numeros["porcentaje"]
                     promocion.cuotas=numeros["cuotas"]
-                    #promocion.comercio = idComercio
+                    promocion.comercio = idComercio
                     promocion.condiciones = listaCondiciones[contador]
-                    #promocion.proveedor = idEntidad
+                    promocion.proveedor = idEntidad
                     promocion.tarjetas = listaTarjetas[contador]
                     promocion.url = url
                     promocion.setearFecha("vigenciaDesde", fechas_encontradas[0])
@@ -300,7 +300,7 @@ while True:
                     promocion.dias = listaDias[contador]
                     promocion.sucursales = sucursales
                     promocion.tyc = tyc
-                    #promocion.guardar()
+                    promocion.guardar()
                     contador += 1
 
             driver.close()
@@ -317,7 +317,6 @@ while True:
     else:
         break
 
-print(todosLosNombres)
 # Cerrar el navegador
 driver.quit()
 print(str(promocionesTotales) + " promociones cargadas correctamente.")

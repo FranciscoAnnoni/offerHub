@@ -21,6 +21,7 @@ from Entidad import Entidad
 import utilidades as utilidades
 from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
+import re
 
 
 #config.setearEntorno()
@@ -104,22 +105,13 @@ while i < len(seccion_categorias):
                 #TRAIGO OFERTA               
                 oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"jsx-309925303 grid-item-base grid-item--spacing grid-item--xs-12")]')))[1].text
 
-                reintegro = None
+                reintegro = ""
                 
-                if "%" in oferta and "cuotas" in oferta:
+                if "%" in oferta:
                         #A la hora de guardar las promos si las queremos separar lo hacemos x acá. Ahora no hace nada.
                         print("\t\t  Descuento: " + oferta)
                         print("\t\t  " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text)
                         reintegro = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text
-                elif "cuotas" in oferta:
-                        print("\t\t  Cuotas: " + oferta)
-                elif "%" in oferta:
-                        print("\t\t  Descuento: " + oferta)
-                        print("\t\t  " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text)
-                        reintegro = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text
-                else: 
-                     print("\t\t CHEQUEAR")
-                     sleep(100000)
                      
                 #Esto va acá adrede, no mover nada
                 print("\t\t  Vigencia: " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[1].text)
@@ -219,9 +211,9 @@ while i < len(seccion_categorias):
                     cantidadSucursalesLeidas = 0
 
                     while cantidadSucursalesLeidas < cantidadTotalSucursales:
-                        sucursales = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-leiOXd bQKZZO")]')))
-
-                        for direccionSucursal in sucursales:
+                        direcciones = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-leiOXd bQKZZO")]')))
+                        sucursales = []
+                        for direccionSucursal in direcciones:
                             direccion = direccionSucursal.find_elements(By.XPATH, './/p')
                             print( "\t\t\t  " + direccion[0].text + ", " + direccion[1].text)
                             sucursal = Sucursal()
@@ -230,7 +222,7 @@ while i < len(seccion_categorias):
                             sucursal.latitud = str(latitud_resultado)
                             sucursal.longitud = str(longitud_resultado)
                             sucursal.idComercio = idComercio
-                            sucursal.guardar()
+                            sucursales.append(sucursal.guardar())
 
                             
                             cantidadSucursalesLeidas += 1
@@ -264,18 +256,26 @@ while i < len(seccion_categorias):
 
                 promocion = Promocion()
                 promocion.titulo=nombreComercio+": "+oferta
+                promocion.setearTipoPromocion(oferta, reintegro)
+                numeros = promocion.obtenerPorcentajeYCantCuotas(oferta)
+                promocion.porcentaje=numeros["porcentaje"]
+                promocion.cuotas=numeros["cuotas"]
                 promocion.proveedor=idEntidad
                 promocion.comercio=idComercio
                 promocion.condiciones = condiciones
                 promocion.url=urlPromocion
                 promocion.tarjetas = tarjetasDisponibles
-                promocion.tope=reintegro
+                promocion.topeTexto = reintegro
+                promocion.topeNro = re.sub(r'<[^>]+>', '', reintegro)
                 promocion.setearFecha("vigenciaDesde",vigencia[2])
                 promocion.setearFecha("vigenciaHasta",vigencia[4])
-                promocion.dias=diasSemana
+                promocion.dias = diasSemana
+                promocion.sucursales = sucursales
                 promocion.tyc=tyc
                 promocion.setearCategoria(categoria)
                 promocion.guardar()
+
+                
 
             try:
                 botonesVolverAPromos[1].click()

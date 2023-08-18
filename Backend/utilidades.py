@@ -18,7 +18,13 @@ def imagenABase64(urlImagen):
         return None
 
 def obtenerCoordenadas(direccion):
-    direccion=direccion.lower().replace("avenida ","").replace("av. ","")
+
+    latitud = "Error de geolocalización"
+    longitud = "Error de geolocalización"
+
+    return latitud, longitud
+
+    """direccion=direccion.lower().replace("avenida ","").replace("av. ","")
     geolocator = Nominatim(user_agent="mi_app_de_geolocalizacion", domain="nominatim.openstreetmap.org")
     try:
         location = geolocator.geocode(direccion, country_codes="AR")
@@ -34,4 +40,4 @@ def obtenerCoordenadas(direccion):
         latitud = "Error de geolocalización"
         longitud = "Error de geolocalización"
 
-    return latitud, longitud
+    return latitud, longitud"""
