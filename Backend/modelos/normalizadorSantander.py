@@ -172,4 +172,3 @@ def asignadorCategoria(comercio):
 
 
 
-[ 'Move', '', 'Óptica Luna', 'Óptica Luna', 'Pantera',, 'Pinturerías del Centro', 'Pioppa', 'Primera compra Modo', 'Renová tu casa', 'Rodó', '', 'Rouge', 'Ruiz y Roca', 'Selú', 'Sweet Sweet Way' 'Tinto', '']
