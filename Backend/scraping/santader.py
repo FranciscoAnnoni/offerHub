@@ -16,15 +16,15 @@ from Promocion import Promocion
 from selenium.webdriver.common.action_chains import ActionChains
 from Comercio import Comercio
 from CategoriaPromocion import CategoriaPromocion
-from TarjetasSantander import creadorDeTarjetas
-from TarjetasSantander import setearTarjeta
+from normalizadorSantander import creadorDeTarjetas
+from normalizadorSantander import setearTarjeta
+from normalizadorSantander import asignadorCategoria
 from Tarjeta import Tarjeta
 from Entidad import Entidad
 import utilidades as utilidades
 from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
-
-
+import re
 
 #config.setearEntorno()
 
@@ -52,7 +52,7 @@ entidad.tipo = "Bancaria"
 
 creadorDeTarjetas("cucumelo") # poner idEntidad
 
-todasTarjetas = []
+todosLosNombres = []
 promocionesTotales = 0
 
 while True:
@@ -64,26 +64,27 @@ while True:
         if(i<cantidad):
             url=promo.get_attribute("href")
             urlImagen = promo.find_element(By.XPATH, './/img').get_attribute("src")
-            print(urlImagen)
 
             driver.execute_script("window.open('');")
             driver.switch_to.window(driver.window_handles[1])
             driver.get(url)
 
             paginaRota = False
-            
+
             try:
-                nombreComercio = driver.find_element(By.XPATH, './/div[contains(@class,"beneficioTitulo")]').find_element(By.XPATH, './/h1').text
+                testPaginaRota = driver.find_element(By.XPATH, './/div[contains(@class,"beneficioTitulo")]').find_element(By.XPATH, './/h1').text
             except NoSuchElementException:
-                nombreComercio = None
+                testPaginaRota = None
                 paginaRota = True
             
             # Hay algunas promos que no estan disponibles, esto lo que hace es saltear las mismas para que no crashee
             if not paginaRota:
+                nombreComercio = wait.until(EC.presence_of_element_located((By.XPATH, './/div[contains(@class,"beneficioTitulo")]'))).find_element(By.XPATH, './/h1').text
 
                 subpromos = []
 
-                categoria = url.split("/")[5].replace("-"," ").title()
+                categoria = asignadorCategoria(nombreComercio)
+                todosLosNombres.append(nombreComercio)
 
                 print("\n\n\t--- Inicio Comercio "+ nombreComercio +" ---")
                 print("\t\t Categoria: "+categoria)
@@ -111,6 +112,13 @@ while True:
                 p = 0
 
                 ofertaAnterior = []
+                cantidadPromos = 0
+                listaVigencias = []
+                listaDias = []
+                listaTarjetas = []
+                listaCondiciones = []
+                listaTopes = []
+                listaOfertas = []
 
                 for subpromo in subpromos:
              
@@ -134,6 +142,12 @@ while True:
                             superClub = None
 
                         if superClub: condiciones.append("Estar subscripto a SuperClub+")
+
+                        try:
+                            sorpresa = subpromo.find_element(By.XPATH, '//div[contains(@class,"beneficioTitulo")]').find_element(By.XPATH, './/p').text
+                            if "Sorp" in sorpresa: condiciones.append("Estar subscripto a Sorpresa")
+                        except NoSuchElementException:
+                            sorpresa = None
                         
                         if not cancelada:
 
@@ -144,10 +158,31 @@ while True:
                             #TRAIGO VIGENCIA
                             vigenciaTexto = subpromo.find_element(By.XPATH, './/div[contains(@class,"vigencia")]').text[:-1]
                             print("\t\t  Vigencia: "+vigenciaTexto)
-                            vigencia = vigenciaTexto.split(" ")
+
+                            # Buscar todas las coincidencias de patrones de fecha en el texto
+                            patron_fecha = re.compile(r'\d{2}/\d{2}/\d{4}')
+                            fechas_encontradas = patron_fecha.findall(vigenciaTexto)
+
+                            listaVigencias.append(fechas_encontradas)
 
                             #TRAIGO OFERTA
-                            oferta = subpromo.find_element(By.XPATH, './/div[contains(@class,"titulo")]').text
+                            oferta = ""
+                            ofertaSeparado = subpromo.find_element(By.XPATH, './/div[contains(@class,"titulo")]').find_elements(By.XPATH, './/h2')
+                            if len(ofertaSeparado) == 1: oferta = ofertaSeparado[0].text
+                            else:
+                                for separado in ofertaSeparado:
+                                    oferta = oferta + separado.text + " "
+                            listaOfertas.append(oferta)
+
+                            #TRAIGO REINTEGRO
+                            reintegro = subpromo.find_element(By.XPATH, './/div[contains(@class,"titulo")]').find_element(By.XPATH, './/p').text
+                            if "integro" in reintegro:
+                                if "Sin" in reintegro:
+                                    listaTopes.append("")
+                                else:
+                                    listaTopes.append(reintegro)
+                            else:
+                                listaTopes.append("")
 
                             # TRAIGO DIAS DE LA SEMANA
                             diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
@@ -176,24 +211,35 @@ while True:
                                 texto = texto[:-2]
                                 print(texto)
 
+                            listaDias.append(diasDisponibles)
+
                             #TRAIGO TARJETAS
                             print("\t\t  Tarjeta requerida: ")
 
-                            for tarjetaTexto in tarjetasTexto:
-                                
-                                tarjetas = []
-                                
-                                tarjetas = setearTarjeta(tarjetaTexto)
+                            tarjetas = []
 
-                                for tarjeta in tarjetas:
-                                    print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
-                                if tarjetaTexto.text not in todasTarjetas: todasTarjetas.append(tarjetaTexto.text)
+                            for tarjetaTexto in tarjetasTexto:              
+                                if "Contactless" in tarjetaTexto.text: condiciones.append("La Tarjeta debe ser Contactless")
+                                if len(tarjetaTexto.text) != 0:
+                                    tarjetasRepetidas = tarjetas + setearTarjeta(tarjetaTexto.text)     #tener en cuenta que se pueden repetir    
+                                    tarjetas = list(set(tarjetasRepetidas))
+
+                            for tarjeta in tarjetas:
+                                print("\t\t\tTarjeta "+tarjeta.procesadora+" "+tarjeta.tipoTarjeta+" "+tarjeta.segmento)
+                            
+                            listaTarjetas.append(tarjetas)
+                            
+                            if len(tarjetas) == 0:
+                                    print("NO CARGO NINGUNA TARJETA")
+                                    sleep(20000)
                             
                             #MUESTRO TYC
                             print("\t\t  TyC: " + tyc)                       
                             
                             p+=1
                             promocionesTotales += 1
+                            cantidadPromos +=1
+                            listaCondiciones.append(condiciones)
 
                 #TRAIGO SUCURSALES
                 try:
@@ -213,9 +259,49 @@ while True:
 
                 print("\t\t  Sucursales:")
 
+                sucursales = []
+
                 for direccion in direcciones:
                     direccionCompleta = direccion.find_element(By.XPATH, './/strong').text + ", " + direccion.find_element(By.XPATH, './/p').text
-                    print("\t\t\t  " + direccionCompleta) 
+
+                    if "Cdad" in direccionCompleta: direccionCompleta = direccionCompleta.replace("Cdad", "Ciudad")
+
+                    if "null" not in direccionCompleta:
+                        sucursal = Sucursal()
+                        sucursal.direccion = direccionCompleta
+                        #latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
+                        #sucursal.latitud = str(latitud_resultado)
+                        #sucursal.longitud = str(longitud_resultado)
+                        #sucursal.idComercio = idComercio
+                        sucursales.append("as") # poner sucursal.guardar()
+                        print("\t\t\t  " + direccionCompleta)
+                
+
+                contador = 0
+                while cantidadPromos != contador:
+                    promocion = Promocion()
+                    promocion.tope = listaTopes[contador]
+                    print(promocion.tope)
+                    promocion.titulo = nombreComercio+": "+ listaOfertas[contador]
+                    print(promocion.titulo)
+                    promocion.setearTipoPromocion(listaOfertas[contador], listaTopes[contador])
+
+                    numeros = promocion.obtenerPorcentajeYCantCuotas(listaOfertas[contador])
+                    promocion.porcentaje=numeros["porcentaje"]
+                    promocion.cuotas=numeros["cuotas"]
+                    #promocion.comercio = idComercio
+                    promocion.condiciones = listaCondiciones[contador]
+                    #promocion.proveedor = idEntidad
+                    promocion.tarjetas = listaTarjetas[contador]
+                    promocion.url = url
+                    promocion.setearFecha("vigenciaDesde", fechas_encontradas[0])
+                    promocion.setearFecha("vigenciaHasta", fechas_encontradas[1])
+                    promocion.setearCategoria(categoria)
+                    promocion.dias = listaDias[contador]
+                    promocion.sucursales = sucursales
+                    promocion.tyc = tyc
+                    #promocion.guardar()
+                    contador += 1
 
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
@@ -231,7 +317,7 @@ while True:
     else:
         break
 
-print(todasTarjetas)
+print(todosLosNombres)
 # Cerrar el navegador
 driver.quit()
 print(str(promocionesTotales) + " promociones cargadas correctamente.")
