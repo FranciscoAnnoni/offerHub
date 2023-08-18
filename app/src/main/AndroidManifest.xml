@@ -3,47 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.offerhub">
 
-    <uses-permission android:name="android.permission.INTERNET"> </uses-permission>   <!-- Esto hace que la app se conecte a internet -->
-    <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.Light"
-        tools:targetApi="31">
+    <!-- Esto hace que la app se conecte a internet -->
+    <uses-permission android:name="android.permission.INTERNET"> </uses-permission>
 
-        <activity
-            android:name=".Register"
-            android:theme="@style/Theme.Material3.Light.NoActionBar"
-            android:exported="false" />
-        <activity
-            android:name=".LoginEmpresa"
-            android:theme="@style/Theme.Material3.Light.NoActionBar"
-            android:exported="false" />
-
-        <activity
-            android:name=".Login"
-            android:theme="@style/Theme.Material3.Light.NoActionBar"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />  <!-- Actividad Principal de la pagina al inicio -->
-            </intent-filter>
-        </activity>
+    <!-- Cargado de las Pantallas  -->
+        <application
+            android:allowBackup="true"
+            android:dataExtractionRules="@xml/data_extraction_rules"
+            android:fullBackupContent="@xml/backup_rules"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.Material3.Light"
+            tools:targetApi="31">
 
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/SplashTheme">
+            <!-- Pantallas  -->
 
-        </activity> <!-- SUPONGO YO QUE IRAN OTRAS ACTIVIDADES PERO NO SE -->
+            <!-- Pantalla de Registro de Usuario  -->
+            <activity
+                android:name=".usuario.Register"
+                android:theme="@style/Theme.Material3.Light.NoActionBar"
+                android:exported="false" />
+
+            <!-- Pantalla de Login de Usuario  -->
+            <activity
+                android:name=".usuario.Login"
+                android:theme="@style/Theme.Material3.Light.NoActionBar"
+                android:exported="true">
+
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />  <!-- Actividad Principal de la pagina al inicio -->
+                </intent-filter>
+            </activity>
+
+            <!-- Pantalla de Login de Empresa  -->
+            <activity
+                android:name=".empresa.LoginEmpresa"
+                android:theme="@style/Theme.Material3.Light.NoActionBar"
+                android:exported="false" />
+
+            <!-- Pantalla de Registro de Empresa  -->
 
 
-    </application>
+            <!-- Inicio/Home de la App  -->
+            <activity
+                android:name=".MainActivity"
+                android:exported="true"
+                android:theme="@style/Theme.Material3.Light">
+            </activity>
+
+
+        </application>
 
 </manifest>

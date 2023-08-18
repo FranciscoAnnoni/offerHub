@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+<!-- Es una Prueva de SplashScreen sirve vasicamente para cuando alguien arranca la app le aparesca esto -->
+<!-- Todavia no la pude utilizar -->
 
     <ImageView
         android:layout_width="179dp"
@@ -51,6 +53,5 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="282dp" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
