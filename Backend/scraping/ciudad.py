@@ -108,25 +108,21 @@ for categoria in categorias:
         if len(oferta) < 3:
                 oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[3].text
         
-        #TRAIGO OFERTA 
+        #TRAIGO DESCRIPCION 
 
         descripcion = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"card-beneficio__detalle col-xs-12 detalle-info ng-binding")]')))[0].text
+        esDescuento = True
+        if len(descripcion) == 0:
+            descripcion = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"card-beneficio__detalle col-xs-12 detalle-info ng-binding")]')))[1].text
+        
+        if "reintegro" not in descripcion and ("2x1" in descripcion or "cuotas" in descripcion): esDescuento = False
 
-        if len(descripcion) < 3:
-                descripcion = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//span[contains(@class,"card-beneficio__label detalle-descuento ng-binding")]')))[1].text
-
-        if "abonando" in descripcion:   regex = r'tope\s+(.+?)\s+abonando' 
-        else:                           regex = r'tope\s+(.+)'
-
-        match = re.search(regex, descripcion)
-        if match:
-            tope = "Tope " + match.group(1)
+        if esDescuento and "$" in descripcion:
+            tope = descripcion.replace(".", "").split("$")[1].split(" ")[0]
+            topeTexto = "Tope de reintegro de $" + tope + " por compra."
         else:
-             tope = ""
-
-        if "." in tope: tope = tope.split(".")[0] + tope.split(".")[1]
-
-        print(tope)
+            tope = ""
+            topeTexto = ""
         
         if "%" in oferta:
                         print("\tDescuento: " + oferta)
@@ -265,9 +261,10 @@ for categoria in categorias:
             numeros = promocion.obtenerPorcentajeYCantCuotas(oferta)
             promocion.porcentaje=numeros["porcentaje"]
             promocion.cuotas=numeros["cuotas"]
-            promocion.topeTexto = tope
-            promocion.topeNro = re.sub(r'<[^>]+>', '', tope)
+            promocion.topeTexto = topeTexto
+            promocion.topeNro = tope
             promocion.sucursales = sucursales
+            promocion.descripcion = descripcion
             promocion.comercio=idComercio
             promocion.url = urlPromocion
             promocion.tarjetas = tarjetas
