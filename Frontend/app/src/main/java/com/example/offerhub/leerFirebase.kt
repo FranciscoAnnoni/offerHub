@@ -225,43 +225,38 @@ class LecturaBD {
                 if (dataSnapshot.exists()) {
                     for (data in dataSnapshot.children){
                         val listaCampo = data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
-                        if (listaCampo != null) {
-                            for (tarj in listaCampo) {
-                                if (tarj == tarjeta) {
-                                    val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                    val vigenciaDesdeString: String? =
-                                        data.child("vigenciaDesde").getValue(String::class.java)
-                                    val vigenciaHastaString: String? =
-                                        data.child("vigenciaHasta").getValue(String::class.java)
-                                    val instancia =
-                                        Promocion(data.child("categoria")
-                                            .getValue(String::class.java),
-                                            data.child("comercio").getValue(String::class.java),
-                                            data.child("dias").getValue(object :
-                                                GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("tarjetas").getValue(object :
-                                                GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("proveedor").getValue(String::class.java),
-                                            data.child("titulo").getValue(String::class.java),
-                                            data.child("tope").getValue(String::class.java),
-                                            data.child("tyc").getValue(String::class.java),
-                                            data.child("url").getValue(String::class.java),
-                                            vigenciaDesdeString?.let {
-                                                LocalDate.parse(
-                                                    it,
-                                                    formato
-                                                )
-                                            },
-                                            vigenciaHastaString?.let {
-                                                LocalDate.parse(
-                                                    it,
-                                                    formato
-                                                )
-                                            }
+                        if (listaCampo != null && listaCampo.contains(tarjeta)) {
+                            val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            val vigenciaDesdeString: String? =
+                                data.child("vigenciaDesde").getValue(String::class.java)
+                            val vigenciaHastaString: String? =
+                                data.child("vigenciaHasta").getValue(String::class.java)
+                            val instancia =
+                                Promocion(data.child("categoria")
+                                    .getValue(String::class.java),
+                                    data.child("comercio").getValue(String::class.java),
+                                    data.child("dias").getValue(object :
+                                        GenericTypeIndicator<List<String?>>() {}),
+                                    data.child("tarjetas").getValue(object :
+                                        GenericTypeIndicator<List<String?>>() {}),
+                                    data.child("proveedor").getValue(String::class.java),
+                                    data.child("titulo").getValue(String::class.java),
+                                    data.child("tope").getValue(String::class.java),
+                                    data.child("tyc").getValue(String::class.java),
+                                    data.child("url").getValue(String::class.java),
+                                    vigenciaDesdeString?.let {
+                                        LocalDate.parse(
+                                            it,
+                                            formato
+                                        ) },
+                                    vigenciaHastaString?.let {
+                                        LocalDate.parse(
+                                            it,
+                                            formato
                                         )
-                                    lista.add(instancia)
-                                }
-                            }
+                                    }
+                                )
+                            lista.add(instancia)
                         }
 
                     }

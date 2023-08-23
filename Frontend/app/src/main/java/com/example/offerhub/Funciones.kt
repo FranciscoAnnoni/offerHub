@@ -27,7 +27,7 @@ class Funciones {
 
 //ejemplos llamados
 /*
-var instancia = Funciones()
+        var instancia = Funciones()
         setContentView(R.layout.activity_main)
         var tarjetas: List<String?> = listOf("-NbqSvUq5L_kTqrzlUo_")
         var usuario1 = Usuario("Pepe", "usuario1@example.com", tarjetas)
