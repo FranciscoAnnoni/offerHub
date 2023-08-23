@@ -13,6 +13,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import org.threeten.bp.LocalDate
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class Entidad{
     // Propiedades (atributos) de la clase
@@ -63,7 +66,6 @@ class Tarjeta{
     var segmento: String?
     var tipoTarjeta: String?
 
-    //   var logo?????
 
     // Constructor primario
     constructor(procesadora: String?, segmento: String?,tipoTarjeta: String?,entidad: String?) {
@@ -81,7 +83,6 @@ class Sucursal{
     var latitud: Double?
     var longitud: Double?
 
-    //   var logo?????
 
     // Constructor primario
     constructor(direccion: String?, idComercio: String?,latitud: Double?,longitud: Double?) {
@@ -105,8 +106,6 @@ class Promocion{
     val url: String?
     val vigenciaDesde: LocalDate?
     val vigenciaHasta: LocalDate?
-
-    //   var logo?????
 
     // Constructor primario
     @RequiresApi(Build.VERSION_CODES.O)
@@ -156,7 +155,6 @@ class LecturaBD {
 
     fun <T> leerBdClase(tabla: String,campoFiltro: String,valorFiltro: String,callback: (MutableList<T>) -> Unit){
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com/")
-        Log.d("prueba",tabla)
         val promocionRef = database.getReference("/$tabla")
 
         val lista: MutableList<T> = mutableListOf()
@@ -213,6 +211,68 @@ class LecturaBD {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.d("Error","Error en lectura de bd")
+            }
+        })
+    }
+
+    suspend fun  obtenerPromosPorTarjetas(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
+        val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com/")
+        val promocionRef = database.getReference("/Promocion")
+        val lista: MutableList<Promocion> = mutableListOf()
+        promocionRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (data in dataSnapshot.children){
+                        val listaCampo = data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
+                        if (listaCampo != null) {
+                            for (tarj in listaCampo) {
+                                if (tarj == tarjeta) {
+                                    val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                    val vigenciaDesdeString: String? =
+                                        data.child("vigenciaDesde").getValue(String::class.java)
+                                    val vigenciaHastaString: String? =
+                                        data.child("vigenciaHasta").getValue(String::class.java)
+                                    val instancia =
+                                        Promocion(data.child("categoria")
+                                            .getValue(String::class.java),
+                                            data.child("comercio").getValue(String::class.java),
+                                            data.child("dias").getValue(object :
+                                                GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("tarjetas").getValue(object :
+                                                GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("proveedor").getValue(String::class.java),
+                                            data.child("titulo").getValue(String::class.java),
+                                            data.child("tope").getValue(String::class.java),
+                                            data.child("tyc").getValue(String::class.java),
+                                            data.child("url").getValue(String::class.java),
+                                            vigenciaDesdeString?.let {
+                                                LocalDate.parse(
+                                                    it,
+                                                    formato
+                                                )
+                                            },
+                                            vigenciaHastaString?.let {
+                                                LocalDate.parse(
+                                                    it,
+                                                    formato
+                                                )
+                                            }
+                                        )
+                                    lista.add(instancia)
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                continuation.resume(lista)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d("Error","Error en lectura de bd")
+                continuation.resumeWithException(databaseError.toException())
             }
         })
     }
