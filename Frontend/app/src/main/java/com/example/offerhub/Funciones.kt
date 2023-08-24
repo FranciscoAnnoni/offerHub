@@ -23,6 +23,24 @@ class Funciones {
 
         listaPromos
     }
+
+
+    suspend fun obtenerTarjeta(entidad: String, procesadora: String, segmento: String, tipo:String):Tarjeta? {
+        var instancia = leerId()
+        var interfaz = InterfaceSinc()
+        var tarjetaFinal: Tarjeta? = null
+        val resultado = instancia.obtenerIdSinc("Entidad", "nombre", entidad)
+        if (resultado != null) {
+            val listaEntidades: MutableList<Tarjeta> = interfaz.leerBdClaseSinc<Tarjeta>("Tarjeta","entidad",resultado)
+            for (tarjeta in listaEntidades){
+                if(tarjeta.procesadora==procesadora && tarjeta.segmento == segmento && tarjeta.tipoTarjeta == tipo){
+                    tarjetaFinal = tarjeta
+                }
+            }
+        }
+        return tarjetaFinal
+    }
+
 }
 
 //ejemplos llamados
@@ -42,6 +60,24 @@ class Funciones {
                 }
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
+            }
+        }
+
+
+ Obtener tarjeta:
+         val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            try {
+                val resultado = instancia.obtenerTarjeta("Banco Galicia", "Visa", "No posee","Débito")
+                if (resultado != null) {
+                    resultado.entidad?.let { Log.d("Resultado", it) }
+                    resultado.id?.let { Log.d("Resultado", it) }
+                }
+                else{
+                   Log.d("Resultado","NULO")
+                }
+            } catch (e: Exception) {
+                Log.d("Resultado","ERROR")
             }
         }
  */

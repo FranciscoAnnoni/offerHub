@@ -19,11 +19,13 @@ import kotlin.coroutines.suspendCoroutine
 
 class Entidad{
     // Propiedades (atributos) de la clase
+    var id: String?
     var nombre: String?
     var tipo: String?
 
     // Constructor primario
-    constructor(nombre: String?, tipo: String?) {
+    constructor(id:String?,nombre: String?, tipo: String?) {
+        this.id = id
         this.nombre = nombre
         this.tipo = tipo
     }
@@ -31,12 +33,14 @@ class Entidad{
 
 class Comercio{
     // Propiedades (atributos) de la clase
+    var id:String?
     var categoria: String?
     var nombre: String?
     var logo: String?
 
     // Constructor primario
-    constructor(nombre: String?, categoria: String?,logo:String?) {
+    constructor(id:String?,nombre: String?, categoria: String?,logo:String?) {
+        this.id = id
         this.nombre = nombre
         this.categoria = categoria
         this.logo =  logo
@@ -61,6 +65,7 @@ class Comercio{
 
 class Tarjeta{
     // Propiedades (atributos) de la clase
+    var id: String?
     var entidad: String?
     var procesadora: String?
     var segmento: String?
@@ -68,7 +73,8 @@ class Tarjeta{
 
 
     // Constructor primario
-    constructor(procesadora: String?, segmento: String?,tipoTarjeta: String?,entidad: String?) {
+    constructor(id:String?,procesadora: String?, segmento: String?,tipoTarjeta: String?,entidad: String?) {
+        this.id = id
         this.procesadora = procesadora
         this.segmento = segmento
         this.tipoTarjeta = tipoTarjeta
@@ -78,6 +84,7 @@ class Tarjeta{
 
 class Sucursal{
     // Propiedades (atributos) de la clase
+    var id: String?
     var direccion: String?
     var idComercio: String?
     var latitud: Double?
@@ -85,7 +92,8 @@ class Sucursal{
 
 
     // Constructor primario
-    constructor(direccion: String?, idComercio: String?,latitud: Double?,longitud: Double?) {
+    constructor(id:String?,direccion: String?, idComercio: String?,latitud: Double?,longitud: Double?) {
+        this.id = id
         this.direccion = direccion
         this.idComercio = idComercio
         this.latitud = latitud
@@ -95,6 +103,7 @@ class Sucursal{
 
 class Promocion{
     // Propiedades (atributos) de la clase
+    var id: String?
     var categoria: String?
     var comercio: String?
     val dias: List<String?>?
@@ -109,9 +118,10 @@ class Promocion{
 
     // Constructor primario
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(categoria: String?, comercio: String?, dias: List<String?>?, tarjetas: List<String?>?,
+    constructor(id:String?,categoria: String?, comercio: String?, dias: List<String?>?, tarjetas: List<String?>?,
                 proveedor: String?, titulo: String?, tope: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
                 vigenciaHasta: LocalDate?) {
+        this.id = id
         this.categoria = categoria
         this.comercio = comercio
         this.dias = dias
@@ -154,7 +164,7 @@ class LecturaBD {
     }
 
     fun <T> leerBdClase(tabla: String,campoFiltro: String,valorFiltro: String,callback: (MutableList<T>) -> Unit){
-        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com/")
+        val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
         val promocionRef = database.getReference("/$tabla")
 
         val lista: MutableList<T> = mutableListOf()
@@ -165,19 +175,19 @@ class LecturaBD {
                         for (data in dataSnapshot.children){
                             when (tabla) {
                                 "Entidad" ->{
-                                    val instancia = Entidad(data.child("nombre").getValue(String::class.java),  data.child("tipo").getValue(String::class.java))
+                                    val instancia = Entidad(data.key,data.child("nombre").getValue(String::class.java),  data.child("tipo").getValue(String::class.java))
                                     lista.add(instancia as T)
                                 }
                                 "Comercio" ->{
-                                    val instancia = Comercio(data.child("nombre").getValue(String::class.java),  data.child("categoria").getValue(String::class.java),data.child("logo").getValue(String::class.java))
+                                    val instancia = Comercio(data.key,data.child("nombre").getValue(String::class.java),  data.child("categoria").getValue(String::class.java),data.child("logo").getValue(String::class.java))
                                     lista.add(instancia as T)
                                 }
                                 "Tarjeta" ->{
-                                    val instancia = Tarjeta(data.child("procesadora").getValue(String::class.java),  data.child("segmento").getValue(String::class.java),data.child("tipoTarjeta").getValue(String::class.java),data.child("entidad").getValue(String::class.java))
+                                    val instancia = Tarjeta(data.key,data.child("procesadora").getValue(String::class.java),  data.child("segmento").getValue(String::class.java),data.child("tipoTarjeta").getValue(String::class.java),data.child("entidad").getValue(String::class.java))
                                     lista.add(instancia as T)
                                 }
                                 "Sucursal" ->{
-                                    val instancia = Sucursal(data.child("direccion").getValue(String::class.java),  data.child("idComercio").getValue(String::class.java),
+                                    val instancia = Sucursal(data.key,data.child("direccion").getValue(String::class.java),  data.child("idComercio").getValue(String::class.java),
                                         data.child("latitud").getValue(String::class.java)?.toDouble(),
                                         data.child("longitud").getValue(String::class.java)
                                             ?.toDouble()
@@ -188,7 +198,7 @@ class LecturaBD {
                                     val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                     val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
                                     val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
-                                    val instancia = Promocion(data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                                    val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
                                         data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("proveedor").getValue(String::class.java),data.child("titulo").getValue(String::class.java),
@@ -232,7 +242,7 @@ class LecturaBD {
                             val vigenciaHastaString: String? =
                                 data.child("vigenciaHasta").getValue(String::class.java)
                             val instancia =
-                                Promocion(data.child("categoria")
+                                Promocion(data.key,data.child("categoria")
                                     .getValue(String::class.java),
                                     data.child("comercio").getValue(String::class.java),
                                     data.child("dias").getValue(object :
