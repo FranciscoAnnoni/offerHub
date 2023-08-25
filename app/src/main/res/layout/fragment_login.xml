@@ -48,7 +48,7 @@
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email"
+            android:id="@+id/edEmailLogin"
             style="@style/EditTextRounded"
             android:hint="@string/email"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,11 +64,11 @@
             android:padding="5dp"
             android:text="@string/password"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email"
+            app:layout_constraintTop_toBottomOf="@id/edEmailLogin"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password"
+            android:id="@+id/edPasswordLogin"
             style="@style/EditTextRounded"
             android:layout_marginTop="4dp"
             android:hint="@string/password"
@@ -83,8 +83,8 @@
         <!--                  Boton de Continuar para enviar los datos                -->
 
         <!--                  Texto para registrarse debajo del boton de login                -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login"
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/btnLogin"
             style="@style/RoundedButtonBackground"
             android:layout_width="150dp"
             android:layout_height="54dp"
@@ -93,7 +93,8 @@
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password"
+            app:layout_constraintTop_toBottomOf="@id/edPasswordLogin"
+            app:spinning_bar_color="@color/white"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -102,19 +103,9 @@
             android:text="no tenes una cuenta?"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin"
             tools:ignore="MissingConstraints" />
 
-        <!--  Esto es el circulito que carga cuando envias los datos -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
-            tools:ignore="MissingConstraints" />
 
         <!--  Esto es el nombre Registrarse en violeta -->
         <TextView
@@ -127,7 +118,7 @@
             android:text="Registrate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin"
             tools:ignore="MissingConstraints" />
 
         <ImageView
@@ -163,7 +154,7 @@
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin"
             tools:ignore="MissingConstraints" />
 
 
