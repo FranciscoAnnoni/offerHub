@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/fondo">
+
+    <!--                  Inicio del apartado de Login                  -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--                  Imagen                -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="@null"
+            android:src="@drawable/offerhub_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--                  Titulo                -->
+        <TextView
+            style="@style/titulos"
+            android:id="@+id/textInicioSesion"
+            android:layout_marginTop="10dp"
+            android:text="Inicio de Sesíon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo"
+            tools:ignore="MissingConstraints" />
+
+        <!--                  Campos para completar por el usuario                -->
+        <TextView
+            android:id="@+id/nombreEmail"
+            style="@style/textoChicoVioleta"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="35dp"
+            android:padding="5dp"
+            android:text="@string/email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInicioSesion"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email"
+            style="@style/EditTextRounded"
+            android:hint="@string/email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nombreEmail"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/nombrePassword"
+            style="@style/textoChicoVioleta"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="20dp"
+            android:padding="5dp"
+            android:text="@string/password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            style="@style/EditTextRounded"
+            android:layout_marginTop="4dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nombrePassword"
+            tools:ignore="MissingConstraints" />
+
+
+        <!--                  Boton de Continuar para enviar los datos                -->
+
+        <!--                  Texto para registrarse debajo del boton de login                -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login"
+            style="@style/RoundedButtonBackground"
+            android:layout_width="150dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="40dp"
+            android:text="Continuar"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            style="@style/textoChicoNegro"
+            android:layout_marginTop="8dp"
+            android:text="no tenes una cuenta?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            tools:ignore="MissingConstraints" />
+
+        <!--  Esto es el circulito que carga cuando envias los datos -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            tools:ignore="MissingConstraints" />
+
+        <!--  Esto es el nombre Registrarse en violeta -->
+        <TextView
+            style="@style/textoChicoVioleta"
+            android:id="@+id/registerNow"
+            android:layout_width="146dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="Registrate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/googleLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:src="@drawable/google_login"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/registerNow"/>
+
+
+        <!--                  Esto es la parte de Abajo                -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/google_login"
+            android:text="Google login"
+            android:textColor="@color/g_gray500"
+            app:layout_constraintBottom_toBottomOf="@id/googleLogin"
+            app:layout_constraintEnd_toEndOf="@id/googleLogin"
+            app:layout_constraintHorizontal_bias="0.666"
+            app:layout_constraintStart_toStartOf="@id/googleLogin"
+            app:layout_constraintTop_toTopOf="@id/googleLogin" />
+
+        <View
+            android:id="@+id/linea1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="120dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            style="@style/textoChicoNegro"
+            android:layout_marginTop="18dp"
+            android:text="Sos una Empresa?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linea1"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            style="@style/textoChicoVioleta"
+            android:id="@+id/loginEmpresa"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="Registrar o Ingresar como Empresa"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linea1"
+            tools:ignore="MissingConstraints" />
+
+        <View
+            android:id="@+id/linea2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginEmpresa"
+            tools:ignore="MissingConstraints" />
+
+
+        <!--                  Estas son las lineas invisibles de guia                -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.10" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.90" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

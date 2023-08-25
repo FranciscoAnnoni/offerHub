@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    !--...............Todos los Styles de los Login y Registros de Usuario y Empresa...................            -->
+
+    <!-- Es para la reutilizacion de las casillas del registro y login -->
+    <style name="EditTextRounded">
+        <item name="android:layout_width">330dp</item>
+        <item name="android:layout_height">54dp</item>
+        <item name="android:background">@drawable/rounded_text_background</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:elevation">0.8dp</item> <!-- Agrega elevación para la sombra -->
+        <item name="android:translationZ">0.3dp</item> <!-- Cambia la elevación para la sombra -->
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Es para la reutilizacion de los botones pero todavia no logro utilizarlo -->
+    <style name="RoundedButtonBackground" parent="Theme.Material3.Light">
+        <item name="android:background">@drawable/rounded_button_background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Es para la reutilizacion de los Titulos grandes del registro y login de color violeta-->
+    <style name="titulos">
+        <item name="android:textColor">@color/violeta</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">42sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Es para la reutilizacion de los textos pequenios del registro y login de color violeta -->
+    <style name="textoChicoVioleta">
+        <item name="android:textColor">@color/violetaMasClaro</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Es para la reutilizacion de los textos pequenios del registro y login de color negro -->
+    <style name="textoChicoNegro">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="h4">
+        <item name="android:fontFamily">@font/poppins_thin</item>
+        <item name="android:textColor">@color/g_black</item>
+        <item name="android:textSize">@dimen/h4TextSize</item>
+    </style>
+
+    <style name="h2">
+        <item name="android:fontFamily">@font/poppins_light</item>
+        <item name="android:textColor">@color/g_gray700</item>
+        <item name="android:textSize">@dimen/h2TextSize</item>
+    </style>
+
+    <style name="h3">
+        <item name="android:fontFamily">@font/poppins_light</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/h3TextSize</item>
+    </style>
+
+    <style name="blueButtonStyle">
+        <item name="android:background">@drawable/blue_background</item>
+        <item name="android:fontFamily">@font/poppins_thin</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/h2TextSize</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="whiteButtonStyle">
+        <item name="android:background">@drawable/white_background</item>
+        <item name="android:fontFamily">@font/poppins_thin</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/h2TextSize</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="editText">
+        <item name="android:background">@drawable/white_background</item>
+        <item name="android:gravity">center</item>
+        <item name="singleLine">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/poppins_light</item>
+    </style>
+
+
+    <dimen name="h4TextSize">35sp</dimen>
+    <dimen name="h2TextSize">17sp</dimen>
+    <dimen name="h3TextSize">22sp</dimen>
+
+
+</resources>
