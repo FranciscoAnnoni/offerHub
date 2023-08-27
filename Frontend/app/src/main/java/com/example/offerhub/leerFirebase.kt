@@ -139,7 +139,7 @@ class Promocion{
 class LecturaBD {
 
     fun leerBdString(tabla: String,campoFiltro: String,valorFiltro: String,campoRetorno: String,callback: (MutableList<String>) -> Unit){
-        val database = FirebaseDatabase.getInstance("https://oh-backend-848a1-default-rtdb.firebaseio.com/")
+        val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
         val promocionRef = database.getReference("/$tabla")
         val lista: MutableList<String> = mutableListOf()
         promocionRef.orderByChild("$campoFiltro").equalTo(valorFiltro).addListenerForSingleValueEvent(object : ValueEventListener {

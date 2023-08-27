@@ -65,7 +65,7 @@ class Funciones {
 
 
  Obtener tarjeta:
-         val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
             try {
                 val resultado = instancia.obtenerTarjeta("Banco Galicia", "Visa", "No posee","Débito")
