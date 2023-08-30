@@ -165,6 +165,8 @@ for boton in seccion_categorias:
         promocion.tarjetas=idTarjetas
         promocion.proveedor=idEntidad
         promocion.comercio=idComercio
+        promocion.topeTexto = ""
+        promocion.topeNro = ""
         promocion.url=url
         if vigencia:
             promocion.vigenciaDesde=" - "
