@@ -194,10 +194,11 @@ for boton in seccion_categorias:
                         print("\t\tCondicion: SI DEPOSITÁS TU SUELDO EN ICBC")
                     promocion.titulo=titulo+": "+tituloPromo
                     if "%" in tituloPromo or "descuento" in tituloPromo:
-                        promocion.tope=re.sub(r'<[^>]+>', '', tope)
-
+                        promocion.topeTexto = reintegro
+                        promocion.topeNro = re.sub(r'<[^>]+>', '', reintegro)
                     else:
                         promocion.tope=""
+                        promocion.topeNro=""
                     promocion.setearTipoPromocion(tituloPromo,promocion.tope)
                     numeros=promocion.obtenerPorcentajeYCantCuotas(tituloPromo)
                     promocion.porcentaje=numeros["porcentaje"]

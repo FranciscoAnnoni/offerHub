@@ -225,6 +225,7 @@ class LecturaBD {
         })
     }
 
+    // NO DEBERÍA SER obtenerPromosPorTarjeta ? Sin plural
     suspend fun  obtenerPromosPorTarjetas(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
         val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com/")
         val promocionRef = database.getReference("/Promocion")
