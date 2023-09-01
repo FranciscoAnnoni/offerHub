@@ -163,7 +163,7 @@ class LecturaBD {
         })
     }
 
-    fun <T> leerBdClase(tabla: String,campoFiltro: String,valorFiltro: String,callback: (MutableList<T>) -> Unit){
+    fun <T> traerClasesXFiltro(tabla: String,campoFiltro: String,valorFiltro: String,callback: (MutableList<T>) -> Unit){
         val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
         val promocionRef = database.getReference("/$tabla")
 
@@ -225,8 +225,7 @@ class LecturaBD {
         })
     }
 
-    // NO DEBERÍA SER obtenerPromosPorTarjeta ? Sin plural
-    suspend fun  obtenerPromosPorTarjetas(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
+    suspend fun  obtenerPromosPorTarjeta(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
         val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com/")
         val promocionRef = database.getReference("/Promocion")
         val lista: MutableList<Promocion> = mutableListOf()
@@ -298,13 +297,13 @@ LeerBdString:
         }
 
 
-//leerBdClase():
+//traerClasesXFiltro():
         var instancia = LecturaBD()
 
         setContentView(R.layout.activity_main)
 
 //Entidad:
-        instancia.leerBdClase<Entidad>("Entidad","tipo","Bancaria"){list ->
+        instancia.traerClasesXFiltro<Entidad>("Entidad","tipo","Bancaria"){list ->
             for (item in list) {
                 when (item) {
                     is Entidad -> println("Instancia de Entidad: ${item.nombre}")
@@ -314,7 +313,7 @@ LeerBdString:
         }
 
 //comercio
-        instancia.leerBdClase<Comercio>("Comercio","nombre","Almado"){list ->
+        instancia.traerClasesXFiltro<Comercio>("Comercio","nombre","Almado"){list ->
             for (item in list) {
                 when (item) {
                     is Comercio -> {
@@ -329,7 +328,7 @@ LeerBdString:
 
 
 //Tarjeta:
-        instancia.leerBdClase<Tarjeta>("Tarjeta","procesadora","Visa"){list ->
+        instancia.traerClasesXFiltro<Tarjeta>("Tarjeta","procesadora","Visa"){list ->
             for (item in list) {
                 when (item) {
                     is Tarjeta -> {
@@ -344,7 +343,7 @@ LeerBdString:
         }
 
 //Sucursal
-      instancia.leerBdClase<Sucursal>("Sucursal","idComercio","-NbqSvEi9vx2qhpYrZhZ"){list ->
+      instancia.traerClasesXFiltro<Sucursal>("Sucursal","idComercio","-NbqSvEi9vx2qhpYrZhZ"){list ->
             for (item in list) {
                 when (item) {
                     is Sucursal -> {
@@ -360,7 +359,7 @@ LeerBdString:
 
 //Promocion
 
-        instancia.leerBdClase<Promocion>("Promocion","categoria","Gastronomía"){list ->
+        instancia.traerClasesXFiltro<Promocion>("Promocion","categoria","Gastronomía"){list ->
             for (item in list) {
                 when (item) {
                     is Promocion -> {
