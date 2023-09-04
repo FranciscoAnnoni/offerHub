@@ -13,7 +13,7 @@ class Funciones {
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
-            instancia.obtenerPromosPorTarjetas("No posee")
+            instancia.obtenerPromosPorTarjeta("No posee")
         }
         val promos = promosDeferred.await() // Esperar a que se completen las promociones
         if (promos != null) {
@@ -26,7 +26,7 @@ class Funciones {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val deferredPromos = usuario.tarjetas?.map { tarjeta ->
             coroutineScope.async {
-                val promos = tarjeta?.let { instancia.obtenerPromosPorTarjetas(it) }
+                val promos = tarjeta?.let { instancia.obtenerPromosPorTarjeta(it) }
                 if (promos != null) {
                     listaPromos.addAll(promos)
                 }

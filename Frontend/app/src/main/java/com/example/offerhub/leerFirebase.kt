@@ -106,11 +106,16 @@ class Promocion{
     var id: String?
     var categoria: String?
     var comercio: String?
+    var cuotas: String?
     val dias: List<String?>?
+    var porcentaje: String?
+    var proveedor: String?
+    val sucursales: List<String?>?
     val tarjetas: List<String?>?
-    val proveedor: String?
+    val tipoPromocion: String?
     val titulo: String?
-    val tope: String?
+    val topeNro: String?
+    val topeTexto: String?
     val tyc: String?
     val url: String?
     val vigenciaDesde: LocalDate?
@@ -118,17 +123,22 @@ class Promocion{
 
     // Constructor primario
     @RequiresApi(Build.VERSION_CODES.O)
-    constructor(id:String?,categoria: String?, comercio: String?, dias: List<String?>?, tarjetas: List<String?>?,
-                proveedor: String?, titulo: String?, tope: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
+    constructor(id:String?,categoria: String?, comercio: String?, cuotas: String?, dias: List<String?>?, porcentaje: String?, proveedor: String?, sucursales: List<String?>?, tarjetas: List<String?>?,
+                tipoPromocion: String?, titulo: String?, topeNro: String?, topeTexto: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
                 vigenciaHasta: LocalDate?) {
         this.id = id
         this.categoria = categoria
         this.comercio = comercio
+        this.cuotas = cuotas
         this.dias = dias
+        this.porcentaje = porcentaje
+        this.proveedor = proveedor
+        this.sucursales = sucursales
         this.tarjetas = tarjetas
-        this.proveedor=proveedor
+        this.tipoPromocion=tipoPromocion
         this.titulo=titulo
-        this.tope=tope
+        this.topeNro=topeNro
+        this.topeTexto=topeTexto
         this.tyc =tyc
         this.url=url
         this.vigenciaDesde = vigenciaDesde
@@ -199,12 +209,17 @@ class LecturaBD {
                                     val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
                                     val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
                                     val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                                        data.child("cuotas").getValue(String::class.java),
                                         data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                        data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
+                                        data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                        data.child("proveedor").getValue(String::class.java),data.child("titulo").getValue(String::class.java),
-                                        data.child("tope").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
+                                        data.child("tipoPromocion").getValue(String::class.java),
+                                        data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
+                                        data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                         data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                         vigenciaHastaString?.let { LocalDate.parse(it, formato) }
+
                                     )
                                     lista.add(instancia as T)
                                 }
@@ -225,6 +240,56 @@ class LecturaBD {
         })
     }
 
+    inline fun <reified T> traerClasesXFiltros(
+        tabla: String,
+        filtros: List<Pair<String, String>>,
+        crossinline callback: (MutableList<T>) -> Unit
+    ) {
+        var lista: MutableList<T>? = null
+
+        traerClasesXFiltro<T>(tabla, filtros[0].first, filtros[0].second) { list ->
+            lista = list
+            var i = 1
+            val atributosListas = listOf("dias", "sucursales", "tarjetas")
+            while (i < filtros.size) {
+                val campoFiltro = filtros[i].first
+                val valorFiltro = filtros[i].second
+
+                lista = lista?.filter { clase ->
+                    try {
+                        val field = (T::class.java).getDeclaredField(campoFiltro)
+                        field.isAccessible = true
+                        val atributoClase = field.get(clase)
+
+                        val booleano = if (campoFiltro in atributosListas) {
+                            if (atributoClase is List<*>) {
+                                valorFiltro in atributoClase
+                            } else {
+                                false
+                            }
+                        } else {
+                            atributoClase == valorFiltro
+                        }
+
+                        booleano
+                    } catch (e: NoSuchFieldException) {
+                        false
+                    }
+                }?.toMutableList()
+
+
+                i++
+            }
+
+            lista?.let { callback(it) }
+        }
+
+
+    }
+
+
+
+
     suspend fun  obtenerPromosPorTarjeta(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
         val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com/")
         val promocionRef = database.getReference("/Promocion")
@@ -237,35 +302,19 @@ class LecturaBD {
                         val listaCampo = data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
                         if (listaCampo != null && listaCampo.contains(tarjeta)) {
                             val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            val vigenciaDesdeString: String? =
-                                data.child("vigenciaDesde").getValue(String::class.java)
-                            val vigenciaHastaString: String? =
-                                data.child("vigenciaHasta").getValue(String::class.java)
-                            val instancia =
-                                Promocion(data.key,data.child("categoria")
-                                    .getValue(String::class.java),
-                                    data.child("comercio").getValue(String::class.java),
-                                    data.child("dias").getValue(object :
-                                        GenericTypeIndicator<List<String?>>() {}),
-                                    data.child("tarjetas").getValue(object :
-                                        GenericTypeIndicator<List<String?>>() {}),
-                                    data.child("proveedor").getValue(String::class.java),
-                                    data.child("titulo").getValue(String::class.java),
-                                    data.child("tope").getValue(String::class.java),
-                                    data.child("tyc").getValue(String::class.java),
-                                    data.child("url").getValue(String::class.java),
-                                    vigenciaDesdeString?.let {
-                                        LocalDate.parse(
-                                            it,
-                                            formato
-                                        ) },
-                                    vigenciaHastaString?.let {
-                                        LocalDate.parse(
-                                            it,
-                                            formato
-                                        )
-                                    }
-                                )
+                            val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
+                            val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                                data.child("cuotas").getValue(String::class.java),
+                                data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
+                                data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("tipoPromocion").getValue(String::class.java),
+                                data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
+                                data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
+                                data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
+                                vigenciaHastaString?.let { LocalDate.parse(it, formato) })
                             lista.add(instancia)
                         }
 
@@ -374,6 +423,56 @@ LeerBdString:
                         println("Instancia de Promocion: ${item.url}")
                         println("Instancia de Promocion: ${item.vigenciaDesde}")
                         println("Instancia de Promocion: ${item.vigenciaHasta}")
+                    }
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+// MUCHOS FILTROS
+
+// PROMOCION
+
+var instancia = LecturaBD()
+
+        setContentView(R.layout.activity_main)
+
+        val filtros = listOf(
+            "categoria" to "Educación",
+            "tipoPromocion" to "Cuotas"
+        )
+
+
+        instancia.traerClasesXFiltros<Promocion>("Promocion",filtros){list ->
+            Log.d("TAMAÑO LISTA", "TAMAÑO: $list.size")
+            for (item in list) {
+                when (item) {
+                    is Promocion -> {
+                        Log.d("Promocion", "titulo: ${item.titulo}")
+                    }
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+   // CON LISTAS
+
+        var instancia = LecturaBD()
+
+        setContentView(R.layout.activity_main)
+
+        val filtros = listOf(
+            "categoria" to "Educación",
+            "tarjetas" to "-NcDHYyW9d0QE9gyP8Nt",
+            "dias" to "Martes"
+        )
+
+
+        instancia.traerClasesXFiltros<Promocion>("Promocion",filtros){list ->
+            for (item in list) {
+                when (item) {
+                    is Promocion -> {
+                        Log.d("Promocion", "titulo: ${item.titulo}")
                     }
                     else -> throw IllegalArgumentException("Tipo de clase desconocido")
                 }
