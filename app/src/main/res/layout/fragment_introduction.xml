@@ -44,7 +44,6 @@
         android:textSize="35sp"
         android:textStyle="bold|normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoIntro"
         tools:ignore="MissingConstraints" />
