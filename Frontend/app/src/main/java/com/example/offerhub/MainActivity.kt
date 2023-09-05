@@ -41,4 +41,3 @@ fun Greeting(texto: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
-

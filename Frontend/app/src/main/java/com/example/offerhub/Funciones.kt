@@ -5,14 +5,15 @@ import kotlinx.coroutines.*
 
 class Funciones {
 
-    val instancia = LecturaBD()
+    val instanciaLectura = LecturaBD()
+    val instanciaEscritura = EscribirBD()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     //Obtiene las promociones de comercios que aplican a cualq usuario, sin necesidad de tarjetas.
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
-            instancia.obtenerPromosPorTarjeta("No posee")
+            instanciaLectura.obtenerPromosPorTarjeta("No posee")
         }
         val promos = promosDeferred.await() // Esperar a que se completen las promociones
         if (promos != null) {
@@ -25,7 +26,7 @@ class Funciones {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val deferredPromos = usuario.tarjetas?.map { tarjeta ->
             coroutineScope.async {
-                val promos = tarjeta?.let { instancia.obtenerPromosPorTarjeta(it) }
+                val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
                 if (promos != null) {
                     listaPromos.addAll(promos)
                 }
@@ -55,19 +56,37 @@ class Funciones {
     }
 
     fun agregarPromocionAFavoritos(userId: String, elementoId: String) {
-        EscribirBD().agregarElementoAListas(userId, elementoId, "Usuario", "favoritos")
+        instanciaEscritura.agregarElementoAListas(userId, elementoId, "Usuario", "favoritos")
     }
 
     fun elimiarPromocionDeFavoritos(userId: String, elementoId: String){
-        EscribirBD().eliminarElementoDeListas(userId, elementoId, "Usuario", "favoritos")
+        instanciaEscritura.eliminarElementoDeListas(userId, elementoId, "Usuario", "favoritos")
     }
 
     fun agregarPromocionAReintegro(userId: String, elementoId: String) {
-        EscribirBD().agregarElementoAListas(userId, elementoId, "Usuario", "promocionesReintegro")
+        instanciaEscritura.agregarElementoAListas(userId, elementoId, "Usuario", "promocionesReintegro")
     }
 
     fun elimiarPromocionDeReintegro(userId: String, elementoId: String){
-        EscribirBD().eliminarElementoDeListas(userId, elementoId, "Usuario", "promocionesReintegro")
+        instanciaEscritura.eliminarElementoDeListas(userId, elementoId, "Usuario", "promocionesReintegro")
+    }
+
+    // Por parámetro se pasa el id del usuario y el elemento a agregar a la wishlist (Id del comercio o nombre del rubro)
+    fun agregarAWishlist(userId: String, elemento: String) {
+        if (elemento in listOf<String>("Gastronomía","Vehículos","Salud y Bienestar","Hogar","Viajes y Turismo","Entretenimiento","Indumentaria","Supermercados","Electrónica","Educación","Niños","Regalos","Bebidas","Librerías","Joyería","Mascotas","Servicios","Otros")) {
+            instanciaEscritura.agregarElementoAListas(userId, elemento, "Usuario", "wishlistRubro")
+        } else {
+            instanciaEscritura.agregarElementoAListas(userId, elemento, "Usuario", "wishlistComercio")
+        }
+
+    }
+
+    fun eliminarDeWishlist(userId: String, elemento: String){
+        if (elemento in listOf<String>("Gastronomía","Vehículos","Salud y Bienestar","Hogar","Viajes y Turismo","Entretenimiento","Indumentaria","Supermercados","Electrónica","Educación","Niños","Regalos","Bebidas","Librerías","Joyería","Mascotas","Servicios","Otros")) {
+            instanciaEscritura.eliminarElementoDeListas(userId, elemento, "Usuario", "wishlistRubro")
+        } else {
+            instanciaEscritura.eliminarElementoDeListas(userId, elemento, "Usuario", "wishlistComercio")
+        }
     }
 
 }
@@ -145,5 +164,25 @@ ELIMINAR REINTEGRO
 
         var instancia = Funciones()
         instancia.elimiarPromocionDeReintegro("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+
+AGREGAR COMERCIO A WISHLIST
+
+        var instancia = Funciones()
+        instancia.agregarAWishlist("-Ndatw54kEPtRjXZ1dDw","-NcDPGdF2TegzU2mg32k")
+
+ELIMINAR COMERCIO DE WISHLIST
+
+        var instancia = Funciones()
+        instancia.eliminarDeWishlist("-Ndatw54kEPtRjXZ1dDw","-NcDPGdF2TegzU2mg32k")
+
+AGREGAR RUBRO A WISHLIST
+
+        var instancia = Funciones()
+        instancia.agregarAWishlist("-Ndatw54kEPtRjXZ1dDw","Joyería")
+
+ELIMINAR RUBRO DE WISHLIST
+
+        var instancia = Funciones()
+        instancia.eliminarDeWishlist("-Ndatw54kEPtRjXZ1dDw","Joyería")
 
  */
