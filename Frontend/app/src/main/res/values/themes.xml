@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.OfferHub" parent="android:Theme.Material.Light.NoActionBar" />
-
-    <!--- ACA CONFIGURAMOS LOS COLRES BASE DE LA APP -->
+    <style name="Theme.OfferHub" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Other style attributes -->
+        <!-- Set the status bar color -->
+        <item name="android:statusBarColor">@color/violetaClaro</item>
+    </style>
 
 </resources>
