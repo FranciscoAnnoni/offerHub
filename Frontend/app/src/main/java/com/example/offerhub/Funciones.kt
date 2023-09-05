@@ -3,7 +3,6 @@ package com.example.offerhub
 import android.util.Log
 import kotlinx.coroutines.*
 
-
 class Funciones {
 
     val instancia = LecturaBD()
@@ -53,6 +52,22 @@ class Funciones {
             }
         }
         return tarjetaFinal
+    }
+
+    fun agregarPromocionAFavoritos(userId: String, elementoId: String) {
+        EscribirBD().agregarElementoAListas(userId, elementoId, "Usuario", "favoritos")
+    }
+
+    fun elimiarPromocionDeFavoritos(userId: String, elementoId: String){
+        EscribirBD().eliminarElementoDeListas(userId, elementoId, "Usuario", "favoritos")
+    }
+
+    fun agregarPromocionAReintegro(userId: String, elementoId: String) {
+        EscribirBD().agregarElementoAListas(userId, elementoId, "Usuario", "promocionesReintegro")
+    }
+
+    fun elimiarPromocionDeReintegro(userId: String, elementoId: String){
+        EscribirBD().eliminarElementoDeListas(userId, elementoId, "Usuario", "promocionesReintegro")
     }
 
 }
@@ -109,4 +124,26 @@ class Funciones {
                 println("Error al obtener promociones: ${e.message}")
             }
         }
+
+
+AGREGAR FAVORITOS
+
+        var instancia = Funciones()
+        instancia.agregarPromocionAFavoritos("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+
+ELIMINAR FAVORITOS
+
+        var instancia = Funciones()
+        instancia.elimiarPromocionDeFavoritos("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+
+AGREGAR REINTEGRO
+
+        var instancia = Funciones()
+        instancia.agregarPromocionAReintegro("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+
+ELIMINAR REINTEGRO
+
+        var instancia = Funciones()
+        instancia.elimiarPromocionDeReintegro("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+
  */

@@ -19,9 +19,26 @@ class MainActivity : ComponentActivity() {
 
 
 
+        setContent {
+            OfferHubTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Greeting("Android")
+                }
+            }
+        }
+
     }
 }
 
-//"-NcDJ22_da-2uuX7S2ZT"
-//"-NcDLygyAWu4RhsKOa4Q"
-//"-NcEA5nsLLY28LsQLjpP"
+@Composable
+fun Greeting(texto: String, modifier: Modifier = Modifier) {
+    Text(
+        text = texto,
+        modifier = modifier
+    )
+}
+

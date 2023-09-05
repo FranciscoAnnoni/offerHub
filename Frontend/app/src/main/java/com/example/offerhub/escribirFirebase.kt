@@ -13,15 +13,17 @@ class Usuario{
     var favoritos: List<String?>?
     var wishlistComercio: List<String?>?
     var wishlistRubro: List<String?>?
+    var promocionesReintegro: List<String?>?
 
     // Constructor primario
-    constructor(nombre: String, correo: String?,tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?){
+    constructor(nombre: String, correo: String?,tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?){
         this.nombre = nombre
         this.correo = correo
         this.tarjetas = tarjetas
         this.favoritos = favoritos
         this.wishlistComercio = wishlistComercio
         this.wishlistRubro = wishlistRubro
+        this.promocionesReintegro = promocionesReintegro
     }
 }
 
@@ -38,11 +40,13 @@ class EscribirBD {
         }
     }
 
-    fun agregarPromocionAFavoritos(userId: String, elementoId: String) {
-        val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
-        val referenciaFavoritos = database.getReference("Usuario").child(userId).child("favoritos")
+//    A PARTIR DE ACA SIRVE PARA EDITAR LOS OBJETOS DE LA BASE DE DATOS
 
-        referenciaFavoritos.addListenerForSingleValueEvent(object : ValueEventListener {
+    fun agregarElementoAListas(userId: String, elementoId: String, clase: String, nombreLista: String) {
+        val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
+        val referencia = database.getReference(clase).child(userId).child(nombreLista)
+
+        referencia.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val listaFavoritos = mutableListOf<String>()
 
@@ -54,7 +58,7 @@ class EscribirBD {
                 }
 
                 val nuevoIndice = listaFavoritos.size.toString()
-                referenciaFavoritos.child(nuevoIndice).setValue(elementoId)
+                referencia.child(nuevoIndice).setValue(elementoId)
                     .addOnCompleteListener {}
             }
 
@@ -63,10 +67,10 @@ class EscribirBD {
         })
     }
 
-    fun elimiarPromocionDeFavoritos(userId: String, elementoId: String) {
+    fun eliminarElementoDeListas(userId: String, elementoId: String, clase: String, nombreLista: String) {
 
         val database = FirebaseDatabase.getInstance()
-        val referenciaFavoritos = database.getReference("Usuario").child(userId).child("favoritos")
+        val referenciaFavoritos = database.getReference(clase).child(userId).child(nombreLista)
 
         referenciaFavoritos.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -82,8 +86,6 @@ class EscribirBD {
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
-
-
     }
 
 }
@@ -94,16 +96,14 @@ class EscribirBD {
         var favoritos: List<String?> = listOf("-NcDJ22_da-2uuX7S2ZT", "-NcDLygyAWu4RhsKOa4Q", "-NcEA5nsLLY28LsQLjpP")
         var wishlistComercio: List<String?> = listOf("-NcDtqHdvwoX7wsvJHNw", "-NcE08fDeAQM2M98gbfR", "-NcE1qDB1J3N3w30hbUC")
         var wishlistRubro: List<String?> = listOf("Supermercados")
+        var reintegro: List<String?> = listOf("-NcDtqHdvwoX7wsvJHNw")
         val usuariosNuevos = listOf(
-            Usuario("Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro),
-            Usuario("Nahuel Barrios", "perritogambeta@hotmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro)
+            Usuario("Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro),
+            Usuario("Nahuel Barrios", "perritogambeta@hotmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
         )
         instancia.escribirUsuariosEnFirebase(usuariosNuevos)
 
-AGREGAR FAVORITOS
-        instancia.agregarPromocionAFavoritos("-NdacjW_k2VmBYR0VWmI","-NcDJ4STEiIYXB_3PlOJ")
-ELIMINAR FAVORITOS
-        instancia.elimiarPromocionDeFavoritos("-NdacjW_k2VmBYR0VWmI","-NcDJ4STEiIYXB_3PlOJ")
+
 
 
 
