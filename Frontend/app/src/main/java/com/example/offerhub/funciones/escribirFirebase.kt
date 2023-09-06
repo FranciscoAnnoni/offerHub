@@ -7,8 +7,10 @@ import com.google.firebase.database.ValueEventListener
 
 class Usuario{
     // Propiedades (atributos) de la clase
+    var id: String
     var nombre: String
     var correo: String?
+    var contrasenia: String
     var tarjetas: List<String?>?
     var favoritos: List<String?>?
     var wishlistComercio: List<String?>?
@@ -16,9 +18,11 @@ class Usuario{
     var promocionesReintegro: List<String?>?
 
     // Constructor primario
-    constructor(nombre: String, correo: String?,tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?){
+    constructor(id: String, nombre: String, correo: String?, contrasenia: String, tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?){
+        this.id = id
         this.nombre = nombre
         this.correo = correo
+        this.contrasenia = contrasenia
         this.tarjetas = tarjetas
         this.favoritos = favoritos
         this.wishlistComercio = wishlistComercio
@@ -31,7 +35,7 @@ class EscribirBD {
 
     fun escribirUsuariosEnFirebase(usuarios: List<Usuario>) {
         val database: FirebaseDatabase =
-            FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referencia: DatabaseReference = database.reference.child("/Usuario")
 
         usuarios.forEach { usuario ->
@@ -43,7 +47,7 @@ class EscribirBD {
 //    A PARTIR DE ACA SIRVE PARA EDITAR LOS OBJETOS DE LA BASE DE DATOS
 
     fun agregarElementoAListas(userId: String, elementoId: String, clase: String, nombreLista: String) {
-        val database = FirebaseDatabase.getInstance("https://oh-bkd2-default-rtdb.firebaseio.com")
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referencia = database.getReference(clase).child(userId).child(nombreLista)
 
         referencia.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -98,13 +102,8 @@ class EscribirBD {
         var wishlistRubro: List<String?> = listOf("Supermercados")
         var reintegro: List<String?> = listOf("-NcDtqHdvwoX7wsvJHNw")
         val usuariosNuevos = listOf(
-            Usuario("Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro),
-            Usuario("Nahuel Barrios", "perritogambeta@hotmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
+            Usuario("Adam Bareiro", "adam9@gmail.com", "carlitos", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro),
+            Usuario("Nahuel Barrios", "perritogambeta@hotmail.com", "enanito",tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
         )
         instancia.escribirUsuariosEnFirebase(usuariosNuevos)
-
-
-
-
-
  */

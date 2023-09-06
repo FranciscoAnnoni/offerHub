@@ -22,7 +22,7 @@ class Funciones {
         listaPromos
     }
 
-    suspend fun listarPromociones(usuario: Usuario): List<Promocion> = coroutineScope {
+    suspend fun obtenerPromociones(usuario: Usuario): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val deferredPromos = usuario.tarjetas?.map { tarjeta ->
             coroutineScope.async {
@@ -89,6 +89,19 @@ class Funciones {
         }
     }
 
+    suspend fun obtenerPromocionesFavoritas(usuario: Usuario): List<Promocion> = coroutineScope {
+        val promocionesTotales = obtenerPromociones(usuario)
+        val promociones : MutableList<Promocion> = mutableListOf()
+
+        for(promocion in promocionesTotales){
+            if(usuario.favoritos?.contains(promocion.id) == true){ // el == true lo puso solo por el ?, sino no anda
+                promociones.add(promocion)
+            }
+        }
+
+        promociones
+    }
+
 }
 
 //ejemplos llamados
@@ -148,41 +161,45 @@ class Funciones {
 AGREGAR FAVORITOS
 
         var instancia = Funciones()
-        instancia.agregarPromocionAFavoritos("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+        instancia.agregarPromocionAFavoritos("-NdfTbz8V6THp1xIC37f","-NcDHhG4OLbring2tKyp")
 
 ELIMINAR FAVORITOS
 
         var instancia = Funciones()
-        instancia.elimiarPromocionDeFavoritos("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+        instancia.elimiarPromocionDeFavoritos("-NdfTbz8V6THp1xIC37f","-NcDHhG4OLbring2tKyp")
 
 AGREGAR REINTEGRO
 
         var instancia = Funciones()
-        instancia.agregarPromocionAReintegro("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+        instancia.agregarPromocionAReintegro("-NdfTbz8V6THp1xIC37f","-NcDHhG4OLbring2tKyp")
 
 ELIMINAR REINTEGRO
 
         var instancia = Funciones()
-        instancia.elimiarPromocionDeReintegro("-Ndatw54kEPtRjXZ1dDw","-NcDHhG4OLbring2tKyp")
+        instancia.elimiarPromocionDeReintegro("-NdfTbz8V6THp1xIC37f","-NcDHhG4OLbring2tKyp")
 
 AGREGAR COMERCIO A WISHLIST
 
         var instancia = Funciones()
-        instancia.agregarAWishlist("-Ndatw54kEPtRjXZ1dDw","-NcDPGdF2TegzU2mg32k")
+        instancia.agregarAWishlist("-NdfTbz8V6THp1xIC37f","-NcDPGdF2TegzU2mg32k")
 
 ELIMINAR COMERCIO DE WISHLIST
 
         var instancia = Funciones()
-        instancia.eliminarDeWishlist("-Ndatw54kEPtRjXZ1dDw","-NcDPGdF2TegzU2mg32k")
+        instancia.eliminarDeWishlist("-NdfTbz8V6THp1xIC37f","-NcDPGdF2TegzU2mg32k")
 
 AGREGAR RUBRO A WISHLIST
 
         var instancia = Funciones()
-        instancia.agregarAWishlist("-Ndatw54kEPtRjXZ1dDw","Joyería")
+        instancia.agregarAWishlist("-NdfTbz8V6THp1xIC37f","Joyería")
 
 ELIMINAR RUBRO DE WISHLIST
 
         var instancia = Funciones()
-        instancia.eliminarDeWishlist("-Ndatw54kEPtRjXZ1dDw","Joyería")
+        instancia.eliminarDeWishlist("-NdfTbz8V6THp1xIC37f","Joyería")
+
+OBTENER PROMOCIONES FAVORITOS
+
+        
 
  */
