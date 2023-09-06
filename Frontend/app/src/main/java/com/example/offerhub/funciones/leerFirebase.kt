@@ -222,7 +222,24 @@ class LecturaBD {
 
                                     )
                                     lista.add(instancia as T)
+                                } "Usuario" ->{
+                                val instancia = data.child("correo").getValue(String::class.java)?.let {
+                                    data.key?.let { it1 ->
+                                        Usuario(
+                                            it1,
+                                            data.child("nombre").getValue(String::class.java)!!,  data.child("correo").getValue(String::class.java),
+                                            it, data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {})
+                                        )
+                                    }
                                 }
+
+
+                                lista.add(instancia as T)
+                            }
 
                                 else -> throw IllegalArgumentException("Tabla desconocida")
                             }
@@ -424,6 +441,24 @@ LeerBdString:
                         println("Instancia de Promocion: ${item.url}")
                         println("Instancia de Promocion: ${item.vigenciaDesde}")
                         println("Instancia de Promocion: ${item.vigenciaHasta}")
+                    }
+                    else -> throw IllegalArgumentException("Tipo de clase desconocido")
+                }
+            }
+        }
+
+ //Usuario
+        instancia.traerClasesXFiltro<Usuario>("Usuario","contrasenia","carlitos"){ list ->
+            for (item in list) {
+                when (item) {
+                    is Usuario -> {
+                        Log.d("Instancia de Sucursal", "${item.id}")
+                        Log.d("Instancia de Sucursal", "${item.correo}")
+                        Log.d("Instancia de Sucursal", "${item.nombre}")
+                        Log.d("Instancia de Sucursal", "${item.contrasenia}")
+                        Log.d("Instancia de Sucursal", "${item.favoritos}")
+                        Log.d("Instancia de Sucursal", "${item.tarjetas}")
+
                     }
                     else -> throw IllegalArgumentException("Tipo de clase desconocido")
                 }

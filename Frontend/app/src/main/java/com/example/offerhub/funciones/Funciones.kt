@@ -102,6 +102,19 @@ class Funciones {
         promociones
     }
 
+    suspend fun obtenerPromocionesReintegro(usuario: Usuario): List<Promocion> = coroutineScope {
+        val promocionesTotales = obtenerPromociones(usuario)
+        val promociones : MutableList<Promocion> = mutableListOf()
+
+        for(promocion in promocionesTotales){
+            if(usuario.promocionesReintegro?.contains(promocion.id) == true){ // el == true lo puso solo por el ?, sino no anda
+                promociones.add(promocion)
+            }
+        }
+
+        promociones
+    }
+
 }
 
 //ejemplos llamados
@@ -200,6 +213,47 @@ ELIMINAR RUBRO DE WISHLIST
 
 OBTENER PROMOCIONES FAVORITOS
 
-        
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        var instancia = Funciones()
+        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
+        var favoritos: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHaAMYXz2y6-VrOol", "-NcDHbt8duv0PY2Mg-HS")
+        var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
+        var wishlistRubro: List<String?> = listOf("Supermercados")
+        var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
+        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", "carlitos", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
 
+
+        coroutineScope.launch {
+            try {
+                var lista = instancia.obtenerPromocionesFavoritas(usuario)
+                for(promo in lista) {
+                    Log.d("promo", "${ promo.titulo }")
+                }
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
+
+OBTENER PROMOCIONES REINTEGRO
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        var instancia = Funciones()
+        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
+        var favoritos: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHaAMYXz2y6-VrOol", "-NcDHbt8duv0PY2Mg-HS")
+        var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
+        var wishlistRubro: List<String?> = listOf("Supermercados")
+        var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
+        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", "carlitos", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
+
+
+        coroutineScope.launch {
+            try {
+                var lista = instancia.obtenerPromocionesReintegro(usuario)
+                for(promo in lista) {
+                    Log.d("promo", "${ promo.titulo }")
+                }
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
  */

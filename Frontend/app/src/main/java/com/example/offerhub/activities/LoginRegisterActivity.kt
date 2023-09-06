@@ -3,8 +3,14 @@ package com.example.offerhub.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.offerhub.EscribirBD
+import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
+import com.example.offerhub.LecturaBD
 import com.example.offerhub.R
+import com.example.offerhub.Sucursal
+import com.example.offerhub.Usuario
+import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

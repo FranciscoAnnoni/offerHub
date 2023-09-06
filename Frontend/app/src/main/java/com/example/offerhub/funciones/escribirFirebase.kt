@@ -96,11 +96,11 @@ class EscribirBD {
 //Ejemplo uso:
 /*
         var instancia = EscribirBD()
-        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDHfx9QyXuHQ_6ZpNC", "-NcDI2VVY0uVeOf4jzEI")
-        var favoritos: List<String?> = listOf("-NcDJ22_da-2uuX7S2ZT", "-NcDLygyAWu4RhsKOa4Q", "-NcEA5nsLLY28LsQLjpP")
-        var wishlistComercio: List<String?> = listOf("-NcDtqHdvwoX7wsvJHNw", "-NcE08fDeAQM2M98gbfR", "-NcE1qDB1J3N3w30hbUC")
+        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
+        var favoritos: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHaAMYXz2y6-VrOol", "-NcDHbt8duv0PY2Mg-HS")
+        var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
         var wishlistRubro: List<String?> = listOf("Supermercados")
-        var reintegro: List<String?> = listOf("-NcDtqHdvwoX7wsvJHNw")
+        var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
         val usuariosNuevos = listOf(
             Usuario("Adam Bareiro", "adam9@gmail.com", "carlitos", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro),
             Usuario("Nahuel Barrios", "perritogambeta@hotmail.com", "enanito",tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
