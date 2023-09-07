@@ -22,7 +22,7 @@ class Funciones {
         listaPromos
     }
 
-    suspend fun obtenerPromociones(usuario: Usuario): List<Promocion> = coroutineScope {
+    suspend fun obtenerPromociones(usuario: Usuario): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val deferredPromos = usuario.tarjetas?.map { tarjeta ->
             coroutineScope.async {
@@ -127,6 +127,35 @@ class Funciones {
 
         promociones
     }
+
+    suspend fun buscarPromocionesPorRubro(usuario: Usuario, nombreRubro: String): MutableList<Promocion> = coroutineScope {
+        var promociones : MutableList<Promocion> = mutableListOf()
+        val promocionesFiltradas : MutableList<Promocion> = mutableListOf()
+        promociones = obtenerPromociones(usuario)
+
+        for(promocion in promociones){
+            if(promocion.categoria == nombreRubro){
+                promocionesFiltradas.add(promocion)
+            }
+        }
+
+        promocionesFiltradas
+    }
+
+    suspend fun buscarPromocionesPorComercio(usuario: Usuario, idComercio: String): MutableList<Promocion> = coroutineScope {
+        var promociones : MutableList<Promocion> = mutableListOf()
+        val promocionesFiltradas : MutableList<Promocion> = mutableListOf()
+        promociones = obtenerPromociones(usuario)
+
+        for(promocion in promociones){
+            if(promocion.comercio == idComercio){
+                promocionesFiltradas.add(promocion)
+            }
+        }
+
+        promocionesFiltradas
+    }
+
 
 }
 
@@ -282,6 +311,35 @@ OBTENER PROMOCIONES REINTEGRO
                 }
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
+            }
+        }
+
+BUSCAR PROMOCIONES POR RUBRO
+
+        val mainScope = MainScope()
+        mainScope.launch(Dispatchers.IO) {
+            // Dentro de esta corrutina, puedes llamar a funciones suspendidas
+            try {
+                val instancia = leerId()
+                val instanciaFuncion = Funciones()
+                val usuario = instancia.obtenerUsuarioPorId("-Ndg5uxYvmAkEIpthvNQ")
+
+                if (usuario != null) {
+                    Log.d("Nombre Usuario", "${usuario.nombre}")
+                } else {
+                    // Usuario no encontrado
+                }
+
+                if (usuario != null) {
+                    var promos = instanciaFuncion.buscarPromocionesPorRubro(usuario, "Educación")
+
+                    for(promo in promos){
+                        Log.d("Promos", "${promo.titulo}")
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e("Error al obtener el usuario", e.message ?: "Error desconocido")
             }
         }
  */

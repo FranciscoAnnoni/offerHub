@@ -257,11 +257,7 @@ class LecturaBD {
         })
     }
 
-    inline fun <reified T> traerClasesXFiltros(
-        tabla: String,
-        filtros: List<Pair<String, String>>,
-        crossinline callback: (MutableList<T>) -> Unit
-    ) {
+    inline fun <reified T> traerClasesXFiltros(tabla: String, filtros: List<Pair<String, String>>, crossinline callback: (MutableList<T>) -> Unit ) {
         var lista: MutableList<T>? = null
 
         traerClasesXFiltro<T>(tabla, filtros[0].first, filtros[0].second) { list ->
@@ -297,14 +293,10 @@ class LecturaBD {
 
                 i++
             }
-
             lista?.let { callback(it) }
         }
 
-
     }
-
-
 
 
     suspend fun  obtenerPromosPorTarjeta(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
@@ -469,7 +461,7 @@ LeerBdString:
 
 // PROMOCION
 
-var instancia = LecturaBD()
+        var instancia = LecturaBD()
 
         setContentView(R.layout.activity_main)
 

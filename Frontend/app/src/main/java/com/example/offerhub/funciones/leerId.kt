@@ -6,8 +6,14 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 class leerId {
 
@@ -80,6 +86,29 @@ class leerId {
             }
         })
     }
+
+    suspend fun obtenerUsuarioPorId(id: String): Usuario? = withContext(Dispatchers.IO) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Usuario").child(id).get().await()
+
+        if (dataSnapshot.exists()) {
+            val correo = dataSnapshot.child("correo").getValue(String::class.java)
+            val contraseina = dataSnapshot.child("contraseina").getValue(String::class.java)?: ""
+            val nombre = dataSnapshot.child("nombre").getValue(String::class.java) ?: ""
+            val tarjetas = dataSnapshot.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val favoritos = dataSnapshot.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val wishlistComercio = dataSnapshot.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val wishlistRubro = dataSnapshot.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val promocionesReintegro = dataSnapshot.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {})
+
+            Usuario(id, nombre, correo, contraseina, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro)
+        } else {
+            null // El usuario no existe
+        }
+    }
+
+
+
 
 }
 
