@@ -26,34 +26,5 @@ class LoginRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_register)
 
-        // Crear una instancia de MainScope para ejecutar corrutinas en el hilo principal
-        val mainScope = MainScope()
-        mainScope.launch(Dispatchers.IO) {
-            // Dentro de esta corrutina, puedes llamar a funciones suspendidas
-            try {
-                val instancia = leerId()
-                val instanciaFuncion = Funciones()
-                val usuario = instancia.obtenerUsuarioPorId("-Ndg5uxYvmAkEIpthvNQ")
-
-                if (usuario != null) {
-                    Log.d("Nombre Usuario", "${usuario.nombre}")
-                } else {
-                    // Usuario no encontrado
-                }
-
-                if (usuario != null) {
-                    var promos = instanciaFuncion.buscarPromocionesPorRubro(usuario, "Educación")
-
-                    for(promo in promos){
-                        Log.d("Promos", "${promo.titulo}")
-                    }
-                }
-
-            } catch (e: Exception) {
-                Log.e("Error al obtener el usuario", e.message ?: "Error desconocido")
-            }
-        }
-
-
     }
 }
