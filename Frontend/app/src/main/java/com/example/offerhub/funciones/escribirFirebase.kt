@@ -73,7 +73,7 @@ class EscribirBD {
 
     fun eliminarElementoDeListas(userId: String, elementoId: String, clase: String, nombreLista: String) {
 
-        val database = FirebaseDatabase.getInstance()
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referenciaFavoritos = database.getReference(clase).child(userId).child(nombreLista)
 
         referenciaFavoritos.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -90,6 +90,12 @@ class EscribirBD {
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
+    }
+
+    fun editarAtributoDeClase(nombreClase: String, idObjeto: String, atributo: String, valorNuevo: String){
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia = database.getReference(nombreClase).child(idObjeto).child(atributo)
+        referencia.setValue(valorNuevo).addOnCompleteListener {}
     }
 
 }

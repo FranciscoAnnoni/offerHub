@@ -89,6 +89,19 @@ class Funciones {
         }
     }
 
+    fun agregarTarjetaAUsuario(userId: String, tarjetaId: String) {
+        instanciaEscritura.agregarElementoAListas(userId, tarjetaId, "Usuario", "tarjetas")
+    }
+
+    fun elimiarTarjetaDeUsuario(userId: String, tarjetaId: String){
+        instanciaEscritura.eliminarElementoDeListas(userId, tarjetaId, "Usuario", "tarjetas")
+    }
+
+    fun editarPerfil(userId: String, atributo: String, valorNuevo: String){
+        instanciaEscritura.editarAtributoDeClase("Usuario",userId, atributo,valorNuevo)
+    }
+
+
     suspend fun obtenerPromocionesFavoritas(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
@@ -210,6 +223,21 @@ ELIMINAR RUBRO DE WISHLIST
 
         var instancia = Funciones()
         instancia.eliminarDeWishlist("-NdfTbz8V6THp1xIC37f","Joyería")
+
+AGREGAR TARJETA A USUARIO
+
+        var instancia = Funciones()
+        instancia.agregarTarjetaAUsuario("-Ndg5uxYvmAkEIpthvNQ", "-NcDI2VVY0uVeOf4jzEI")
+
+ELIMINAR TARJETA DE USUARIO
+
+        var instancia = Funciones()
+        instancia.elimiarTarjetaDeUsuario("-Ndg5uxYvmAkEIpthvNQ", "-NcDI2VVY0uVeOf4jzEI")
+
+EDITAR PERFIL
+
+        var instancia = Funciones()
+        instancia.editarPerfil("-Ndg5uxYvmAkEIpthvNQ", "contrasenia", "goleador")
 
 OBTENER PROMOCIONES FAVORITOS
 
