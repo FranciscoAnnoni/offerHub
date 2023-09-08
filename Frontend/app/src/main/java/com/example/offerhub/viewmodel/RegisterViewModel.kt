@@ -3,6 +3,8 @@ package com.example.offerhub.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.offerhub.EscribirBD
+import com.example.offerhub.Usuario
 import com.example.offerhub.data.User
 import com.example.offerhub.util.Constants.USER_COLLECTION
 import com.example.offerhub.util.RegisterFieldsState
@@ -12,6 +14,8 @@ import com.example.offerhub.util.validateEmail
 import com.example.offerhub.util.validatePassword
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -26,11 +30,12 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val db: FirebaseFirestore
+    // private val db: FirebaseDatabase
+
 ): ViewModel(){
 
-    private val _register = MutableStateFlow<Resource<User>>(Resource.Unspecified())
-          val register:Flow<Resource<User>> = _register
+    private val _register = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
+          val register:Flow<Resource<Usuario>> = _register
 
     private val _validation = Channel<RegisterFieldsState>()
         val validation = _validation.receiveAsFlow()
@@ -73,16 +78,32 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun saveUserInfo(userUid: String, user: User){
-        db.collection(USER_COLLECTION)
-            .document(userUid)
-            .set(user)
-            .addOnSuccessListener {
+       val usuario = Usuario(
+           userUid,
+           user.nameAndLastName,
+           user.email,
+           "",
+           listOf(),
+           listOf(),
+           listOf(),
+           listOf(),
+           listOf()
+       )
+
+        val database: FirebaseDatabase =
+                FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia: DatabaseReference = database.getReference("/Usuario")
+
+        referencia.child(userUid).child("correo").setValue(user.email)
+        referencia.child(userUid).child("nombre").setValue(user.nameAndLastName)
+           .addOnSuccessListener {
                 _registrationSuccess.value = true // Registro exitoso
-                _register.value = Resource.Success(user)
+                _register.value = Resource.Success(usuario)
             }.addOnFailureListener{
                 _register.value = Resource.Error(it.message.toString())
             }
     }
+
 
 
 }

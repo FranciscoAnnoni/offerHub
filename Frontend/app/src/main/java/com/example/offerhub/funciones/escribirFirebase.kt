@@ -1,9 +1,15 @@
 package com.example.offerhub
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.offerhub.data.User
+import com.example.offerhub.util.Resource
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class Usuario{
     // Propiedades (atributos) de la clase
@@ -32,7 +38,27 @@ class Usuario{
 }
 
 class EscribirBD {
+    private val _registrationSuccess = MutableLiveData<Boolean>()
+    val registrationSuccess: LiveData<Boolean> = _registrationSuccess
 
+    private val _register = MutableStateFlow<Resource<User>>(Resource.Unspecified())
+    val register: Flow<Resource<User>> = _register
+
+    fun escribirUsuarioEnFirebase(usuario: Usuario, user: User) {
+
+        val database: FirebaseDatabase =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia: DatabaseReference = database.reference.child("/Usuario")
+
+            val usuarioReferencia = referencia.push()
+            usuarioReferencia.setValue(usuario).addOnSuccessListener {
+                _registrationSuccess.value = true // Registro exitoso
+                _register.value = Resource.Success(user)
+            }.addOnFailureListener{
+                _register.value = Resource.Error(it.message.toString())
+            }
+
+    }
     fun escribirUsuariosEnFirebase(usuarios: List<Usuario>) {
         val database: FirebaseDatabase =
             FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")

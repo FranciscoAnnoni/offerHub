@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import com.example.offerhub.util.Constants.INTRODUCTION_SP
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -27,7 +28,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseFirestoreDatabase() = FirebaseFirestore.getInstance()
+    //fun provideFirebaseFirestoreDatabase() = FirebaseFirestore.getInstance()
+    fun provideFirebaseFirestoreDatabase() = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
 
     @Provides
     fun provideIntroductionSP(
