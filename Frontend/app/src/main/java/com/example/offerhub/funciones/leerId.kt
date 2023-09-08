@@ -1,6 +1,8 @@
 package com.example.offerhub
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
@@ -104,6 +106,45 @@ class leerId {
             Usuario(id, nombre, correo, contraseina, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro)
         } else {
             null // El usuario no existe
+        }
+    }
+
+    // VER COMO HACER QUE ANDE, COMPLICACIONES CON EL SUSPEND
+    suspend fun obtenerPromocionPorId(id: String): Promocion? {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Promocion").child(id).get().await()
+
+        if (dataSnapshot.exists()) {
+            val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val key = dataSnapshot.key
+            val categoria = dataSnapshot.child("categoria").getValue(String::class.java)
+            val comercio = dataSnapshot.child("comercio").getValue(String::class.java)
+            val cuotas = dataSnapshot.child("cuotas").getValue(String::class.java)
+            val dias = dataSnapshot.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val porcentaje = dataSnapshot.child("porcentaje").getValue(String::class.java)
+            val proveedor = dataSnapshot.child("proveedor").getValue(String::class.java)
+            val sucursales = dataSnapshot.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val tarjetas = dataSnapshot.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val tipoPromocion = dataSnapshot.child("tipoPromocion").getValue(String::class.java)
+            val titulo = dataSnapshot.child("titulo").getValue(String::class.java)
+            val topeNro = dataSnapshot.child("topeNro").getValue(String::class.java)
+            val topeTexto = dataSnapshot.child("topeTexto").getValue(String::class.java)
+            val tyc = dataSnapshot.child("tyc").getValue(String::class.java)
+            val url = dataSnapshot.child("url").getValue(String::class.java)
+
+            val vigenciaDesdeString: String? = dataSnapshot.child("vigenciaDesde").getValue(String::class.java)
+            val vigenciaHastaString: String? = dataSnapshot.child("vigenciaHasta").getValue(String::class.java)
+
+            val vigenciaDesde = vigenciaDesdeString?.let { LocalDate.parse(it, formato) }
+            val vigenciaHasta = vigenciaHastaString?.let { LocalDate.parse(it, formato) }
+
+            val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales, tarjetas,
+                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta)
+
+
+            return promocion
+        } else {
+            return null
         }
     }
 

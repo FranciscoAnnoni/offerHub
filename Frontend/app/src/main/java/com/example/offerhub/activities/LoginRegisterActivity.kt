@@ -1,8 +1,10 @@
 package com.example.offerhub.activities
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.offerhub.EscribirBD
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
@@ -25,6 +27,7 @@ class LoginRegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_register)
+
 
     }
 }

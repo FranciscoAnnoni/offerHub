@@ -122,7 +122,7 @@ class Promocion{
     val vigenciaHasta: LocalDate?
 
     // Constructor primario
-    @RequiresApi(Build.VERSION_CODES.O)
+
     constructor(id:String?,categoria: String?, comercio: String?, cuotas: String?, dias: List<String?>?, porcentaje: String?, proveedor: String?, sucursales: List<String?>?, tarjetas: List<String?>?,
                 tipoPromocion: String?, titulo: String?, topeNro: String?, topeTexto: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
                 vigenciaHasta: LocalDate?) {
@@ -340,7 +340,27 @@ class LecturaBD {
         })
     }
 
+    suspend fun  obtenerListaOrdenadaSegun(promocionesDesordenadas: List<Promocion>, atributo: String, valorAtributo: String): List<Promocion> = suspendCoroutine { continuation ->
+        val listaOrdenada = promocionesDesordenadas
+            .filter { promocion ->
+                val atributoValor = promocion.javaClass.getDeclaredField(atributo).apply { isAccessible = true }
+                val valor = atributoValor.get(promocion).toString()
+                valor == valorAtributo
+            }
+            .sortedBy { it.javaClass.getDeclaredField(atributo).get(it).toString() }
+
+        continuation.resume(listaOrdenada)
+    }
+
+
+
+
+
+
 }
+
+
+
 
 
 
