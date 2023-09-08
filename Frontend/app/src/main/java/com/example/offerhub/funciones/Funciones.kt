@@ -105,10 +105,11 @@ class Funciones {
     suspend fun obtenerPromocionesFavoritas(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
+        val instancia = leerId()
 
-        for(promocion in promocionesTotales){
-            if(usuario.favoritos?.contains(promocion.id) == true){ // el == true lo puso solo por el ?, sino no anda
-                promociones.add(promocion)
+        for(id in usuario.favoritos!!){
+            if (id != null) {
+                instancia.obtenerPromocionPorId(id)?.let { promociones.add(it) }
             }
         }
 
