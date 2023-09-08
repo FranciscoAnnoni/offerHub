@@ -16,7 +16,6 @@ class Usuario{
     var id: String
     var nombre: String
     var correo: String?
-    var contrasenia: String
     var tarjetas: List<String?>?
     var favoritos: List<String?>?
     var wishlistComercio: List<String?>?
@@ -24,11 +23,10 @@ class Usuario{
     var promocionesReintegro: List<String?>?
 
     // Constructor primario
-    constructor(id: String, nombre: String, correo: String?, contrasenia: String, tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?){
+    constructor(id: String, nombre: String, correo: String?, tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?){
         this.id = id
         this.nombre = nombre
         this.correo = correo
-        this.contrasenia = contrasenia
         this.tarjetas = tarjetas
         this.favoritos = favoritos
         this.wishlistComercio = wishlistComercio

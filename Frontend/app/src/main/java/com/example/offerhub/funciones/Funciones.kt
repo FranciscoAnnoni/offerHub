@@ -277,7 +277,7 @@ OBTENER PROMOCIONES FAVORITOS
         var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
         var wishlistRubro: List<String?> = listOf("Supermercados")
         var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
-        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", "carlitos", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
+        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
 
 
         coroutineScope.launch {
@@ -322,7 +322,7 @@ BUSCAR PROMOCIONES POR RUBRO
             try {
                 val instancia = leerId()
                 val instanciaFuncion = Funciones()
-                val usuario = instancia.obtenerUsuarioPorId("-Ndg5uxYvmAkEIpthvNQ")
+                val usuario = instancia.obtenerUsuarioPorId("FDKPMRrqo1OnpxZQUVAYmHbywjw2")
 
                 if (usuario != null) {
                     Log.d("Nombre Usuario", "${usuario.nombre}")
