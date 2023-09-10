@@ -129,30 +129,20 @@ class Funciones {
         promociones
     }
 
-    suspend fun buscarPromocionesPorRubro(usuario: Usuario, nombreRubro: String): MutableList<Promocion> = coroutineScope {
-        var promociones : MutableList<Promocion> = mutableListOf()
-        val promocionesFiltradas : MutableList<Promocion> = mutableListOf()
-        promociones = obtenerPromociones(usuario)
-
-        for(promocion in promociones){
-            if(promocion.categoria == nombreRubro){
-                promocionesFiltradas.add(promocion)
-            }
-        }
+    suspend fun buscarPromocionesPorRubro(usuario: Usuario, nombreRubro: String): List<Promocion> = coroutineScope {
+        val filtros = listOf(
+            "categoria" to nombreRubro,
+        )
+        val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros, usuario)
 
         promocionesFiltradas
     }
 
-    suspend fun buscarPromocionesPorComercio(usuario: Usuario, idComercio: String): MutableList<Promocion> = coroutineScope {
-        var promociones : MutableList<Promocion> = mutableListOf()
-        val promocionesFiltradas : MutableList<Promocion> = mutableListOf()
-        promociones = obtenerPromociones(usuario)
-
-        for(promocion in promociones){
-            if(promocion.comercio == idComercio){
-                promocionesFiltradas.add(promocion)
-            }
-        }
+    suspend fun buscarPromocionesPorComercio(usuario: Usuario, idComercio: String): List<Promocion> = coroutineScope {
+        val filtros = listOf(
+            "comercio" to idComercio,
+        )
+        val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros, usuario)
 
         promocionesFiltradas
     }

@@ -298,6 +298,61 @@ class LecturaBD {
 
     }
 
+    suspend fun filtrarPromos(filtros: List<Pair<String, String>>, usuario: Usuario): List<Promocion> {
+        var instancia = Funciones()
+        var promos = instancia.obtenerPromociones(usuario)
+        var i = 0
+        val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        while (i < filtros.size) {
+            val campoFiltro = filtros[i].first
+            val valorFiltro = filtros[i].second
+
+                when (campoFiltro) {
+                    "categoria" -> {
+                        promos = promos.filter { promo -> promo.categoria == valorFiltro }.toMutableList()
+
+                    } "comercio" -> {
+                        promos = promos.filter { promo -> promo.comercio == valorFiltro }.toMutableList()
+
+                    } "dias" -> {
+                        promos = promos.filter { promo -> promo.dias!!.contains(valorFiltro)  }.toMutableList()
+
+                    } "porcentaje" -> {
+                        promos = promos.filter { promo -> promo.porcentaje == valorFiltro }.toMutableList()
+
+                    } "proveedor" -> {
+                        promos = promos.filter { promo -> promo.proveedor == valorFiltro }.toMutableList()
+
+                    } "tarjetas" -> {
+                        promos = promos.filter { promo -> promo.tarjetas!!.contains(valorFiltro)  }.toMutableList()
+
+                    } "tipoPromocion" -> {
+                        promos = promos.filter { promo -> promo.tipoPromocion == valorFiltro }.toMutableList()
+
+                    } "topeNro" -> {
+                        promos = promos.filter { promo -> promo.topeNro == valorFiltro }.toMutableList()
+
+                    } "topeTexto" -> {
+                        promos = promos.filter { promo -> promo.topeTexto == valorFiltro }.toMutableList()
+
+                    } "vigenciaDesde" -> {
+                        val fechaLocal = LocalDate.parse(valorFiltro, formato)
+                        promos = promos.filter { promo -> promo.vigenciaDesde == fechaLocal }.toMutableList()
+
+                    } "vigenciaHasta" -> {
+                        val fechaLocal = LocalDate.parse(valorFiltro, formato)
+                        promos = promos.filter { promo -> promo.vigenciaHasta == fechaLocal }.toMutableList()
+
+                    }
+                    else -> throw IllegalArgumentException("Atributo desconocido")
+                }
+            i += 1
+            }
+
+        return promos
+    }
+
 
     suspend fun  obtenerPromosPorTarjeta(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
@@ -526,5 +581,31 @@ LeerBdString:
                 }
             }
         }
+ FILTRAR PROMOS
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        var instancia = LecturaBD()
+        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
+        var favoritos: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHaAMYXz2y6-VrOol", "-NcDHbt8duv0PY2Mg-HS")
+        var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
+        var wishlistRubro: List<String?> = listOf("Supermercados")
+        var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
+        var usuario = Usuario("FDKPMRrqo1OnpxZQUVAYmHbywjw2","Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
+        val filtros = listOf(
+            "categoria" to "Educación",
+        )
+
+        Log.d("promo", "hola?")
+        coroutineScope.launch {
+            try {
+                var promos = instancia.filtrarPromos(filtros, usuario)
+                for(promo in promos){
+                    Log.d("promo", "${ promo.categoria }")
+                }
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
+
 
  */
