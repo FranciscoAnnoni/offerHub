@@ -308,7 +308,7 @@ class LecturaBD {
             val campoFiltro = filtros[i].first
             val valorFiltro = filtros[i].second
 
-                when (campoFiltro) {
+            when(campoFiltro) {
                     "categoria" -> {
                         promos = promos.filter { promo -> promo.categoria == valorFiltro }.toMutableList()
 

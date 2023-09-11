@@ -26,7 +26,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -51,7 +51,7 @@ cantElementos = int(driver.find_element(By.XPATH, '//strong').get_attribute("inn
 print(cantElementos)
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
-i = cantElementos
+i = 0
 error = 0
 
 while i < cantElementos:
@@ -66,7 +66,6 @@ while i < cantElementos:
 
     i = len(seccion_categorias)
 
-seccion_categorias = driver.find_elements(By.XPATH, '//div[contains(@class,"grid-item --col-8 --col-md-6 --col-lg-4 --col-xl-4")]')
 
 
 #de la lista obtenida muestra link asociado y texto de cada elemento
@@ -135,7 +134,10 @@ for boton in seccion_categorias:
             print("\t\t  Descuento: "+oferta)
         else: print("\t\t CHEQUEAR")
 
-        print("\t\t  Descripción: " + containerPromo.find_element(By.XPATH, './/p[contains(@class,"paragraph --mb-24 --fourxs")]').text)
+        try:
+            print("\t\t  Descripción: " + containerPromo.find_element(By.XPATH, './/p[contains(@class,"paragraph --mb-24 --fourxs")]').text)
+        except NoSuchElementException:
+            None
         
         # TRAIGO LAS TARJETAS
         tarjetas = []

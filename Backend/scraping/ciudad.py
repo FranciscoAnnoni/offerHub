@@ -76,6 +76,7 @@ for categoria in categorias:
         sleep(0.2)
         promocion.click()
         urlPromocion = driver.current_url
+        sleep(1) #dejar porque a veces carga mal la foto
         imagenes = driver.find_element(By.XPATH, '//div[contains(@class,"card-beneficio__logo detalle-logo")]').find_elements(By.XPATH, './/img')
 
         if len(imagenes[0].get_attribute("src")) == 0:
