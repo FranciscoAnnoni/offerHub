@@ -14,6 +14,7 @@ import com.example.offerhub.R
 import com.example.offerhub.Sucursal
 import com.example.offerhub.Usuario
 import com.example.offerhub.leerId
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -28,25 +29,16 @@ class LoginRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_register)
 
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
-        var instancia = Funciones()
-        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
-        var favoritos: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHaAMYXz2y6-VrOol", "-NcDHbt8duv0PY2Mg-HS")
-        var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
-        var wishlistRubro: List<String?> = listOf("Supermercados")
-        var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
-        var usuario = Usuario("FDKPMRrqo1OnpxZQUVAYmHbywjw2","Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
+        val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
 
-        coroutineScope.launch {
-            try {
-                var lista = instancia.obtenerPromocionesFavoritas(usuario)
-                for(promo in lista) {
-                    Log.d("promo", "${ promo.titulo }")
-                }
-            } catch (e: Exception) {
-                println("Error al obtener promociones: ${e.message}")
-            }
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            Log.d("ID", currentUser.uid)
+        } else {
+            Log.d("ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
         }
+
+
 
     }
 }

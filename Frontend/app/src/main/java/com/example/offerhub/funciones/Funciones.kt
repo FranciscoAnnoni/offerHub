@@ -1,10 +1,11 @@
 package com.example.offerhub
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.*
 
 class Funciones {
-
+    val instancialeerId = leerId()
     val instanciaLectura = LecturaBD()
     val instanciaEscritura = EscribirBD()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -145,6 +146,22 @@ class Funciones {
         val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros, usuario)
 
         promocionesFiltradas
+    }
+
+
+    suspend fun traerUsuarioActual(){
+
+        val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
+
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+
+           var usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
+            Log.d("ID", currentUser.uid)
+        } else {
+            Log.d("ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
+        }
+
     }
 
 
