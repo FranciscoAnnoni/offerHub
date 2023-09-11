@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/inicioHome"
         style="@style/titulos"
-        android:text="Mi Perfil"
+        android:text="Usuario"
         android:layout_marginTop="25dp"
         android:contentDescription="@null"
         app:layout_constraintEnd_toEndOf="parent"
