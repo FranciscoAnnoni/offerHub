@@ -103,7 +103,7 @@ class Sucursal{
 
 class Promocion{
     // Propiedades (atributos) de la clase
-    var id: String?
+    var id: String? = null
     var categoria: String?
     var comercio: String?
     var cuotas: String?
@@ -120,12 +120,13 @@ class Promocion{
     val url: String?
     val vigenciaDesde: LocalDate?
     val vigenciaHasta: LocalDate?
+    val estado: String?
 
     // Constructor primario
 
     constructor(id:String?,categoria: String?, comercio: String?, cuotas: String?, dias: List<String?>?, porcentaje: String?, proveedor: String?, sucursales: List<String?>?, tarjetas: List<String?>?,
                 tipoPromocion: String?, titulo: String?, topeNro: String?, topeTexto: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
-                vigenciaHasta: LocalDate?) {
+                vigenciaHasta: LocalDate?,estado:String?) {
         this.id = id
         this.categoria = categoria
         this.comercio = comercio
@@ -143,7 +144,9 @@ class Promocion{
         this.url=url
         this.vigenciaDesde = vigenciaDesde
         this.vigenciaHasta = vigenciaHasta
+        this.estado = estado
     }
+
 }
 
 class LecturaBD {
@@ -218,8 +221,8 @@ class LecturaBD {
                                         data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
                                         data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                         data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
-                                        vigenciaHastaString?.let { LocalDate.parse(it, formato) }
-
+                                        vigenciaHastaString?.let { LocalDate.parse(it, formato)},
+                                        data.child("tipoPromocion").getValue(String::class.java)
                                     )
                                     lista.add(instancia as T)
                                 } "Usuario" ->{
@@ -378,7 +381,8 @@ class LecturaBD {
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
                                 data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                 data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
-                                vigenciaHastaString?.let { LocalDate.parse(it, formato) })
+                                vigenciaHastaString?.let { LocalDate.parse(it, formato) },
+                                data.child("estado").getValue(String::class.java))
                             lista.add(instancia)
                         }
 

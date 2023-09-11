@@ -137,8 +137,10 @@ class leerId {
             val vigenciaDesde = vigenciaDesdeString?.let { LocalDate.parse(it, formato) }
             val vigenciaHasta = vigenciaHastaString?.let { LocalDate.parse(it, formato) }
 
+            val estado = dataSnapshot.child("estado").getValue(String::class.java)
+
             val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales, tarjetas,
-                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta)
+                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta,estado)
 
 
             return promocion
