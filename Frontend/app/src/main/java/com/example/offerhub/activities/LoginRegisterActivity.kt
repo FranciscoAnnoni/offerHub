@@ -29,14 +29,6 @@ class LoginRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_register)
 
-        val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
-
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            Log.d("ID", currentUser.uid)
-        } else {
-            Log.d("ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
-        }
 
 
 

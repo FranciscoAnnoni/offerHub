@@ -149,19 +149,21 @@ class Funciones {
     }
 
 
-    suspend fun traerUsuarioActual(){
+    suspend fun traerUsuarioActual(): Usuario? = coroutineScope {
 
         val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
-
         val currentUser = auth.currentUser
-        if (currentUser != null) {
+        var usuario : Usuario?
 
-           var usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
+        if (currentUser != null) {
+            usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
             Log.d("ID", currentUser.uid)
         } else {
+            usuario =  null
             Log.d("ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
         }
 
+        usuario
     }
 
 
@@ -350,4 +352,21 @@ BUSCAR PROMOCIONES POR RUBRO
                 Log.e("Error al obtener el usuario", e.message ?: "Error desconocido")
             }
         }
+
+TRAER USUARIO ACTUAL
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+                val instancia = Funciones()
+                coroutineScope.launch {
+                    try {
+                        val usuario = instancia.traerUsuarioActual()
+                        if (usuario != null) {
+                            Log.d("ID USUARIO", "${ usuario.id }")
+                            Log.d("ID USUARIO", "${ usuario.nombre }")
+                        }
+
+                    } catch (e: Exception) {
+                        println("Error al obtener promociones: ${e.message}")
+                    }
+                }
  */
