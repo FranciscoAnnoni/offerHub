@@ -12,6 +12,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -211,6 +214,25 @@ class LecturaBD {
                                     val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                     val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
                                     val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                                    val comercio: String? = data.child("comercio").getValue(String::class.java)
+                                    val coroutineScope = CoroutineScope(Dispatchers.Main)
+                                    var logo: String? = ""
+
+                                    coroutineScope.launch {
+                                        try {
+                                            if(comercio != null){
+                                                logo = Funciones().traerLogoComercio(comercio)}
+                                            else{logo = ""}
+                                            if (logo != null) {
+                                                Log.d("logo", "${ logo }")
+                                            }
+
+                                        } catch (e: Exception) {
+                                            println("Error al obtener promociones: ${e.message}")
+                                        }
+                                    }
+
+                                    Log.d("logo", "${ logo }")
                                     val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
                                         data.child("cuotas").getValue(String::class.java),
                                         data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
@@ -371,7 +393,27 @@ class LecturaBD {
                             val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
                             val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
-                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                            val comercio: String? = data.child("comercio").getValue(String::class.java)
+                            val coroutineScope = CoroutineScope(Dispatchers.Main)
+                            var logo: String? = ""
+
+                            coroutineScope.launch {
+                                try {
+                                    if(comercio != null){
+                                    logo = Funciones().traerLogoComercio(comercio)}
+                                    else{logo = ""}
+                                    if (logo != null) {
+                                        Log.d("logo", "${ logo }")
+                                    }
+
+                                } catch (e: Exception) {
+                                    println("Error al obtener promociones: ${e.message}")
+                                }
+                            }
+
+                            Log.d("logo", "${ logo }")
+
+                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
                                 data.child("cuotas").getValue(String::class.java),
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
@@ -611,5 +653,20 @@ LeerBdString:
             }
         }
 
+OBTENER PROMOS POR TARJETA
+
+val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val instancia = LecturaBD()
+        coroutineScope.launch {
+            try {
+                val logo = instancia.obtenerPromosPorTarjeta("-Ne52v1WN0OfZwqqBx_H")
+                if (logo != null) {
+                    Log.d("logo", "${ logo.size}")
+                }
+
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
 
  */

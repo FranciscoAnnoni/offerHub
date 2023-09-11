@@ -2,7 +2,9 @@ package com.example.offerhub
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
 class Funciones {
@@ -167,6 +169,17 @@ class Funciones {
         }
 
         usuario
+    }
+
+    suspend fun traerLogoComercio(idComercio: String): String? = coroutineScope {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Comercio").child(idComercio).get().await()
+        var logo: String? = ""
+
+        if (dataSnapshot.exists()) {
+            logo = dataSnapshot.child("logo").getValue(String::class.java)
+        }
+        logo
     }
 
 
@@ -372,4 +385,21 @@ TRAER USUARIO ACTUAL
                         println("Error al obtener promociones: ${e.message}")
                     }
                 }
+
+TRAER LOGO COMERCIO
+
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val instancia = Funciones()
+        coroutineScope.launch {
+            try {
+                val logo = instancia.traerLogoComercio("-Ne52vRSdRMlcb1J3OMT")
+                if (logo != null) {
+                    Log.d("logo", "${ logo }")
+                }
+
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
+
  */
