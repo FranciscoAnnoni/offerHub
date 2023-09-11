@@ -3,6 +3,7 @@ package com.example.offerhub
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.*
+import java.util.Locale
 
 class Funciones {
     val instancialeerId = leerId()
@@ -17,8 +18,10 @@ class Funciones {
             instanciaLectura.obtenerPromosPorTarjeta("No posee")
         }
         val promos = promosDeferred.await() // Esperar a que se completen las promociones
-        if (promos != null) {
-            listaPromos.addAll(promos)
+        for (promo in promos){
+            if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
+                listaPromos.add(promo)
+            }
         }
         listaPromos
     }
