@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fondo">
+    android:background="@color/fondo"
+    tools:context=".activities.ShoppingActivity">
 
     <TextView
         android:id="@+id/buscador"
@@ -113,194 +114,22 @@
             app:layout_constraintTop_toBottomOf="@+id/buscarCategoria"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
-            <!-- Cuadrado 1 -->
-            <LinearLayout
-                style="@style/searchCategoryBackground"
-                android:id="@+id/cuadrado1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="2"
+                android:verticalSpacing="8dp"
+                android:horizontalSpacing="8dp"
+                android:stretchMode="columnWidth"
                 android:gravity="center"
-                android:layout_margin="8dp"
-                android:padding="10dp">
-
-                <!-- Agrega tu imagen aquí -->
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_gravity="center"/>
-
-                <!-- Agrega tu texto aquí -->
-                <TextView
-                    style="@style/blueButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Entretenimiento"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-            <!-- Cuadrado 2 -->
-            <LinearLayout
-                style="@style/searchCategoryBackground"
-                android:id="@+id/cuadrado2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:layout_margin="8dp"
-                android:padding="10dp">
-
-                <!-- Agrega tu imagen aquí -->
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_gravity="center"/>
-
-                <!-- Agrega tu texto aquí -->
-                <TextView
-                    style="@style/blueButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Indumentaria"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-
-            <!-- Cuadrado 3 -->
-            <LinearLayout
-                style="@style/searchCategoryBackground"
-                android:id="@+id/cuadrado3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:layout_margin="8dp"
-                android:padding="10dp">
-
-                <!-- Agrega tu imagen aquí -->
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_gravity="center"/>
-
-                <!-- Agrega tu texto aquí -->
-                <TextView
-                    style="@style/blueButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gastronomia"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-
-            <!-- Cuadrado 4 -->
-            <LinearLayout
-                style="@style/searchCategoryBackground"
-                android:id="@+id/cuadrado4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:layout_margin="8dp"
-                android:padding="10dp">
-
-                <!-- Agrega tu imagen aquí -->
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_gravity="center"/>
-
-                <!-- Agrega tu texto aquí -->
-                <TextView
-                    style="@style/blueButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Electronica"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-
-            <!-- Cuadrado 5 -->
-            <LinearLayout
-                style="@style/searchCategoryBackground"
-                android:id="@+id/cuadrado5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:layout_margin="8dp"
-                android:padding="10dp">
-
-                <!-- Agrega tu imagen aquí -->
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_gravity="center"/>
-
-                <!-- Agrega tu texto aquí -->
-                <TextView
-                    style="@style/blueButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Viajes y Turismo"
-                    android:textSize="16sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-
-            <!-- Cuadrado 6 -->
-            <LinearLayout
-                style="@style/searchCategoryBackground"
-                android:id="@+id/cuadrado6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:layout_margin="8dp"
-                android:padding="10dp">
-
-                <!-- Agrega tu imagen aquí -->
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:layout_gravity="center"/>
-
-                <!-- Agrega tu texto aquí -->
-                <TextView
-                    style="@style/blueButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Deporte"
-                    android:textSize="17sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
+            />
 
         </GridLayout>
 
 
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
