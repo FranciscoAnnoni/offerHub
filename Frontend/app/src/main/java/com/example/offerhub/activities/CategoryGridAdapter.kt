@@ -24,23 +24,24 @@ class CategoryGridAdapter(private val context: Context, private val categorias: 
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val categoria = getItem(position) as Categoria
-       // val comercio = getItem(position) as Comercio
+       val categoria = getItem(position) as Categoria
+        // val comercio = getItem(position) as Comercio
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val gridViewItem = inflater.inflate(R.layout.fragment_category_card, null)
 
         val textViewCategory = gridViewItem.findViewById<TextView>(R.id.txtCategoria)
-        textViewCategory.text = categoria.nombre
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
+
+        textViewCategory.text = categoria.nombre
         imgViewCategory.setImageDrawable(categoria.logo)
         // Utiliza la función base64ToBitmap para obtener el Bitmap del logotipo
-      /*  val textViewCategory = gridViewItem.findViewById<TextView>(R.id.txtCategoria)
-         textViewCategory.text = comercio.nombre
+        /*
+        textViewCategory.text = comercio.nombre
         val logoBitmap = comercio.base64ToBitmap(comercio.logo)
         if (logoBitmap != null) {
             imgViewCategory.setImageBitmap(logoBitmap)
-        }*/
-
+         }
+         */
         // Agrega cualquier otra configuración específica de tu diseño aquí
 
         return gridViewItem
