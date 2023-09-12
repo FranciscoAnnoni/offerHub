@@ -11,6 +11,7 @@ import com.example.offerhub.data.User
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
 import com.example.offerhub.util.validateEmail
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,6 +21,7 @@ import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -74,37 +76,10 @@ class UserAccountViewModel @Inject constructor(
 
 
 
-
-        /*
-        referencia.child(userUid).addListenerForSingleValueEvent(object :
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user = snapshot.getValue(Usuario::class.java)
-                if (user != null) {
-                    Log.d("Resultado","${user.nombre}")
-                }
-                user?.let {
-                    viewModelScope.launch {
-                        Log.d("Resultado","entre al UID2")
-                        _user.emit(Resource.Success(it))
-
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                viewModelScope.launch {
-                    _user.emit(Resource.Error(error.message))
-                }
-            }
-        })
-         */
-
     }
 
- /*
-    fun updateUser(nombreyApellido: String){
 
+    fun updateUser(nombreyApellido: String){
         val areInputsValid = nombreyApellido.trim().isNotEmpty()
         if (!areInputsValid){
             viewModelScope.launch {
@@ -117,11 +92,35 @@ class UserAccountViewModel @Inject constructor(
             _updateInfo.emit(Resource.Loading())
         }
 
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            try {
+                val userUid = auth.currentUser?.uid
+                val instancia = Funciones()
 
+                userUid?.let { it1 -> instancia.editarPerfil(it1,"nombre",nombreyApellido) }
 
+                val usuario = instancia.traerUsuarioActual()
+
+                viewModelScope.launch {
+                    if(usuario != null){
+                        delay(1000)
+                        _updateInfo.emit(Resource.Success(usuario))
+                    }else {
+                        viewModelScope.launch {
+                            _updateInfo.emit(Resource.Error("error de guardado"))
+                        }
+                    }
+
+                }
+
+            } catch (e: Exception) {
+                Log.d("Resultado","ERROR")
+            }
+        }
     }
 
-  */
+
 
      /*
     //GUARDAR EL USUARIO

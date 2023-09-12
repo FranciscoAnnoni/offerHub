@@ -17,6 +17,7 @@ import com.example.offerhub.databinding.FragmentUserAccountBinding
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.UserAccountViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UserAccountFragment: Fragment() {
+    private lateinit var rootView: View
     private lateinit var binding: FragmentUserAccountBinding
     private val viewModel by viewModels<UserAccountViewModel>()
 
@@ -46,8 +48,13 @@ class UserAccountFragment: Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        rootView = view // Asignar la vista raíz del fragmento
+
         lifecycleScope.launchWhenStarted {
             viewModel.user.collectLatest {
                 when (it) {
@@ -80,6 +87,9 @@ class UserAccountFragment: Fragment() {
 
                     is Resource.Success -> {
                         binding.buttonSave.revertAnimation()
+                        if (rootView != null) {
+                            Snackbar.make(rootView, "Cambio de nombre Exitoso", Snackbar.LENGTH_SHORT).show()
+                        }
                         findNavController().navigateUp()
                     }
 
@@ -93,18 +103,13 @@ class UserAccountFragment: Fragment() {
         }
 
         binding.buttonSave.setOnClickListener{
-            binding.buttonSave.startAnimation()
+
             binding.apply{
-
-                val userUid = auth.currentUser?.uid
-                val instancia = Funciones()
                 val nombreYapellido = edFirstName.text.toString().trim()
-
-                userUid?.let { it1 -> instancia.editarPerfil(it1,"nombre",nombreYapellido) }
-
+                viewModel.updateUser(nombreYapellido)
             }
 
-            binding.buttonSave.revertAnimation()
+
         }
 
     }
