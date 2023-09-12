@@ -73,23 +73,34 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvPromocionesDisponibles"
+        style="@style/textoMedianoNegro"
+        android:text="Promociones Disponibles"
+        android:layout_marginTop="25dp"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="@id/homeHeader"
+        app:layout_constraintTop_toBottomOf="@id/homeHeader"
+        android:textSize="25sp"
+        />
+
     <GridLayout
         android:id="@+id/promocionesGridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="2"
         android:rowCount="3"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:layout_gravity="center"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/homeHeader"
+        app:layout_constraintTop_toBottomOf="@id/tvPromocionesDisponibles"
         app:layout_constraintBottom_toBottomOf="parent"
         >
         <GridView
             android:id="@+id/promocionesGridView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/altura_grid_view"
-            android:numColumns="2"
+            android:layout_height="match_parent"
+            android:numColumns="3"
             android:verticalSpacing="8dp"
             android:paddingBottom="20dp"
             android:horizontalSpacing="8dp"

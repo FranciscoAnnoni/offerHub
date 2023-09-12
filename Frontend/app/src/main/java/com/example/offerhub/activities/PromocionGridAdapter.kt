@@ -31,7 +31,8 @@ class PromocionGridAdapter(private val context: Context, private val promociones
        val promocion = getItem(position) as Promocion
 
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val gridViewItem = inflater.inflate(R.layout.fragment_promo_card, null)
+        //val gridViewItem = inflater.inflate(R.layout.fragment_promo_card, null)
+        val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
 
         val textViewCategory = gridViewItem.findViewById<TextView>(R.id.txtCategoria)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
