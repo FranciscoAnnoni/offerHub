@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
+import com.example.offerhub.R
 import com.example.offerhub.Usuario
 import com.example.offerhub.data.User
 import com.example.offerhub.databinding.FragmentUserAccountBinding
@@ -87,9 +88,11 @@ class UserAccountFragment: Fragment() {
 
                     is Resource.Success -> {
                         binding.buttonSave.revertAnimation()
+                        binding.buttonSave.setBackgroundResource(R.drawable.rounded_button_background)
                         if (rootView != null) {
                             Snackbar.make(rootView, "Cambio de nombre Exitoso", Snackbar.LENGTH_SHORT).show()
                         }
+
                         findNavController().navigateUp()
                     }
 
@@ -130,6 +133,8 @@ class UserAccountFragment: Fragment() {
             edFirstName.visibility = View.VISIBLE
             tvUpdatePassword.visibility = View.VISIBLE
             buttonSave.visibility = View.VISIBLE
+            textView.visibility = View.VISIBLE
+            textView2.visibility = View.VISIBLE
         }
     }
 
@@ -141,6 +146,8 @@ class UserAccountFragment: Fragment() {
             edFirstName.visibility = View.INVISIBLE
             tvUpdatePassword.visibility = View.INVISIBLE
             buttonSave.visibility = View.INVISIBLE
+            textView.visibility = View.INVISIBLE
+            textView2.visibility = View.INVISIBLE
         }
     }
 

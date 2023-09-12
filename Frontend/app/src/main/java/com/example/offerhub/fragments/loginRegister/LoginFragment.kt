@@ -66,6 +66,8 @@ class LoginFragment:Fragment(R.layout.fragment_login) {
                     is Resource.Success -> {
                         Snackbar.make(rootView, "Login exitoso", Snackbar.LENGTH_SHORT).show()
                         binding.btnLogin.revertAnimation()
+                        binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
+
                         Snackbar.make(rootView, "Login exitoso", Snackbar.LENGTH_SHORT).show()
                        Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -73,9 +75,9 @@ class LoginFragment:Fragment(R.layout.fragment_login) {
                        }
                     }
                     is Resource.Error -> {
-                        Snackbar.make(rootView, "Error de Login", Snackbar.LENGTH_SHORT).show()
-                        Toast.makeText(requireContext(), it.message , Toast.LENGTH_LONG).show()
+                        Snackbar.make(rootView, "Error de Login, la contraseña o el mail son incorrectos", Snackbar.LENGTH_SHORT).show()
                         binding.btnLogin.revertAnimation()
+                        binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
                     }
                     else -> Unit
                 }

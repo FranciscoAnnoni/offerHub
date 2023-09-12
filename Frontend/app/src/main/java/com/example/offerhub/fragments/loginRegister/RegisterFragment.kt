@@ -75,6 +75,7 @@ class RegisterFragment:Fragment() {
                     is Resource.Error -> {
                         Log.e(TAG,it.message.toString())
                         binding.btnRegister.revertAnimation()
+                        binding.btnRegister.setBackgroundResource(R.drawable.rounded_button_background)
                     }
                     else -> Unit
                 }
