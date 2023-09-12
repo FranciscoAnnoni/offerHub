@@ -12,6 +12,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.threeten.bp.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -103,7 +108,7 @@ class Sucursal{
 
 class Promocion{
     // Propiedades (atributos) de la clase
-    var id: String?
+    var id: String? = null
     var categoria: String?
     var comercio: String?
     var cuotas: String?
@@ -120,12 +125,14 @@ class Promocion{
     val url: String?
     val vigenciaDesde: LocalDate?
     val vigenciaHasta: LocalDate?
+    val estado: String?
+    val logo: String?
 
     // Constructor primario
 
     constructor(id:String?,categoria: String?, comercio: String?, cuotas: String?, dias: List<String?>?, porcentaje: String?, proveedor: String?, sucursales: List<String?>?, tarjetas: List<String?>?,
                 tipoPromocion: String?, titulo: String?, topeNro: String?, topeTexto: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
-                vigenciaHasta: LocalDate?) {
+                vigenciaHasta: LocalDate?,estado:String?, logo: String?) {
         this.id = id
         this.categoria = categoria
         this.comercio = comercio
@@ -143,7 +150,10 @@ class Promocion{
         this.url=url
         this.vigenciaDesde = vigenciaDesde
         this.vigenciaHasta = vigenciaHasta
+        this.estado = estado
+        this.logo = logo
     }
+
 }
 
 class LecturaBD {
@@ -208,6 +218,22 @@ class LecturaBD {
                                     val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                     val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
                                     val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                                    val comercio: String? = data.child("comercio").getValue(String::class.java)
+                                    val coroutineScope = CoroutineScope(Dispatchers.Main)
+                                    var logo: String? = ""
+
+                                    coroutineScope.launch {
+                                        try {
+                                            if(comercio != null){
+                                                logo = Funciones().traerLogoComercio(comercio)}
+                                            else{logo = ""}
+
+                                        } catch (e: Exception) {
+                                            println("Error al obtener promociones: ${e.message}")
+                                        }
+                                    }
+
+                                    Log.d("logo", "${ logo }")
                                     val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
                                         data.child("cuotas").getValue(String::class.java),
                                         data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
@@ -218,8 +244,8 @@ class LecturaBD {
                                         data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
                                         data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                         data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
-                                        vigenciaHastaString?.let { LocalDate.parse(it, formato) }
-
+                                        vigenciaHastaString?.let { LocalDate.parse(it, formato)},
+                                        data.child("tipoPromocion").getValue(String::class.java), logo
                                     )
                                     lista.add(instancia as T)
                                 } "Usuario" ->{
@@ -308,7 +334,7 @@ class LecturaBD {
             val campoFiltro = filtros[i].first
             val valorFiltro = filtros[i].second
 
-                when (campoFiltro) {
+            when(campoFiltro) {
                     "categoria" -> {
                         promos = promos.filter { promo -> promo.categoria == valorFiltro }.toMutableList()
 
@@ -368,7 +394,24 @@ class LecturaBD {
                             val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
                             val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
-                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                            val comercio: String? = data.child("comercio").getValue(String::class.java)
+                            val coroutineScope = CoroutineScope(Dispatchers.Main)
+                            var logo: String? = ""
+
+                            Log.d("comercio", "${ comercio }")
+
+                            coroutineScope.launch {
+                                try {
+                                    if(comercio != null){
+                                    logo = Funciones().traerLogoComercio(comercio)}
+                                    else{logo = ""}
+                                } catch (e: Exception) {
+                                    println("Error al obtener promociones: ${e.message}")
+                                }
+                            }
+
+
+                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
                                 data.child("cuotas").getValue(String::class.java),
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
@@ -378,7 +421,8 @@ class LecturaBD {
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
                                 data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                 data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
-                                vigenciaHastaString?.let { LocalDate.parse(it, formato) })
+                                vigenciaHastaString?.let { LocalDate.parse(it, formato) },
+                                data.child("estado").getValue(String::class.java), logo)
                             lista.add(instancia)
                         }
 
@@ -607,5 +651,20 @@ LeerBdString:
             }
         }
 
+OBTENER PROMOS POR TARJETA
+
+val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val instancia = LecturaBD()
+        coroutineScope.launch {
+            try {
+                val logo = instancia.obtenerPromosPorTarjeta("-Ne52v1WN0OfZwqqBx_H")
+                if (logo != null) {
+                    Log.d("logo", "${ logo.size}")
+                }
+
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
 
  */

@@ -26,7 +26,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -51,7 +51,7 @@ cantElementos = int(driver.find_element(By.XPATH, '//strong').get_attribute("inn
 print(cantElementos)
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
-i = cantElementos
+i = 0
 error = 0
 
 while i < cantElementos:
@@ -66,7 +66,6 @@ while i < cantElementos:
 
     i = len(seccion_categorias)
 
-seccion_categorias = driver.find_elements(By.XPATH, '//div[contains(@class,"grid-item --col-8 --col-md-6 --col-lg-4 --col-xl-4")]')
 
 
 #de la lista obtenida muestra link asociado y texto de cada elemento
@@ -83,8 +82,11 @@ for boton in seccion_categorias:
     time.sleep(2)
 
     
-
-    categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[3].text
+    try:
+        categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[3].text
+    except NoSuchElementException:
+        
+        listaSucursales = None
     # Esto lo hago por como está hecha la página
     condicion = "Otros" == categoria or "Tiendas" in categoria or "Transportes" in categoria or "cocina" in categoria or "gourmet" in categoria
     if condicion: categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[2].text
@@ -135,7 +137,10 @@ for boton in seccion_categorias:
             print("\t\t  Descuento: "+oferta)
         else: print("\t\t CHEQUEAR")
 
-        print("\t\t  Descripción: " + containerPromo.find_element(By.XPATH, './/p[contains(@class,"paragraph --mb-24 --fourxs")]').text)
+        try:
+            print("\t\t  Descripción: " + containerPromo.find_element(By.XPATH, './/p[contains(@class,"paragraph --mb-24 --fourxs")]').text)
+        except NoSuchElementException:
+            None
         
         # TRAIGO LAS TARJETAS
         tarjetas = []

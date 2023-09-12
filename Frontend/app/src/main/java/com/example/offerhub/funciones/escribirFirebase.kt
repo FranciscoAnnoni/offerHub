@@ -10,6 +10,84 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.threeten.bp.LocalDate
+
+class SucursalEscritura{
+    // Propiedades (atributos) de la clase
+    var direccion: String?
+    var idComercio: String?
+    var latitud: String?
+    var longitud: String?
+
+
+    // Constructor primario
+    constructor(id:String?,direccion: String?, idComercio: String?,latitud: String?,longitud: String?) {
+        this.direccion = direccion
+        this.idComercio = idComercio
+        this.latitud = latitud
+        this.longitud = longitud
+    }
+}
+class PromocionEscritura {
+    // Propiedades (atributos) de la clase
+    var categoria: String?
+    var comercio: String?
+    var cuotas: String?
+    val dias: List<String?>?
+    var porcentaje: String?
+    var proveedor: String?
+    val sucursales: List<String?>?
+    val tarjetas: List<String?>?
+    val tipoPromocion: String?
+    val titulo: String?
+    val topeNro: String?
+    val topeTexto: String?
+    val tyc: String?
+    val url: String?
+    val vigenciaDesde: String?
+    val vigenciaHasta: String?
+    val estado: String?
+
+    // Constructor primario
+
+    constructor(
+        categoria: String?,
+        comercio: String?,
+        cuotas: String?,
+        dias: List<String?>?,
+        porcentaje: String?,
+        proveedor: String?,
+        sucursales: List<String?>?,
+        tarjetas: List<String?>?,
+        tipoPromocion: String?,
+        titulo: String?,
+        topeNro: String?,
+        topeTexto: String?,
+        tyc: String?,
+        url: String?,
+        vigenciaDesde: String?,
+        vigenciaHasta: String?,
+        estado: String?
+    ) {
+        this.categoria = categoria
+        this.comercio = comercio
+        this.cuotas = cuotas
+        this.dias = dias
+        this.porcentaje = porcentaje
+        this.proveedor = proveedor
+        this.sucursales = sucursales
+        this.tarjetas = tarjetas
+        this.tipoPromocion = tipoPromocion
+        this.titulo = titulo
+        this.topeNro = topeNro
+        this.topeTexto = topeTexto
+        this.tyc = tyc
+        this.url = url
+        this.vigenciaDesde = vigenciaDesde
+        this.vigenciaHasta = vigenciaHasta
+        this.estado = estado
+    }
+}
 
 class Usuario{
     // Propiedades (atributos) de la clase
@@ -42,6 +120,7 @@ class EscribirBD {
     private val _register = MutableStateFlow<Resource<User>>(Resource.Unspecified())
     val register: Flow<Resource<User>> = _register
 
+
     fun escribirUsuarioEnFirebase(usuario: Usuario, user: User) {
 
         val database: FirebaseDatabase =
@@ -57,6 +136,33 @@ class EscribirBD {
             }
 
     }
+
+    fun registrarComercio(comercio:Comercio,sucursales:List<SucursalEscritura>) {
+        val database: FirebaseDatabase =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referenciaCom: DatabaseReference = database.reference.child("/Comercio")
+
+        val comercioReferencia = referenciaCom.push()
+        comercioReferencia.setValue(comercio)
+
+        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
+        for (sucursal in sucursales){
+            sucursal.idComercio = comercioReferencia.key
+            val sucursalReferencia = referenciaSuc.push()
+            sucursalReferencia.setValue(sucursal)
+        }
+    }
+
+    fun escribirPromocion(promocion: PromocionEscritura) {
+
+        val database: FirebaseDatabase =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia: DatabaseReference = database.reference.child("/Promocion")
+
+        val promoReferencia = referencia.push()
+        promoReferencia.setValue(promocion)
+        }
+
     fun escribirUsuariosEnFirebase(usuarios: List<Usuario>) {
         val database: FirebaseDatabase =
             FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
@@ -136,4 +242,17 @@ class EscribirBD {
             Usuario("Nahuel Barrios", "perritogambeta@hotmail.com", "enanito",tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
         )
         instancia.escribirUsuariosEnFirebase(usuariosNuevos)
+
+
+ESCRIBIR PROMOCION:
+        val dias: List<String?> = listOf("Lunes")
+        val sucursales: List<String?> = listOf("almagro")
+        val tarjetas: List<String?> = listOf("No posee")
+        var promo1 = PromocionEscritura("Prueba3","Offerhub","3",dias,"30","jp",sucursales,tarjetas,"descuento","promopiola","2000","dos mil","ninguno","hola.com","2020-03-03","2025-01-01","pendiente")
+        var instancia = EscribirBD()
+        instancia.escribirPromocion(promo1)
+
+
+REGISTRAR COMERCIO
+
  */

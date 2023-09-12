@@ -85,6 +85,8 @@ while i < len(seccion_categorias):
             comercio.nombre=nombreComercio
             comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
             comercio.logo=utilidades.imagenABase64(urlImagen)
+            print(urlImagen)
+            print(comercio.logo)
             idComercio=comercio.guardar()
             
 
