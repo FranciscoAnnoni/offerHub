@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
@@ -44,10 +45,17 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                     instancia.leerBdClaseSinc("Promocion", "categoria", "Gastronomía")
                 val adapter = PromocionGridAdapter(view.context, datos)
                 listView.adapter = adapter
+                listView.setOnItemClickListener { parent, _, position, _ ->
+                    val selectedPromo = adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
+                    val action = HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(selectedPromo)
+                    findNavController().navigate(action)
+                }
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
             }
         }
+
+
 
     }
 }

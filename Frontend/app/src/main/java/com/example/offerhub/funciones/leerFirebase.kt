@@ -2,6 +2,7 @@ package com.example.offerhub
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Parcelable
 import com.google.firebase.database.ValueEventListener
 import org.threeten.bp.format.DateTimeFormatter
 import android.util.Base64
@@ -12,6 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
+import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -106,55 +108,28 @@ class Sucursal{
     }
 }
 
-class Promocion{
-    // Propiedades (atributos) de la clase
-    var id: String? = null
-    var categoria: String?
-    var comercio: String?
-    var cuotas: String?
-    val dias: List<String?>?
-    var porcentaje: String?
-    var proveedor: String?
-    val sucursales: List<String?>?
-    val tarjetas: List<String?>?
-    val tipoPromocion: String?
-    val titulo: String?
-    val topeNro: String?
-    val topeTexto: String?
-    val tyc: String?
-    val url: String?
-    val vigenciaDesde: LocalDate?
-    val vigenciaHasta: LocalDate?
-    val estado: String?
+@Parcelize
+class Promocion(
+    var id: String?,
+    var categoria: String?,
+    var comercio: String?,
+    var cuotas: String?,
+    val dias: List<String?>?,
+    var porcentaje: String?,
+    var proveedor: String?,
+    val sucursales: List<String?>?,
+    val tarjetas: List<String?>?,
+    val tipoPromocion: String?,
+    val titulo: String?,
+    val topeNro: String?,
+    val topeTexto: String?,
+    val tyc: String?,
+    val url: String?,
+    val vigenciaDesde: LocalDate?,
+    val vigenciaHasta: LocalDate?,
+    val estado: String?,
     val logo: String?
-
-    // Constructor primario
-
-    constructor(id:String?,categoria: String?, comercio: String?, cuotas: String?, dias: List<String?>?, porcentaje: String?, proveedor: String?, sucursales: List<String?>?, tarjetas: List<String?>?,
-                tipoPromocion: String?, titulo: String?, topeNro: String?, topeTexto: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
-                vigenciaHasta: LocalDate?,estado:String?, logo: String?) {
-        this.id = id
-        this.categoria = categoria
-        this.comercio = comercio
-        this.cuotas = cuotas
-        this.dias = dias
-        this.porcentaje = porcentaje
-        this.proveedor = proveedor
-        this.sucursales = sucursales
-        this.tarjetas = tarjetas
-        this.tipoPromocion=tipoPromocion
-        this.titulo=titulo
-        this.topeNro=topeNro
-        this.topeTexto=topeTexto
-        this.tyc =tyc
-        this.url=url
-        this.vigenciaDesde = vigenciaDesde
-        this.vigenciaHasta = vigenciaHasta
-        this.estado = estado
-        this.logo = logo
-    }
-
-}
+) : Parcelable
 
 class LecturaBD {
 
