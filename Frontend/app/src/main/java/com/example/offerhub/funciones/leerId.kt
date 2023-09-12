@@ -11,8 +11,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -137,10 +139,27 @@ class leerId {
             val vigenciaDesde = vigenciaDesdeString?.let { LocalDate.parse(it, formato) }
             val vigenciaHasta = vigenciaHastaString?.let { LocalDate.parse(it, formato) }
 
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+            var logo: String? = ""
+
+            coroutineScope.launch {
+                try {
+                    if(comercio != null){
+                        logo = Funciones().traerLogoComercio(comercio)}
+                    else{logo = ""}
+
+
+                } catch (e: Exception) {
+                    println("Error al obtener promociones: ${e.message}")
+                }
+            }
+
+            Log.d("logo", "${ logo }")
+
             val estado = dataSnapshot.child("estado").getValue(String::class.java)
 
             val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales, tarjetas,
-                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta,estado)
+                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta,estado, logo)
 
 
             return promocion

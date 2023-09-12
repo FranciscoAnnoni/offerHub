@@ -14,7 +14,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.threeten.bp.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -124,12 +126,13 @@ class Promocion{
     val vigenciaDesde: LocalDate?
     val vigenciaHasta: LocalDate?
     val estado: String?
+    val logo: String?
 
     // Constructor primario
 
     constructor(id:String?,categoria: String?, comercio: String?, cuotas: String?, dias: List<String?>?, porcentaje: String?, proveedor: String?, sucursales: List<String?>?, tarjetas: List<String?>?,
                 tipoPromocion: String?, titulo: String?, topeNro: String?, topeTexto: String?, tyc: String?, url: String?, vigenciaDesde: LocalDate?,
-                vigenciaHasta: LocalDate?,estado:String?) {
+                vigenciaHasta: LocalDate?,estado:String?, logo: String?) {
         this.id = id
         this.categoria = categoria
         this.comercio = comercio
@@ -148,6 +151,7 @@ class Promocion{
         this.vigenciaDesde = vigenciaDesde
         this.vigenciaHasta = vigenciaHasta
         this.estado = estado
+        this.logo = logo
     }
 
 }
@@ -223,9 +227,6 @@ class LecturaBD {
                                             if(comercio != null){
                                                 logo = Funciones().traerLogoComercio(comercio)}
                                             else{logo = ""}
-                                            if (logo != null) {
-                                                Log.d("logo", "${ logo }")
-                                            }
 
                                         } catch (e: Exception) {
                                             println("Error al obtener promociones: ${e.message}")
@@ -244,7 +245,7 @@ class LecturaBD {
                                         data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                         data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                         vigenciaHastaString?.let { LocalDate.parse(it, formato)},
-                                        data.child("tipoPromocion").getValue(String::class.java)
+                                        data.child("tipoPromocion").getValue(String::class.java), logo
                                     )
                                     lista.add(instancia as T)
                                 } "Usuario" ->{
@@ -397,21 +398,18 @@ class LecturaBD {
                             val coroutineScope = CoroutineScope(Dispatchers.Main)
                             var logo: String? = ""
 
+                            Log.d("comercio", "${ comercio }")
+
                             coroutineScope.launch {
                                 try {
                                     if(comercio != null){
                                     logo = Funciones().traerLogoComercio(comercio)}
                                     else{logo = ""}
-                                    if (logo != null) {
-                                        Log.d("logo", "${ logo }")
-                                    }
-
                                 } catch (e: Exception) {
                                     println("Error al obtener promociones: ${e.message}")
                                 }
                             }
 
-                            Log.d("logo", "${ logo }")
 
                             val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
                                 data.child("cuotas").getValue(String::class.java),
@@ -424,7 +422,7 @@ class LecturaBD {
                                 data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
                                 data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                 vigenciaHastaString?.let { LocalDate.parse(it, formato) },
-                                data.child("estado").getValue(String::class.java))
+                                data.child("estado").getValue(String::class.java), logo)
                             lista.add(instancia)
                         }
 

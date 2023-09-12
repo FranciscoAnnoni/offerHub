@@ -29,7 +29,21 @@ class LoginRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_register)
 
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val instancia = LecturaBD()
+        coroutineScope.launch {
+            try {
+                val promos = instancia.obtenerPromosPorTarjeta("-Ne52v1WN0OfZwqqBx_H")
+                if (promos != null) {
+                    for(promo in promos) {
+                        Log.d("logo", "${promo.logo}")
+                    }
+                }
 
+            } catch (e: Exception) {
+                println("Error al obtener promociones: ${e.message}")
+            }
+        }
 
 
     }

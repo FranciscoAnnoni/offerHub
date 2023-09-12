@@ -82,8 +82,11 @@ for boton in seccion_categorias:
     time.sleep(2)
 
     
-
-    categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[3].text
+    try:
+        categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[3].text
+    except NoSuchElementException:
+        
+        listaSucursales = None
     # Esto lo hago por como está hecha la página
     condicion = "Otros" == categoria or "Tiendas" in categoria or "Transportes" in categoria or "cocina" in categoria or "gourmet" in categoria
     if condicion: categoria = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"link club-link --primary --font-bold --font-xs")]')))[2].text
