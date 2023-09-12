@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
+import androidx.core.view.size
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.InterfaceSinc
@@ -17,11 +19,23 @@ import com.example.offerhub.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Math.ceil
 
 
 class HomeFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentHomeBinding
+    private var scrollPosition: Int = 0
 
+    override fun onPause() {
+        super.onPause()
+        scrollPosition = binding.promocionesGridView.scrollY
+    }
+    override fun onResume() {
+        super.onResume()
+        binding.promocionesGridView.post {
+            binding.promocionesGridView.scrollTo(0, scrollPosition)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +64,11 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                     val action = HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(selectedPromo)
                     findNavController().navigate(action)
                 }
+                val alturaTotal = resources.getDimensionPixelSize(R.dimen.altura_grid_view)
+                val params = listView.layoutParams
+                params.height = alturaTotal
+                listView.layoutParams = params
+
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
             }
@@ -57,5 +76,22 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
 
 
+    }
+
+    fun calcularAlturaTotalGridView(gridView: GridView): Int {
+        val adapter = gridView.adapter
+        var alturaTotal = 0
+
+        for (i in 0 until ceil((adapter.count/2).toDouble()).toInt()) {
+            val itemView = adapter.getView(i, null, gridView)
+            itemView.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            )
+            val alturaItem = itemView.measuredHeight
+            alturaTotal += alturaItem
+        }
+
+        return alturaTotal
     }
 }
