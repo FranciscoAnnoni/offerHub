@@ -46,7 +46,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 val circleId = resources.getIdentifier("circle$nombreDia", "id", requireContext().packageName)
                 val circleView = view.findViewById<TextView>(circleId)
                 circleView.setBackgroundResource(R.drawable.circle_foreground)
-                circleView.setTextColor(Color.parseColor("#000000"))
+                circleView.setTextColor(Color.parseColor("#FFFFFF"))
             }
             }
             //tvProductPrice.text = "$ ${promocion.price}"
