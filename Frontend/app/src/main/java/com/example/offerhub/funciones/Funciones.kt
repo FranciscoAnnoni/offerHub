@@ -161,8 +161,14 @@ class Funciones {
         var usuario : Usuario?
 
         if (currentUser != null) {
+            Log.d("IDCurrentUser", "${currentUser.uid}")
+        }
+
+        if (currentUser != null) {
             usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
-            Log.d("ID", currentUser.uid)
+            if (usuario != null) {
+                Log.d("ID", "${usuario.nombre}")
+            }
         } else {
             usuario =  null
             Log.d("ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado

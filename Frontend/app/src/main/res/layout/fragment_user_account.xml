@@ -89,7 +89,6 @@
             app:layout_constraintBottom_toBottomOf="@id/imageUser"
             app:layout_constraintEnd_toEndOf="@id/imageUser" />
 
-
         <EditText
             style="@style/EditTextRounded"
             android:id="@+id/edFirstName"
@@ -122,8 +121,9 @@
             android:id="@+id/tvUpdatePassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Forgot/Change password"
+            android:layout_marginTop="16dp"
+            android:text=" Olvidé mi contraseña/Cambiar contraseña"
+            app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintStart_toStartOf="@id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@+id/edEmail" />
 
@@ -134,7 +134,7 @@
             android:layout_height="44dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/rounded_button_background"
-            android:text="Save"
+            android:text="Guardar Cambios"
             android:textSize="17dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"

@@ -27,6 +27,10 @@
         android:name="com.example.offerhub.fragments.shopping.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search"/>
+    <fragment
+        android:id="@+id/userAccountFragment"
+        android:name="com.example.offerhub.fragments.settings.UserAccountFragment"
+        android:label="UserAccountFragment" />
 </navigation>
 
 

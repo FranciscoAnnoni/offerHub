@@ -106,6 +106,7 @@ class leerId {
 
             Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro)
         } else {
+            Log.d("ID", "El usuario es NULO")
             null // El usuario no existe
         }
     }
