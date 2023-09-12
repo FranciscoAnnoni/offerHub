@@ -20,7 +20,11 @@
         android:id="@+id/profileFragment"
         android:name="com.example.offerhub.fragments.shopping.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_userAccountFragment"
+            app:destination="@id/userAccountFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
