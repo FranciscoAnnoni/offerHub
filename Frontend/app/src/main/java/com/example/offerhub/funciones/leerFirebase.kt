@@ -16,9 +16,7 @@ import com.google.firebase.database.GenericTypeIndicator
 import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.threeten.bp.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -54,7 +52,7 @@ class Comercio{
     }
 
     //Funcion que convierte de base64 a bitmap para luego poder mostrar como imagen
-    fun base64ToBitmap(logo: String?): Bitmap? {
+     fun base64ToBitmap(logo: String?): Bitmap? {
         if (logo.isNullOrBlank()) {
             return null
         }

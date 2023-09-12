@@ -1,4 +1,5 @@
 <resources>
     <!-- Define la altura de la GridView en píxeles -->
     <dimen name="altura_grid_view">450dp</dimen>
+    <dimen name="altura_inner_grid_view">350dp</dimen>
 </resources>

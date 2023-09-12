@@ -21,7 +21,7 @@
         <!-- Agrega tu imagen aquí -->
         <ImageView
             android:id="@+id/imgComercio"
-            android:layout_width="48dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:src="@drawable/cat_default"
             android:layout_gravity="center"/>

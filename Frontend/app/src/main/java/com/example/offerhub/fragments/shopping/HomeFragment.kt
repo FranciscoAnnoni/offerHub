@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
+import android.widget.ProgressBar
 import androidx.core.view.size
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -49,7 +50,10 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var instancia = InterfaceSinc()
-        val listView = view.findViewById<GridView>(R.id.promocionesGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+        val listView = view.findViewById<GridView>(R.id.promocionesGridView)
+        progressBar.visibility = View.VISIBLE
+        listView.visibility = View.GONE
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         var datos: MutableList<String> = mutableListOf()
         // Llamar a la función que obtiene los datos.
@@ -68,6 +72,8 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                 val params = listView.layoutParams
                 params.height = alturaTotal
                 listView.layoutParams = params
+                listView.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
 
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")

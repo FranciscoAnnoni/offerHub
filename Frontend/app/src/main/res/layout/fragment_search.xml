@@ -107,6 +107,7 @@
             android:layout_height="wrap_content"
             android:columnCount="2"
             android:rowCount="3"
+            android:background="@android:color/transparent"
             android:layout_margin="8dp"
             android:layout_gravity="center"
             android:padding="8dp"
@@ -116,7 +117,7 @@
             <GridView
                 android:id="@+id/gridView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/altura_inner_grid_view"
                 android:numColumns="2"
                 android:verticalSpacing="8dp"
                 android:horizontalSpacing="8dp"

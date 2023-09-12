@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import java.util.Locale
 
 class Funciones {
     val instancialeerId = leerId()
@@ -171,9 +170,9 @@ class Funciones {
         usuario
     }
 
-    suspend fun traerLogoComercio(idComercio: String): String? = coroutineScope {
+    suspend fun traerLogoComercio(idComercio: String?): String? = coroutineScope {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
-        val dataSnapshot = database.child("Comercio").child(idComercio).get().await()
+        val dataSnapshot = database.child("Comercio").child(idComercio.toString()).get().await()
         var logo: String? = ""
 
         if (dataSnapshot.exists()) {
