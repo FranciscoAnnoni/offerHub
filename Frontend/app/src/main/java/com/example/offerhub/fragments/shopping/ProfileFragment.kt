@@ -57,7 +57,6 @@ class ProfileFragment : Fragment() {
             // viewModel.logoutSuccessLiveData.value = true
 
             val intent = Intent(requireActivity(),LoginRegisterActivity::class.java)
-
             startActivity(intent)
             requireActivity().finish()
 

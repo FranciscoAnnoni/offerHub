@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
 import com.example.offerhub.R
 import com.example.offerhub.Usuario
+import com.example.offerhub.activities.LoginRegisterActivity
 import com.example.offerhub.data.User
 import com.example.offerhub.databinding.FragmentUserAccountBinding
 import com.example.offerhub.util.Resource
@@ -51,7 +53,7 @@ class UserAccountFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageCloseUserAccount.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_userAccountFragment_to_profileFragment)
         }
 
         rootView = view // Asignar la vista raíz del fragmento
