@@ -17,30 +17,39 @@ class Funciones {
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
-            instanciaLectura.obtenerPromosPorTarjeta("No posee")
-        }
-        val promos = promosDeferred.await() // Esperar a que se completen las promociones
-        for (promo in promos){
-            if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
-                listaPromos.add(promo)
+            val promos = instanciaLectura.obtenerPromosPorTarjeta("No posee")
+            for (promo in promos){
+                if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
+                    listaPromos.add(promo)
+                }
             }
         }
+        promosDeferred.await() // Esperar a que se completen las promociones
+
         listaPromos
     }
 
+
+
     suspend fun obtenerPromociones(usuario: Usuario): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
+        val i = 0
         val deferredPromos = usuario.tarjetas?.map { tarjeta ->
             coroutineScope.async {
+                if(i == 0){
+                    val promosComunes = obtenerPromocionesComunes()
+                    if (promosComunes != null) {
+                    listaPromos.addAll(promosComunes)
+                    }
+                }
+
                 val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
                 if (promos != null) {
                     listaPromos.addAll(promos)
                 }
             }
         }
-
         deferredPromos?.awaitAll()
-
         listaPromos
     }
 
@@ -193,24 +202,23 @@ class Funciones {
 
 //ejemplos llamados
 /*
+OBTENER PROMOCIONES:
         var instancia = Funciones()
-        setContentView(R.layout.activity_main)
-        var tarjetas: List<String?> = listOf("-NbqSvUq5L_kTqrzlUo_")
-        var usuario1 = Usuario("Pepe", "usuario1@example.com", tarjetas)
+        var tarjetas: List<String?> = listOf("-Ne5dQiaSXSCnMJmukwT")
+        var usuario1 = Usuario("aflkaslfa","Pepe", "usuario1@example.com", tarjetas,null,null,null,null)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
 
         coroutineScope.launch {
             try {
-                var promociones = instancia.listarPromociones(usuario1)
+                var promociones = instancia.obtenerPromociones(usuario1)
                 println("Promociones obtenidas:")
                 for (promo in promociones){
                     promo.titulo?.let { Log.d("promo", it) }
                 }
             } catch (e: Exception) {
-                println("Error al obtener promociones: ${e.message}")
+                println("Error al obtener promociones: {e.message}")
             }
         }
-
 
  Obtener tarjeta:
         val coroutineScope = CoroutineScope(Dispatchers.Main)
