@@ -54,12 +54,14 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             findNavController().navigateUp()
         }
         val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
-        val adapter = TarjetasPromocionAdapter(promocion.tarjetas as List<String>?)
 
-        recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewTarjetas.adapter = adapter
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
+            var tarjetasComunes=instancia.tarjetasComunes(instancia.traerUsuarioActual(),promocion)
+            val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
+
+            recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerViewTarjetas.adapter = adapter
             isFavorite= instancia.traerUsuarioActual()
                 ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
             binding.imageFav.setImageResource(getFavResource(isFavorite))
@@ -105,8 +107,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 val logoBitmap = Comercio(
                     "",
                     "",
-                    "",
-                    ""
+                    "","",""
                 ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
                 if (logoBitmap != null) {
                     viewPagerProductImages.setImageBitmap(logoBitmap)

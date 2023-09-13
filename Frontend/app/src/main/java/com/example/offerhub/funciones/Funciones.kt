@@ -30,10 +30,10 @@ class Funciones {
 
 
 
-    suspend fun obtenerPromociones(usuario: Usuario): MutableList<Promocion> = coroutineScope {
+    suspend fun obtenerPromociones(usuario: Usuario?): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val i = 0
-        val deferredPromos = usuario.tarjetas?.map { tarjeta ->
+        val deferredPromos = usuario?.tarjetas?.map { tarjeta ->
             coroutineScope.async {
                 if(i == 0){
                     val promosComunes = obtenerPromocionesComunes()
@@ -189,12 +189,14 @@ class Funciones {
         usuario
     }
 
-    fun tarjetasComunes(usuario:Usuario,promocion:Promocion):List<String>{
+    fun tarjetasComunes(usuario:Usuario?,promocion:Promocion):List<String>{
         val lista = mutableListOf<String>()
-        for (tarj in usuario.tarjetas!!){
-            if(promocion.tarjetas?.contains(tarj) == true){
-                if (tarj != null) {
-                    lista.add(tarj)
+        if (usuario != null) {
+            for (tarj in usuario.tarjetas!!){
+                if(promocion.tarjetas?.contains(tarj) == true){
+                    if (tarj != null) {
+                        lista.add(tarj)
+                    }
                 }
             }
         }
@@ -215,9 +217,9 @@ class Funciones {
     suspend fun traerLogoComercio(idComercio: String?): String? = coroutineScope {
         traerInfoComercio(idComercio,"logo")
     }
-    suspend fun traerNombeEntidad(idEntidad: String): String? = coroutineScope {
+    suspend fun traerNombeEntidad(idEntidad: String?): String? = coroutineScope {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
-        val dataSnapshot = database.child("Entidad").child(idEntidad).get().await()
+        val dataSnapshot = database.child("Entidad").child(idEntidad.toString()).get().await()
         var nombre: String? = ""
 
         if (dataSnapshot.exists()) {

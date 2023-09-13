@@ -51,6 +51,7 @@ class PromocionGridAdapter(private val context: Context, private val promociones
                 "",
                 "",
                 "",
+                "",
                 ""
             ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
             if (logoBitmap != null) {

@@ -238,7 +238,7 @@ class LecturaBD {
                                         data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
                                         data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                         vigenciaHastaString?.let { LocalDate.parse(it, formato)},
-                                        data.child("tipoPromocion").getValue(String::class.java)
+                                        data.child("tipoPromocion").getValue(String::class.java),""
                                     )
                                     lista.add(instancia as T)
                                 } "Usuario" ->{
@@ -400,7 +400,7 @@ class LecturaBD {
                                 data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
                                 data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                 vigenciaHastaString?.let { LocalDate.parse(it, formato) },
-                                data.child("estado").getValue(String::class.java))
+                                data.child("estado").getValue(String::class.java),"")
                             lista.add(instancia)
                         }
 

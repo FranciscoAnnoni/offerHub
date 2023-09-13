@@ -3,6 +3,7 @@ package com.example.offerhub.fragments.shopping
 import CategoryGridAdapter
 import PromocionGridAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,7 +67,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         val job = coroutineScope.launch {
             try {
                 val datos: List<Promocion> =
-                    instancia.leerBdClaseSinc("Promocion", "categoria", "Gastronomía")
+                    funciones.obtenerPromociones(funciones.traerUsuarioActual())
                 val adapter = PromocionGridAdapter(view.context, datos)
                 listView.adapter = adapter
                 listView.setOnItemClickListener { parent, _, position, _ ->
