@@ -2,6 +2,7 @@ package com.example.offerhub.viewmodel
 
 import android.app.Application
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,6 +34,8 @@ class UserAccountViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseDatabase
 ) : AndroidViewModel(app) {
+
+
 
     private val _user = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
     val user = _user.asStateFlow()
