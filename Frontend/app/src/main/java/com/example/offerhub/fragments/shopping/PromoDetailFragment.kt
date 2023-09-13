@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.shopping
 
+import TarjetasPromocionAdapter
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.R
@@ -50,6 +53,11 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
         }
+        val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
+        val adapter = TarjetasPromocionAdapter(promocion.tarjetas as List<String>?)
+
+        recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewTarjetas.adapter = adapter
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
             isFavorite= instancia.traerUsuarioActual()
@@ -87,7 +95,11 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 promoDesc.text = promocion.descripcion
                 promoDesc.visibility = View.VISIBLE
             }
+            if(promocion.tipoPromocion!="Reintegro") {
+                containerNotificar.visibility = View.GONE
+            }
             promoTyC.text = promocion.tyc
+            promoVigencia.text=promocion.obtenerTextoVigencia()
             coroutineScope.launch {
                 promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
                 val logoBitmap = Comercio(

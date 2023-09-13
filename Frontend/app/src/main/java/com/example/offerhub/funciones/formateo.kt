@@ -5,6 +5,10 @@ import java.util.regex.Pattern
 import android.graphics.Bitmap
 import android.graphics.Color
 import com.example.offerhub.R
+import org.threeten.bp.LocalDate
+
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 fun removeAccents(input: String?): String {
     val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
@@ -62,5 +66,13 @@ fun getFavResource(isFavorite: Boolean): Int {
     } else {
         return R.drawable.ic_fav
     }
+}
+
+
+fun formatearFecha(fecha: LocalDate?): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val date = inputFormat.parse(fecha.toString())
+    return outputFormat.format(date)
 }
 

@@ -9,6 +9,7 @@ import android.util.Base64
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
+import com.example.offerhub.funciones.formatearFecha
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -129,6 +130,25 @@ class Promocion(
     val estado: String?,
     val logo: String?
 ) : Parcelable {
+    fun obtenerTextoVigencia(): String? {
+        val vigenciaDesde = this.vigenciaDesde
+        val vigenciaHasta = this.vigenciaHasta
+
+        val textoVigencia = when {
+            vigenciaDesde != null && vigenciaHasta != null -> {
+                return "Desde ${formatearFecha(vigenciaDesde)} hasta ${formatearFecha(vigenciaHasta)}"
+            }
+            vigenciaDesde != null -> {
+                return "Desde ${formatearFecha(vigenciaDesde)}"
+            }
+            vigenciaHasta != null -> {
+                return "Hasta ${formatearFecha(vigenciaHasta)}"
+            }
+            else -> {
+                return ""
+            }
+        }
+    }
     fun obtenerDesc(): kotlin.String {
         if(this.tipoPromocion=="Reintegro" || this.tipoPromocion=="Descuento"){
             return this.porcentaje.toString()+"%"

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/fondo"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,23 +109,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Descripcion"
-                android:layout_marginBottom="10dp"
                 android:textColor="@color/g_gray700"
                 android:textSize="15sp"
                 android:visibility="gone"
                 android:textStyle="bold"
+                android:layout_marginBottom="20dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tituloDisponibilidad"
+                app:layout_constraintBottom_toTopOf="@+id/containerDisponibilidad"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                  />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerDisponibilidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintBottom_toTopOf="@+id/containerTarjetas"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="horizontal">
             <LinearLayout
                 android:id="@+id/tituloDisponibilidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/promoDesc"
                 app:layout_constraintBottom_toTopOf="@id/diasPromo"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"> <!-- Añade android:gravity -->
@@ -144,7 +152,7 @@
                     android:layout_marginLeft="10dp"
                     android:textSize="17sp"
                     android:textStyle="bold"
-                    android:text="Disponibilidad de la Promocion"/>
+                    android:text="Disponibilidad de la Promoción"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/diasPromo"
@@ -217,18 +225,80 @@
                     android:gravity="center"
                     android:layout_marginLeft="5dp"
                     android:text="DO" />
-
                 <!-- Agrega círculos para los otros días de la semana de manera similar -->
 
             </LinearLayout>
+                <TextView
+                    android:id="@+id/promoVigencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/g_gray700"
+                    android:textSize="17sp"
+                    android:layout_marginTop="20dp"
+                    android:paddingLeft="30dp"
+                    android:textStyle="bold"
+                    android:gravity="left"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/diasPromo"
+                    android:text="Desde 10/10/2023 hasta 10/10/2024" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerTarjetas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/containerDisponibilidad"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/tituloSeccionTarjetas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"> <!-- Añade android:gravity -->
+
+                    <ImageView
+                        android:id="@+id/imgSeccionTarjetas"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_creditcard"
+                        app:tint="#b5abc9"/>
+
+                    <TextView
+                        android:id="@+id/txtSeccionTarjetas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#b5abc9"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:text="Tarjetas de la Promoción"/>
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewTarjetas"
+                    app:layout_constraintTop_toBottomOf="@id/tituloSeccionTarjetas"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/containerNotificar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="35dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diasPromo"
+                app:layout_constraintTop_toBottomOf="@id/containerTarjetas"
                 android:orientation="horizontal">
             <LinearLayout
                 android:id="@+id/tituloNotifReintegro"
@@ -265,12 +335,33 @@
                     android:textColor="@color/g_gray700"
                     app:layout_constraintTop_toTopOf="@id/tituloNotifReintegro"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginLeft="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:textSize="15sp"
+                    android:paddingLeft="40dp"
                     android:textStyle="bold"
                     android:text="Se le enviara un mail recordandole de chequear el reintegro."/>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtNotifReintegroExplicacion"
+                    android:layout_gravity="center">
+
+                    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                        android:id="@+id/btnNotificar"
+                        style="@style/RoundedButtonBackgroundLight"
+                        android:layout_width="120dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Notificar"
+                        android:textSize="17sp" />
+
+                </androidx.cardview.widget.CardView>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <TextView
