@@ -209,7 +209,17 @@ class Funciones {
         logo
     }
 
+    suspend fun traerNombeEntidad(idEntidad: String): String? = coroutineScope {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Entidad").child(idEntidad).get().await()
+        var nombre: String? = ""
 
+        if (dataSnapshot.exists()) {
+            nombre = dataSnapshot.child("nombre").getValue(String::class.java)
+        }
+
+        nombre
+    }
 }
 
 //ejemplos llamados

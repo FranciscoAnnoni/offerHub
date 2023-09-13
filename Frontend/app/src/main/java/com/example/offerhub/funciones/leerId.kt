@@ -186,6 +186,24 @@ class LeerId {
             return null
         }
     }
+
+    suspend fun obtenerSucursalPorId(id: String): Sucursal? {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Sucursal").child(id).get().await()
+
+        if (dataSnapshot.exists()) {
+            val key = dataSnapshot.key
+            val direccion = dataSnapshot.child("direccion").getValue(String::class.java)
+            val idComercio = dataSnapshot.child("idComercio").getValue(String::class.java)
+            val latitud = dataSnapshot.child("latitud").getValue(String::class.java)?.toDouble()
+            val longitud = dataSnapshot.child("longitud").getValue(String::class.java)?.toDouble()
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+            val sucursal = Sucursal(key,direccion,idComercio,latitud,longitud)
+            return sucursal
+        } else {
+            return null
+        }
+    }
 }
 
 

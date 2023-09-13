@@ -258,7 +258,7 @@ for categoria in categorias:
             promocion.proveedor=idEntidad
             promocion.titulo = nombreComercio+": "+oferta
             promocion.proveedor = idEntidad
-            promocion.setearTipoPromocion(oferta, "")
+            promocion.setearTipoPromocion(oferta, tope)
             numeros = promocion.obtenerPorcentajeYCantCuotas(oferta)
             promocion.porcentaje=numeros["porcentaje"]
             promocion.cuotas=numeros["cuotas"]
