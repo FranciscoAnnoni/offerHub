@@ -154,17 +154,20 @@
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnLogin"
+            app:layout_constraintBottom_toBottomOf="@id/sosEmpresa"
+            android:layout_marginBottom="35dp"
             tools:ignore="MissingConstraints" />
 
 
         <TextView
+            android:id="@+id/sosEmpresa"
             style="@style/textoChicoNegro"
             android:layout_marginTop="18dp"
             android:text="Sos una Empresa?"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linea1"
+            app:layout_constraintBottom_toBottomOf="@id/loginEmpresa"
+            android:layout_marginBottom="30dp"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -176,18 +179,21 @@
             android:text="Registrar o Ingresar como Empresa"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linea1"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/linea2"
+            />
 
         <View
             android:id="@+id/linea2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="18dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/fondo"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginEmpresa"
+            android:layout_marginBottom="10dp"
             tools:ignore="MissingConstraints" />
 
 
@@ -197,7 +203,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.10" />
+            app:layout_constraintGuide_percent="0.0" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
