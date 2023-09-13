@@ -13,18 +13,15 @@
             android:id="@+id/cardProductImages"
             android:layout_width="0dp"
             android:layout_height="350dp"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="15dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:cardElevation="0dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
+            app:cardElevation="0dp">
 
-            <androidx.viewpager2.widget.ViewPager2
+            <ImageView
                 android:id="@+id/viewPagerProductImages"
                 android:layout_width="match_parent"
+                android:src="@drawable/cat_default"
                 android:layout_height="match_parent"/>
 
             <ImageView
@@ -33,7 +30,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_close"
                 android:padding="5dp"
-                app:tint="@color/g_black"/>
+                app:tint="@color/g_white"/>
 
 
         </androidx.cardview.widget.CardView>
