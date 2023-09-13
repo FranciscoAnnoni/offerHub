@@ -132,6 +132,7 @@ class leerId {
             val topeNro = dataSnapshot.child("topeNro").getValue(String::class.java)
             val topeTexto = dataSnapshot.child("topeTexto").getValue(String::class.java)
             val tyc = dataSnapshot.child("tyc").getValue(String::class.java)
+            val descripcion = dataSnapshot.child("descripcion").getValue(String::class.java)
             val url = dataSnapshot.child("url").getValue(String::class.java)
 
             val vigenciaDesdeString: String? = dataSnapshot.child("vigenciaDesde").getValue(String::class.java)
@@ -160,7 +161,7 @@ class leerId {
             val estado = dataSnapshot.child("estado").getValue(String::class.java)
 
             val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales, tarjetas,
-                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta,estado, logo)
+                tipoPromocion, titulo, topeNro, topeTexto, tyc,descripcion, url, vigenciaDesde, vigenciaHasta,estado, logo)
 
 
             return promocion

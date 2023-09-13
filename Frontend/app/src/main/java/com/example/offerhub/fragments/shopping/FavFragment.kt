@@ -61,6 +61,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
             "",
             "",
             "",
+            "",
             org.threeten.bp.LocalDate.now(),
             org.threeten.bp.LocalDate.now(),
             "",

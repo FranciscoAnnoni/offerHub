@@ -90,112 +90,221 @@
                 app:layout_constraintGuide_percent="0.9" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-        <LinearLayout
-            android:id="@+id/diasPromo"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/infoPromo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="35dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linearTitlePrice"
             android:orientation="horizontal">
 
-            <!-- Círculo para el día Lunes -->
             <TextView
-                android:id="@+id/circleLunes"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="LU" />
+                android:id="@+id/promoDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripcion"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/g_gray700"
+                android:textSize="15sp"
+                android:visibility="gone"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tituloDisponibilidad"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                 />
+            <LinearLayout
+                android:id="@+id/tituloDisponibilidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/promoDesc"
+                app:layout_constraintBottom_toTopOf="@id/diasPromo"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"> <!-- Añade android:gravity -->
 
-            <!-- Círculo para el día Martes -->
-            <TextView
-                android:id="@+id/circleMartes"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="MA" />
-            <TextView
-                android:id="@+id/circleMiercoles"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="MI" />
-            <TextView
-                android:id="@+id/circleJueves"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="JU" />
-            <TextView
-                android:id="@+id/circleViernes"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="VI" />
-            <TextView
-                android:id="@+id/circleSabado"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="SA" />
-            <TextView
-                android:id="@+id/circleDomingo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="DO" />
+                <ImageView
+                    android:id="@+id/imgDisponibilidad"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_calendar"
+                    app:tint="#b5abc9"/>
 
-            <!-- Agrega círculos para los otros días de la semana de manera similar -->
+                <TextView
+                    android:id="@+id/txtDisponibilidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#b5abc9"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:text="Disponibilidad de la Promocion"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/diasPromo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="30dp"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tituloDisponibilidad"
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <!-- Círculo para el día Lunes -->
+                <TextView
+                    android:id="@+id/circleLunes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="LU" />
+
+                <!-- Círculo para el día Martes -->
+                <TextView
+                    android:id="@+id/circleMartes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="MA" />
+                <TextView
+                    android:id="@+id/circleMiercoles"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="MI" />
+                <TextView
+                    android:id="@+id/circleJueves"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="JU" />
+                <TextView
+                    android:id="@+id/circleViernes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="VI" />
+                <TextView
+                    android:id="@+id/circleSabado"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="SA" />
+                <TextView
+                    android:id="@+id/circleDomingo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="DO" />
+
+                <!-- Agrega círculos para los otros días de la semana de manera similar -->
+
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerNotificar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/diasPromo"
+                android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/tituloNotifReintegro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/txtNotifReintegroExplicacion"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"> <!-- Añade android:gravity -->
+
+                <ImageView
+                    android:id="@+id/imgNotifReintegro"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_reintegro"
+                    app:tint="#b5abc9"/>
+
+                <TextView
+                    android:id="@+id/txtNotifReintegro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#b5abc9"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:text="Notificar Reintegro"/>
+            </LinearLayout>
+                <TextView
+                    android:id="@+id/txtNotifReintegroExplicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/g_gray700"
+                    app:layout_constraintTop_toTopOf="@id/tituloNotifReintegro"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:text="Se le enviara un mail recordandole de chequear el reintegro."/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/promoTyC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="20dp"
+                style="@style/h3"
+                android:textColor="@color/g_gray700"
+                app:layout_constraintTop_toBottomOf="@id/containerNotificar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Terminos y Condiciones"/>
+            <View
+                android:id="@+id/topLine"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/g_line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/promoTyC"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <TextView
-            android:id="@+id/promoDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:layout_marginTop="20dp"
-            style="@style/h3"
-            android:textColor="@color/g_gray700"
-            app:layout_constraintTop_toBottomOf="@id/diasPromo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Descripcion"/>
-        <View
-            android:id="@+id/topLine"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/g_line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/promoDesc"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"/>
+
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

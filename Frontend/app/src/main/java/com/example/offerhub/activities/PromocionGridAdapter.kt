@@ -59,7 +59,6 @@ class PromocionGridAdapter(private val context: Context, private val promociones
             val isFavorite= instancia.traerUsuarioActual()
                 ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
             favIcon.setImageResource(getFavResource(isFavorite))
-            favIcon.setTag(R.id.promocion_id, promocion.id)
         }
 
         // Agrega cualquier otra configuración específica de tu diseño aquí

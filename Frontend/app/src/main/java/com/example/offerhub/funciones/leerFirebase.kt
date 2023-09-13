@@ -122,6 +122,7 @@ class Promocion(
     val topeNro: String?,
     val topeTexto: String?,
     val tyc: String?,
+    val descripcion: String?,
     val url: String?,
     val vigenciaDesde: LocalDate?,
     val vigenciaHasta: LocalDate?,
@@ -226,7 +227,7 @@ class LecturaBD {
                                         data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tipoPromocion").getValue(String::class.java),
                                         data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
-                                        data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
+                                        data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
                                         data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                         vigenciaHastaString?.let { LocalDate.parse(it, formato)},
                                         data.child("tipoPromocion").getValue(String::class.java), logo
@@ -403,7 +404,7 @@ class LecturaBD {
                                 data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("tipoPromocion").getValue(String::class.java),
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
-                                data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
+                                data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
                                 data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                 vigenciaHastaString?.let { LocalDate.parse(it, formato) },
                                 data.child("estado").getValue(String::class.java), logo)

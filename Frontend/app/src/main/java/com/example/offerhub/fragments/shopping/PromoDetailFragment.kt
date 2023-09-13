@@ -60,7 +60,6 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             isFavorite = !isFavorite // Cambiar el estado al contrario
 
             // Cambiar la imagen según el estado
-            var favoriteImageResource =R.drawable.ic_fav
             if (isFavorite) {
                 coroutineScope.launch {
                     instancia.agregarPromocionAFavoritos(
@@ -84,7 +83,11 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         binding.apply {
             var text =promocion.obtenerDesc()
             promoTitulo.text = text
-            promoDesc.text = promocion.tyc
+            if((promocion.descripcion.toString()).length>0) {
+                promoDesc.text = promocion.descripcion
+                promoDesc.visibility = View.VISIBLE
+            }
+            promoTyC.text = promocion.tyc
             coroutineScope.launch {
                 promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
                 val logoBitmap = Comercio(
