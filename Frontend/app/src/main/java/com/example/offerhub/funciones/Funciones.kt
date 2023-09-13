@@ -8,7 +8,7 @@ import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
 class Funciones {
-    val instancialeerId = leerId()
+    val instancialeerId = LeerId()
     val instanciaLectura = LecturaBD()
     val instanciaEscritura = EscribirBD()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -55,7 +55,7 @@ class Funciones {
 
 
     suspend fun obtenerTarjeta(entidad: String, procesadora: String, segmento: String, tipo:String):Tarjeta? {
-        var instancia = leerId()
+        var instancia = LeerId()
         var interfaz = InterfaceSinc()
         var tarjetaFinal: Tarjeta? = null
         val resultado = instancia.obtenerIdSinc("Entidad", "nombre", entidad)
@@ -120,7 +120,7 @@ class Funciones {
     suspend fun obtenerPromocionesFavoritas(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
-        val instancia = leerId()
+        val instancia = LeerId()
 
         for(id in usuario.favoritos!!){
             if (id != null) {
@@ -184,6 +184,18 @@ class Funciones {
         }
 
         usuario
+    }
+
+    fun tarjetasComunes(usuario:Usuario,promocion:Promocion):List<String>{
+        val lista = mutableListOf<String>()
+        for (tarj in usuario.tarjetas!!){
+            if(promocion.tarjetas?.contains(tarj) == true){
+                if (tarj != null) {
+                    lista.add(tarj)
+                }
+            }
+        }
+        return lista
     }
 
     suspend fun traerLogoComercio(idComercio: String): String? = coroutineScope {
@@ -414,6 +426,21 @@ TRAER LOGO COMERCIO
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
             }
+        }
+        
+        
+TARJETAS COMUNES:
+        var tarjetas2: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Ng")
+        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
+        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", tarjetas, null, null, null, null)
+        var promocion = Promocion("ads",null,null,null,null,null,null,null,
+        tarjetas2,null,null,null,null,null,null,null,null,null)
+        val instancia = Funciones()
+        val lista = instancia.tarjetasComunes(usuario,promocion)
+        if (lista.size>0){
+            println(lista)
+        }else{
+            Log.d("No hay tarjetas comunes","No se encontraron tarjetas comunes entre el usuario y la promocion")
         }
 
  */

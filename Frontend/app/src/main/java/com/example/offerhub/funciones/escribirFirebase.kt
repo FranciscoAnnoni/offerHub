@@ -155,7 +155,7 @@ class EscribirBD {
     }
 
     suspend fun validarComercioNuevo(comercio:Comercio): Boolean {
-        var instancia = leerId()
+        var instancia = LeerId()
         val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }
         return resultado == null
     }
@@ -164,7 +164,7 @@ class EscribirBD {
         val database: FirebaseDatabase =
             FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
-        var instancia = leerId()
+        var instancia = LeerId()
         val resultado = instancia.obtenerIdSinc("Comercio", "cuil",cuilComercio)
         if (resultado!=null){
             sucursal.idComercio=resultado
