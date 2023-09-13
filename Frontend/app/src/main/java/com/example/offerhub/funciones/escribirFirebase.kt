@@ -1,4 +1,5 @@
 package com.example.offerhub
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.offerhub.data.User
@@ -157,6 +158,21 @@ class EscribirBD {
         var instancia = leerId()
         val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }
         return resultado == null
+    }
+
+    suspend fun agregarSucursal(cuilComercio:String,sucursal: SucursalEscritura) {
+        val database: FirebaseDatabase =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
+        var instancia = leerId()
+        val resultado = instancia.obtenerIdSinc("Comercio", "cuil",cuilComercio)
+        if (resultado!=null){
+            sucursal.idComercio=resultado
+            val sucursalReferencia = referenciaSuc.push()
+            sucursalReferencia.setValue(sucursal)
+        }else{
+            Log.d("Comercio inexistente","El cuil del comercio aun no se encuentra registrado o no fue encontrado")
+        }
     }
 
     fun escribirPromocion(promocion: PromocionEscritura) {
