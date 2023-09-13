@@ -402,7 +402,7 @@ TRAER USUARIO ACTUAL
 
 TRAER LOGO COMERCIO
 
-    val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
         val instancia = Funciones()
         coroutineScope.launch {
             try {

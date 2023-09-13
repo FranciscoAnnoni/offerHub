@@ -153,6 +153,12 @@ class EscribirBD {
         }
     }
 
+    suspend fun validarComercioNuevo(comercio:Comercio): Boolean {
+        var instancia = leerId()
+        val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }
+        return resultado == null
+    }
+
     fun escribirPromocion(promocion: PromocionEscritura) {
 
         val database: FirebaseDatabase =
@@ -254,5 +260,18 @@ ESCRIBIR PROMOCION:
 
 
 REGISTRAR COMERCIO
-
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        var cuil = 2040420213
+        val instancia = EscribirBD()
+        val comercio1= Comercio(null,"pepitos","otros",null,cuil.toString())
+        val sucursal = SucursalEscritura(null,"Julian Alvarez",null,"30.0","20.0")
+        val lista = listOf(sucursal)
+        coroutineScope.launch {
+            if(instancia.validarComercioNuevo(comercio1)){
+                instancia.registrarComercio(comercio1,lista)
+            }
+            else{
+                Log.d("Comercio existente","El comercio que se trata de escribir ya se encuentra registrado en el sistema")
+            }
+        }
  */

@@ -160,7 +160,7 @@ class leerId {
             val estado = dataSnapshot.child("estado").getValue(String::class.java)
 
             val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales, tarjetas,
-                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta,estado, logo)
+                tipoPromocion, titulo, topeNro, topeTexto, tyc, url, vigenciaDesde, vigenciaHasta,estado)
 
 
             return promocion
