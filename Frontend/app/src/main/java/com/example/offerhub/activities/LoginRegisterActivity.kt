@@ -13,7 +13,7 @@ import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.Sucursal
 import com.example.offerhub.Usuario
-import com.example.offerhub.leerId
+import com.example.offerhub.LeerId
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
