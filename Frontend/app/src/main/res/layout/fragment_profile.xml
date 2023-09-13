@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:id="@+id/linearTrackOrder">
+                    android:id="@+id/linearLegals">
 
                     <ImageView
                         android:layout_width="30dp"

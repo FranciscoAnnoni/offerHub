@@ -36,9 +36,6 @@ class UserAccountFragment: Fragment() {
     val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
     val currentUser = auth.currentUser
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,7 +93,6 @@ class UserAccountFragment: Fragment() {
                             Snackbar.make(rootView, "Cambio de nombre Exitoso", Snackbar.LENGTH_SHORT).show()
                         }
 
-                        findNavController().navigateUp()
                     }
 
                     is Resource.Error -> {

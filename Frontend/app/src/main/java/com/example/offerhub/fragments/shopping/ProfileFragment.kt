@@ -47,6 +47,9 @@ class ProfileFragment : Fragment() {
         binding.constraintProfile.setOnClickListener{
             findNavController().navigate(R.id.action_profileFragment_to_userAccountFragment)
         }
+        binding.linearLegals.setOnClickListener{
+            findNavController().navigate(R.id.action_profileFragment_to_legalsInfoFragment)
+        }
 
         binding.linearLogOut.setOnClickListener{
             viewModel.logout()
