@@ -21,7 +21,7 @@ from Sucursal import Sucursal
 from CategoriaPromocion import CategoriaPromocion
 from Promocion import Promocion
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 

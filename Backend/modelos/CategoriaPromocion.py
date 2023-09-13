@@ -27,7 +27,7 @@ class CategoriaPromocion:
         GASTRONOMIA: ["resto", "heladerias", "desayuno", "gastronomia","comidas rapidas","restaurantes y bares","cafeteria / dulceria","delivery","tiendas gourmet"],
         VEHICULOS: ["vehiculos", "auto", "combustible", "automotor", "automotores", "bicicleterias", "automovil", "lavadero", "neumaticos"],
         SALUDYBIENESTAR: ["belleza", "cuidado personal", "bienestar", "farmacias", "farmacia", "perfumerias", "salud y bienestar", "farmacias y perfumerias", "centros esteticos", "salud", "gimnasios", "peluquerias"],
-        HOGAR: [HOGAR, "casa", "hogar y decoracion", "cuidado personal", "deco y hogar", "muebles", "pinturerias", "baños y cocina", "jardines y exteriores","huertas y jardines","tiendas","seguridad"],
+        HOGAR: [HOGAR, "casa", "hogar y decoracion", "cuidado personal", "deco y hogar", "muebles", "pinturerias", "baños y cocina", "jardines y exteriores","huertas y jardines","tiendas","seguridad", "hogar"],
         VIAJESYTURISMO: ["viajes y turismo", "turismo", "viajes","hoteles","actividades turisticas","agencia turistica"],
         ENTRETENIMIENTO: ["entretenimiento", "espectaculos","teatros","cines","teatro","cine","aventuras","recitales y conciertos"],
         INDUMENTARIA: ["indumentaria", "moda", "moda y accesorios","calzados","accesorios","infantiles"],
