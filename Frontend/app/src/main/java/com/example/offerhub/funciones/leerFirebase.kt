@@ -398,15 +398,13 @@ class LecturaBD {
                             val coroutineScope = CoroutineScope(Dispatchers.Main)
                             var logo: String? = ""
 
-                            Log.d("comercio", "${ comercio }")
-
                             coroutineScope.launch {
                                 try {
                                     if(comercio != null){
                                     logo = Funciones().traerLogoComercio(comercio)}
                                     else{logo = ""}
                                 } catch (e: Exception) {
-                                    println("Error al obtener promociones: ${e.message}")
+                                    println("Error al obtener promos: ${e.message}")
                                 }
                             }
 

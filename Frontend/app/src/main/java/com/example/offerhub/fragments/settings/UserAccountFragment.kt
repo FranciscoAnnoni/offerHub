@@ -53,6 +53,9 @@ class UserAccountFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.imageCloseUserAccount.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         rootView = view // Asignar la vista raíz del fragmento
 

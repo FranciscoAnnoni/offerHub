@@ -1,11 +1,13 @@
 package com.example.offerhub.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.offerhub.Funciones
 import com.example.offerhub.Usuario
 import com.example.offerhub.util.Resource
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +24,7 @@ class ProfileViewModel @Inject constructor(
 
 ):ViewModel() {
 
+    // val logoutSuccessLiveData = MutableLiveData<Boolean>() par el log out exitoso
     private val _user = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
     val user = _user.asStateFlow()
 
@@ -61,6 +64,7 @@ class ProfileViewModel @Inject constructor(
 
     fun logout(){
         auth.signOut()
+
     }
 
 }

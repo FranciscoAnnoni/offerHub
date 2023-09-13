@@ -33,6 +33,7 @@ class RegisterFragment:Fragment() {
     private val viewModel by viewModels<RegisterViewModel>()
 
     private lateinit var rootView: View
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
