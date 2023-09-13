@@ -1,6 +1,7 @@
 package com.example.offerhub.fragments.shopping
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentPromoDetailBinding
+import com.example.offerhub.funciones.getContrastColor
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
 import com.example.offerhub.viewmodel.PromoDetailViewModel
@@ -27,6 +29,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     private val args by navArgs<PromoDetailFragmentArgs>()
     private lateinit var binding: FragmentPromoDetailBinding
     private val viewModel by viewModels<PromoDetailViewModel>()
+    var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,14 +45,47 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         super.onViewCreated(view, savedInstanceState)
 
         val promocion = args.promocion
+        val instancia=Funciones()
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
         }
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            isFavorite= instancia.traerUsuarioActual()
+                ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
+            binding.imageFav.setImageResource(getFavResource())
+        }
+        binding.imageFav.setOnClickListener {
+            isFavorite = !isFavorite // Cambiar el estado al contrario
+
+            // Cambiar la imagen según el estado
+            var favoriteImageResource =R.drawable.ic_fav
+            if (isFavorite) {
+                coroutineScope.launch {
+                    instancia.agregarPromocionAFavoritos(
+                        instancia.traerUsuarioActual()?.id.toString(),
+                        promocion.id.toString()
+                    )
+                }
+            } else {
+                coroutineScope.launch {
+                    instancia.elimiarPromocionDeFavoritos(
+                        instancia.traerUsuarioActual()?.id.toString(),
+                        promocion.id.toString()
+                    )
+                }
+            }
+
+            // Establecer la imagen en la ImageView
+            binding.imageFav.setImageResource(getFavResource())
+        }
+
         binding.apply {
-            promoTitulo.text = promocion.titulo
+            var text =promocion.obtenerDesc()
+            promoTitulo.text = text
             promoDesc.text = promocion.tyc
-            val coroutineScope = CoroutineScope(Dispatchers.Main)
             coroutineScope.launch {
+                promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
                 val logoBitmap = Comercio(
                     "",
                     "",
@@ -64,6 +100,9 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
 // Establece el color de fondo del CardView
                     cardProductImages.setBackgroundColor(color)
+                    val textColor = getContrastColor(color)
+                    imageClose.setColorFilter(textColor, PorterDuff.Mode.SRC_IN)
+                    imageFav.setColorFilter(textColor, PorterDuff.Mode.SRC_IN)
 
                 }
             }
@@ -79,5 +118,13 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             //tvProductDescription.text = promocion.description
 
         }
+
+    fun getFavResource(): Int {
+        if (isFavorite) {
+            return R.drawable.ic_fav_selected
+        } else {
+            return R.drawable.ic_fav
+        }
+    }
 
     }

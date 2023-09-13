@@ -121,6 +121,10 @@ class Funciones {
         promociones
     }
 
+    suspend fun existePromocionEnFavoritos(usuario: Usuario, elementoId: String?): Boolean = coroutineScope {
+        usuario.favoritos?.contains(elementoId) == true
+    }
+
     suspend fun obtenerPromocionesReintegro(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
@@ -170,15 +174,19 @@ class Funciones {
         usuario
     }
 
-    suspend fun traerLogoComercio(idComercio: String?): String? = coroutineScope {
+    suspend fun traerInfoComercio(idComercio: String?,attr:String): String? = coroutineScope {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
         val dataSnapshot = database.child("Comercio").child(idComercio.toString()).get().await()
-        var logo: String? = ""
+        var value: String? = ""
 
         if (dataSnapshot.exists()) {
-            logo = dataSnapshot.child("logo").getValue(String::class.java)
+            value = dataSnapshot.child(attr).getValue(String::class.java)
         }
-        logo
+        value
+    }
+
+    suspend fun traerLogoComercio(idComercio: String?): String? = coroutineScope {
+        traerInfoComercio(idComercio,"logo")
     }
 
 

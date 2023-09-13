@@ -41,3 +41,17 @@ fun obtenerColorMayoritario(bitmap: Bitmap): Int {
 
     return colorMayoritario
 }
+
+fun getContrastColor(backgroundColor: Int, threshold: Int = 128): Int {
+    val red = (backgroundColor shr 16) and 0xFF
+    val green = (backgroundColor shr 8) and 0xFF
+    val blue = backgroundColor and 0xFF
+    val brightness = (red * 299 + green * 587 + blue * 114) / 1000
+    return if (brightness > threshold) {
+        Color.BLACK // Fondo claro, usar texto negro
+    } else {
+        Color.WHITE // Fondo oscuro, usar texto blanco
+    }
+}
+
+

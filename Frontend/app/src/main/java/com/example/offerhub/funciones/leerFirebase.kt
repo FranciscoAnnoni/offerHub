@@ -127,7 +127,18 @@ class Promocion(
     val vigenciaHasta: LocalDate?,
     val estado: String?,
     val logo: String?
-) : Parcelable
+) : Parcelable {
+    fun obtenerDesc(): kotlin.String {
+        if(this.tipoPromocion=="Reintegro" || this.tipoPromocion=="Descuento"){
+            return this.porcentaje.toString()+"%"
+        } else if (this.tipoPromocion=="2x1") {
+            return "2x1"
+        } else if (this.tipoPromocion=="Cuotas"){
+            return this.cuotas+" cuotas"
+        }
+        return ""
+    }
+}
 
 class LecturaBD {
 
