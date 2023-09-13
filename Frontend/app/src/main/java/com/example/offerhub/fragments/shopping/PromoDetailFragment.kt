@@ -18,6 +18,7 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentPromoDetailBinding
 import com.example.offerhub.funciones.getContrastColor
+import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
 import com.example.offerhub.viewmodel.PromoDetailViewModel
@@ -53,7 +54,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         coroutineScope.launch {
             isFavorite= instancia.traerUsuarioActual()
                 ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
-            binding.imageFav.setImageResource(getFavResource())
+            binding.imageFav.setImageResource(getFavResource(isFavorite))
         }
         binding.imageFav.setOnClickListener {
             isFavorite = !isFavorite // Cambiar el estado al contrario
@@ -77,7 +78,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             }
 
             // Establecer la imagen en la ImageView
-            binding.imageFav.setImageResource(getFavResource())
+            binding.imageFav.setImageResource(getFavResource(isFavorite))
         }
 
         binding.apply {
@@ -119,12 +120,5 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
         }
 
-    fun getFavResource(): Int {
-        if (isFavorite) {
-            return R.drawable.ic_fav_selected
-        } else {
-            return R.drawable.ic_fav
-        }
-    }
 
     }

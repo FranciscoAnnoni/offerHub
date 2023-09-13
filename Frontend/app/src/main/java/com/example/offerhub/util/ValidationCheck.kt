@@ -2,9 +2,11 @@ package com.example.offerhub.util
 
 import android.util.Patterns
 
-fun validateEmail(email:String): RegisterValidation{
-    if (email.isEmpty())
-        return RegisterValidation.Failed("El campo Email no puede estar vacio")
+fun validateEmail(email:String?): RegisterValidation{
+    if (email != null) {
+        if (email.isEmpty())
+            return RegisterValidation.Failed("El campo Email no puede estar vacio")
+    }
     if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         return RegisterValidation.Failed("Formato de Email incorrecto")
 

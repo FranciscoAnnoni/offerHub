@@ -22,6 +22,7 @@
         >
 
         <ImageView
+            android:id="@+id/promoFav"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_fav"

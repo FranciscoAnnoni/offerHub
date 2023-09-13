@@ -36,4 +36,5 @@ object AppModule {
         application: Application
     ) = application.getSharedPreferences(INTRODUCTION_SP, MODE_PRIVATE)
 
+
 }

@@ -16,7 +16,6 @@ import com.example.offerhub.databinding.FragmentRegisterBinding
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.viewmodel.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.zip.Inflater
 
 import com.example.offerhub.util.Resource
 import com.google.android.material.snackbar.Snackbar
@@ -25,6 +24,7 @@ import kotlinx.coroutines.withContext
 
 
 private val TAG = "RegisterFragment"
+
 @AndroidEntryPoint
 class RegisterFragment:Fragment() {
 
@@ -33,6 +33,7 @@ class RegisterFragment:Fragment() {
     private val viewModel by viewModels<RegisterViewModel>()
 
     private lateinit var rootView: View
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,6 +76,7 @@ class RegisterFragment:Fragment() {
                     is Resource.Error -> {
                         Log.e(TAG,it.message.toString())
                         binding.btnRegister.revertAnimation()
+                        binding.btnRegister.setBackgroundResource(R.drawable.rounded_button_background)
                     }
                     else -> Unit
                 }

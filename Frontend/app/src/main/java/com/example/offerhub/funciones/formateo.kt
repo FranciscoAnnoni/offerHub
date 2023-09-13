@@ -4,6 +4,8 @@ import java.text.Normalizer
 import java.util.regex.Pattern
 import android.graphics.Bitmap
 import android.graphics.Color
+import com.example.offerhub.R
+
 fun removeAccents(input: String?): String {
     val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
     val pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
@@ -54,4 +56,11 @@ fun getContrastColor(backgroundColor: Int, threshold: Int = 128): Int {
     }
 }
 
+fun getFavResource(isFavorite: Boolean): Int {
+    if (isFavorite) {
+        return R.drawable.ic_fav_selected
+    } else {
+        return R.drawable.ic_fav
+    }
+}
 

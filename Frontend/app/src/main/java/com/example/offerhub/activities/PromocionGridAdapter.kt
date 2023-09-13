@@ -9,6 +9,7 @@ import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.funciones.getFavResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,8 +34,9 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         //val gridViewItem = inflater.inflate(R.layout.fragment_promo_card, null)
         val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
-
+        val instancia=Funciones()
         val textViewCategory = gridViewItem.findViewById<TextView>(R.id.txtCategoria)
+        val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
 
         textViewCategory.text = promocion.titulo
@@ -43,6 +45,7 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         /*
         textViewCategory.text = comercio.nombre */
         val coroutineScope = CoroutineScope(Dispatchers.Main)
+
         coroutineScope.launch {
             val logoBitmap = Comercio(
                 "",
@@ -53,6 +56,10 @@ class PromocionGridAdapter(private val context: Context, private val promociones
             if (logoBitmap != null) {
                 imgViewCategory.setImageBitmap(logoBitmap)
             }
+            val isFavorite= instancia.traerUsuarioActual()
+                ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
+            favIcon.setImageResource(getFavResource(isFavorite))
+            favIcon.setTag(R.id.promocion_id, promocion.id)
         }
 
         // Agrega cualquier otra configuración específica de tu diseño aquí
