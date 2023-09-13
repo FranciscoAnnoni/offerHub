@@ -30,7 +30,6 @@ Ejemplo llamado:
         var instancia = InterfaceSinc()
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         var lista: MutableList<String> = mutableListOf()
-        setContentView(R.layout.activity_main)
         val job = coroutineScope.launch {
             try {
                 lista =

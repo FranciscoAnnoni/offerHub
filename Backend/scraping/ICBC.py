@@ -22,7 +22,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from Entidad import Entidad
 from CategoriaPromocion import CategoriaPromocion
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 

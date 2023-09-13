@@ -7,7 +7,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
 class Funciones {
-    val instancialeerId = leerId()
+    val instancialeerId = LeerId()
     val instanciaLectura = LecturaBD()
     val instanciaEscritura = EscribirBD()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -16,36 +16,45 @@ class Funciones {
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
-            instanciaLectura.obtenerPromosPorTarjeta("No posee")
-        }
-        val promos = promosDeferred.await() // Esperar a que se completen las promociones
-        for (promo in promos){
-            if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
-                listaPromos.add(promo)
+            val promos = instanciaLectura.obtenerPromosPorTarjeta("No posee")
+            for (promo in promos){
+                if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
+                    listaPromos.add(promo)
+                }
             }
         }
+        promosDeferred.await() // Esperar a que se completen las promociones
+
         listaPromos
     }
 
+
+
     suspend fun obtenerPromociones(usuario: Usuario): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
+        val i = 0
         val deferredPromos = usuario.tarjetas?.map { tarjeta ->
             coroutineScope.async {
+                if(i == 0){
+                    val promosComunes = obtenerPromocionesComunes()
+                    if (promosComunes != null) {
+                    listaPromos.addAll(promosComunes)
+                    }
+                }
+
                 val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
                 if (promos != null) {
                     listaPromos.addAll(promos)
                 }
             }
         }
-
         deferredPromos?.awaitAll()
-
         listaPromos
     }
 
 
     suspend fun obtenerTarjeta(entidad: String, procesadora: String, segmento: String, tipo:String):Tarjeta? {
-        var instancia = leerId()
+        var instancia = LeerId()
         var interfaz = InterfaceSinc()
         var tarjetaFinal: Tarjeta? = null
         val resultado = instancia.obtenerIdSinc("Entidad", "nombre", entidad)
@@ -110,7 +119,7 @@ class Funciones {
     suspend fun obtenerPromocionesFavoritas(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
-        val instancia = leerId()
+        val instancia = LeerId()
 
         for(id in usuario.favoritos!!){
             if (id != null) {
@@ -180,6 +189,18 @@ class Funciones {
         usuario
     }
 
+    fun tarjetasComunes(usuario:Usuario,promocion:Promocion):List<String>{
+        val lista = mutableListOf<String>()
+        for (tarj in usuario.tarjetas!!){
+            if(promocion.tarjetas?.contains(tarj) == true){
+                if (tarj != null) {
+                    lista.add(tarj)
+                }
+            }
+        }
+        return lista
+    }
+
     suspend fun traerInfoComercio(idComercio: String?,attr:String): String? = coroutineScope {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
         val dataSnapshot = database.child("Comercio").child(idComercio.toString()).get().await()
@@ -194,30 +215,38 @@ class Funciones {
     suspend fun traerLogoComercio(idComercio: String?): String? = coroutineScope {
         traerInfoComercio(idComercio,"logo")
     }
+    suspend fun traerNombeEntidad(idEntidad: String): String? = coroutineScope {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Entidad").child(idEntidad).get().await()
+        var nombre: String? = ""
 
+        if (dataSnapshot.exists()) {
+            nombre = dataSnapshot.child("nombre").getValue(String::class.java)
+        }
 
+        nombre
+    }
 }
 
 //ejemplos llamados
 /*
+OBTENER PROMOCIONES:
         var instancia = Funciones()
-        setContentView(R.layout.activity_main)
-        var tarjetas: List<String?> = listOf("-NbqSvUq5L_kTqrzlUo_")
-        var usuario1 = Usuario("Pepe", "usuario1@example.com", tarjetas)
+        var tarjetas: List<String?> = listOf("-Ne5dQiaSXSCnMJmukwT")
+        var usuario1 = Usuario("aflkaslfa","Pepe", "usuario1@example.com", tarjetas,null,null,null,null)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
 
         coroutineScope.launch {
             try {
-                var promociones = instancia.listarPromociones(usuario1)
+                var promociones = instancia.obtenerPromociones(usuario1)
                 println("Promociones obtenidas:")
                 for (promo in promociones){
                     promo.titulo?.let { Log.d("promo", it) }
                 }
             } catch (e: Exception) {
-                println("Error al obtener promociones: ${e.message}")
+                println("Error al obtener promociones: {e.message}")
             }
         }
-
 
  Obtener tarjeta:
         val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -401,7 +430,7 @@ TRAER USUARIO ACTUAL
 
 TRAER LOGO COMERCIO
 
-    val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
         val instancia = Funciones()
         coroutineScope.launch {
             try {
@@ -413,6 +442,21 @@ TRAER LOGO COMERCIO
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
             }
+        }
+        
+        
+TARJETAS COMUNES:
+        var tarjetas2: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Ng")
+        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
+        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", tarjetas, null, null, null, null)
+        var promocion = Promocion("ads",null,null,null,null,null,null,null,
+        tarjetas2,null,null,null,null,null,null,null,null,null)
+        val instancia = Funciones()
+        val lista = instancia.tarjetasComunes(usuario,promocion)
+        if (lista.size>0){
+            println(lista)
+        }else{
+            Log.d("No hay tarjetas comunes","No se encontraron tarjetas comunes entre el usuario y la promocion")
         }
 
  */

@@ -15,11 +15,11 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarUserAccount"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="25dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -28,15 +28,14 @@
 
                 <ImageView
                     android:id="@+id/imageCloseUserAccount"
-                    android:layout_width="26dp"
-                    android:layout_height="29dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginStart="4dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_close"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.609"
                     app:tint="@color/violeta" />
 
                 <TextView
@@ -44,7 +43,6 @@
                     style="@style/titulos"
                     android:layout_width="362dp"
                     android:layout_height="60dp"
-                    android:layout_marginTop="10dp"
                     android:contentDescription="@null"
                     android:text="Mi Perfil"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +68,7 @@
             android:id="@+id/imageUser"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/ic_miperfil"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintHorizontal_bias="0.498"

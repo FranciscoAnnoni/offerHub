@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_profileFragment_to_userAccountFragment"
             app:destination="@id/userAccountFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_legalsInfoFragment"
+            app:destination="@id/legalsInfoFragment" />
     </fragment>
 
     <fragment
@@ -47,7 +50,15 @@
     <fragment
         android:id="@+id/userAccountFragment"
         android:name="com.example.offerhub.fragments.settings.UserAccountFragment"
-        android:label="UserAccountFragment" />
+        android:label="UserAccountFragment" >
+        <action
+            android:id="@+id/action_userAccountFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/legalsInfoFragment"
+        android:name="com.example.offerhub.fragments.settings.LegalsInfoFragment"
+        android:label="LegalsInfoFragment" />
 </navigation>
 
 
