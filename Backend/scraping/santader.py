@@ -45,7 +45,7 @@ sleep(3)
 navegador = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"pager")]'))).find_element(By.XPATH, './/a[contains(@data-nav,"next")]')
 
 entidad = Entidad()
-entidad.nombre = "Banco Santander"
+entidad.nombre = "Santander"
 entidad.tipo = "Bancaria"
 idEntidad = entidad.guardar()
 
