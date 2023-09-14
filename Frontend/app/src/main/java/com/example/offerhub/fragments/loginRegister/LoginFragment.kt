@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
 import com.example.offerhub.databinding.FragmentLoginBinding
+import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.ProfileViewModel
@@ -56,6 +57,28 @@ class LoginFragment:Fragment(R.layout.fragment_login) {
         */
 
         rootViewLogin = view // Asignar la vista raíz del fragmento
+
+        binding.tvUpdatePassword.setOnClickListener {
+            setupBottomSheetDialog {email ->
+            viewModel.resetPassword(email)
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.resetPassword.collect{
+                when(it){
+                    is Resource.Loading -> {
+
+                    }
+                    is Resource.Success -> {
+                        Snackbar.make(requireView(), "Se ha enviado un correo electrónico a su cuenta para restablecer la contraseña.", Snackbar.LENGTH_LONG).show()
+                    }
+                    is Resource.Error -> {
+                        Snackbar.make(requireView(), "Error: ${it.message}", Snackbar.LENGTH_LONG).show()
+                    }
+                    else -> Unit
+                }
+            }
+        }
 
         binding.registerNow.setOnClickListener{
          findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
