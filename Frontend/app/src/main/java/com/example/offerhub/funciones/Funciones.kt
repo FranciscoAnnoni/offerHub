@@ -134,6 +134,10 @@ class Funciones {
         usuario.favoritos?.contains(elementoId) == true
     }
 
+    suspend fun existePromocionEnReintegros(usuario: Usuario, elementoId: String?): Boolean = coroutineScope {
+        usuario.promocionesReintegro?.contains(elementoId) == true
+    }
+
     suspend fun obtenerPromocionesReintegro(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()

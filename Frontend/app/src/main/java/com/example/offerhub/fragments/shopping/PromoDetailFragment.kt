@@ -1,13 +1,18 @@
 package com.example.offerhub.fragments.shopping
 
 import TarjetasPromocionAdapter
+import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -34,6 +39,8 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     private lateinit var binding: FragmentPromoDetailBinding
     private val viewModel by viewModels<PromoDetailViewModel>()
     var isFavorite = false
+    var isNotificado = false
+    var isTyCExpanded = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +59,20 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         val instancia = Funciones()
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
+        }
+        binding.tituloTyc.setOnClickListener {
+            isTyCExpanded = !isTyCExpanded
+            if (isTyCExpanded) {
+                binding.imageToggleTyC.setImageResource(R.drawable.ic_expand_less)
+                binding.promoTyC.visibility = View.VISIBLE
+                // Calcula la posición y anima el desplazamiento hacia abajo
+                val animator = ObjectAnimator.ofInt(binding.scrollView, "scrollY", binding.topLine.bottom)
+                animator.duration = 500 // Duración de la animación en milisegundos
+                animator.start()
+            } else {
+                binding.imageToggleTyC.setImageResource(R.drawable.ic_expand_more)
+                binding.promoTyC.visibility = View.GONE
+            }
         }
 
         val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
@@ -84,7 +105,10 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             recyclerViewTarjetas.adapter = adapter
             isFavorite = instancia.traerUsuarioActual()
                 ?.let { instancia.existePromocionEnFavoritos(it, promocion.id) } == true
+            isNotificado = instancia.traerUsuarioActual()
+                ?.let { instancia.existePromocionEnReintegros(it, promocion.id) } == true
             binding.imageFav.setImageResource(getFavResource(isFavorite))
+            binding.btnNotificar.text=if (isNotificado) "Eliminar Notificacion" else "Notificar"
         }
         binding.imageFav.setOnClickListener {
             isFavorite = !isFavorite // Cambiar el estado al contrario
@@ -109,6 +133,29 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             // Establecer la imagen en la ImageView
             binding.imageFav.setImageResource(getFavResource(isFavorite))
         }
+        binding.btnNotificar.setOnClickListener {
+            isNotificado = !isNotificado // Cambiar el estado al contrario
+
+            // Cambiar la imagen según el estado
+            if (isNotificado) {
+                coroutineScope.launch {
+                    instancia.agregarPromocionAReintegro(
+                        instancia.traerUsuarioActual()?.id.toString(),
+                        promocion.id.toString()
+                    )
+                }
+            } else {
+                coroutineScope.launch {
+                    instancia.elimiarPromocionDeReintegro(
+                        instancia.traerUsuarioActual()?.id.toString(),
+                        promocion.id.toString()
+                    )
+                }
+            }
+
+            // Establecer la imagen en la ImageView
+            binding.btnNotificar.text=if (isNotificado) "Eliminar Notificacion" else "Notificar"
+        }
 
         binding.apply {
             var text =promocion.obtenerDesc()
@@ -119,6 +166,9 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             }
             if(promocion.tipoPromocion!="Reintegro") {
                 containerNotificar.visibility = View.GONE
+                containerTope.visibility = View.GONE
+            } else {
+                txtTope.text=promocion.topeTexto
             }
             promoTyC.text = promocion.tyc
             promoVigencia.text=promocion.obtenerTextoVigencia()
