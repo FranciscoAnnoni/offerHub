@@ -99,10 +99,6 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 //                    // Establecer la imagen en la ImageView
 //                    promoFav.setImageResource(getFavResource(isFavorite))
 //                }
-                val alturaTotal = resources.getDimensionPixelSize(R.dimen.altura_grid_view)
-                val params = listView.layoutParams
-                params.height = alturaTotal
-                listView.layoutParams = params
                 listView.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/searchCategoryBackground"
         android:id="@+id/cuadrado1"
         android:layout_width="match_parent"
@@ -21,22 +21,28 @@
         <!-- Agrega tu imagen aquí -->
         <ImageView
             android:id="@+id/imgComercio"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/cat_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_gravity="center"/>
 
         <!-- Agrega tu texto aquí -->
         <TextView
             android:id="@+id/txtCategoria"
             style="@style/blueButtonStyle"
+            app:layout_constraintTop_toBottomOf="@id/imgComercio"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:text="Entretenimiento"
-            android:textSize="16sp"
-            android:maxLines="2"
+            android:textSize="14dp"
+            android:maxLines="1"
             android:ellipsize="end"
             android:layout_gravity="center"/>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

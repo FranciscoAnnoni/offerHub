@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginLeft
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -81,7 +84,6 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         iconoEnlace.setOnClickListener {
             // Define el enlace que deseas abrir en el navegador
             val url = promocion.url // Reemplaza con tu enlace real
-
             // Crea un Intent para abrir el enlace en un navegador externo
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(url)
@@ -159,7 +161,22 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
         binding.apply {
             var text =promocion.obtenerDesc()
-            promoTitulo.text = text
+            promoBenef.text = text
+            if(promocion.tipoPromocion=="Reintegro" || promocion.tipoPromocion=="Descuento"){
+                promoBenefTipo.text="%"
+            } else if (promocion.tipoPromocion=="2x1") {
+                promoBenefTipo.visibility=View.GONE
+            } else if (promocion.tipoPromocion=="Cuotas"){
+                promoBenefTipo.text= "cuotas \nsin interés"
+                val marginLeftInDp = 5f // 5dp
+                val scale = resources.displayMetrics.density
+                val marginLeftInPixels = (marginLeftInDp * scale + 0.5f).toInt()
+                val params = promoBenefTipo.layoutParams as ViewGroup.MarginLayoutParams
+                params.marginStart = marginLeftInPixels
+                promoBenefTipo.layoutParams = params
+                promoBenefTipo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15f)
+            }
+            promoTitulo.text = promocion.titulo?.substringAfter(":")?.trim()
             if((promocion.descripcion.toString()).length>0) {
                 promoDesc.text = promocion.descripcion
                 promoDesc.visibility = View.VISIBLE
