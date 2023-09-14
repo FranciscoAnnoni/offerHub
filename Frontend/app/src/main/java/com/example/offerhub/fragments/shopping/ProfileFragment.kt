@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.shopping
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -52,13 +53,30 @@ class ProfileFragment : Fragment() {
         }
 
         binding.linearLogOut.setOnClickListener{
-            viewModel.logout()
-            // esto hace que se envie el mensaje de log Out
-            // viewModel.logoutSuccessLiveData.value = true
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Cerrar sesión")
+            builder.setMessage("¿Está seguro de que desea cerrar sesión?")
 
-            val intent = Intent(requireActivity(),LoginRegisterActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+            // Agregar un botón "Sí" para confirmar el cierre de sesión
+            builder.setPositiveButton("Sí") { dialogInterface, _ ->
+                // Realiza el cierre de sesión aquí
+                viewModel.logout()
+
+                // Redirige a la pantalla de inicio de sesión
+                val intent = Intent(requireActivity(), LoginRegisterActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
+
+            // Agregar un botón "No" para cancelar el cierre de sesión
+            builder.setNegativeButton("No") { dialogInterface, _ ->
+                // Cierra el cuadro de diálogo
+                dialogInterface.dismiss()
+            }
+
+            // Mostrar el cuadro de diálogo
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
 
         }
 

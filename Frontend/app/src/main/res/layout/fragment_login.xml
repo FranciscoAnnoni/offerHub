@@ -26,9 +26,10 @@
         <!--                  Titulo                -->
         <TextView
             style="@style/titulos"
+            android:textStyle="bold"
             android:id="@+id/textInicioSesion"
-            android:layout_marginTop="10dp"
-            android:text="Inicio de Sesíon"
+            android:layout_marginTop="-9dp"
+            android:text="OfferHub"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
