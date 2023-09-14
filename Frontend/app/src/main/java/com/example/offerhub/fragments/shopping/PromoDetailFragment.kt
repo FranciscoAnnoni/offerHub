@@ -49,21 +49,41 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         super.onViewCreated(view, savedInstanceState)
 
         val promocion = args.promocion
-        val instancia=Funciones()
+        val instancia = Funciones()
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
+
+        // Agrega un OnClickListener al ImageView
+        iconoEnlace.setOnClickListener {
+            // Define el enlace que deseas abrir en el navegador
+            val url = promocion.url // Reemplaza con tu enlace real
+
+            // Crea un Intent para abrir el enlace en un navegador externo
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+
+            // Verifica si hay una actividad que pueda manejar el intent (navegador)
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                // Maneja el caso en el que no se pueda abrir el navegador
+                Toast.makeText(requireContext(), "No se pudo abrir el navegador", Toast.LENGTH_SHORT).show()
+            }
         }
         val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
-            var tarjetasComunes=instancia.tarjetasComunes(instancia.traerUsuarioActual(),promocion)
+            var tarjetasComunes = instancia.tarjetasComunes(instancia.traerUsuarioActual(), promocion)
             val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
 
             recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recyclerViewTarjetas.adapter = adapter
-            isFavorite= instancia.traerUsuarioActual()
-                ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
+            isFavorite = instancia.traerUsuarioActual()
+                ?.let { instancia.existePromocionEnFavoritos(it, promocion.id) } == true
             binding.imageFav.setImageResource(getFavResource(isFavorite))
         }
         binding.imageFav.setOnClickListener {
