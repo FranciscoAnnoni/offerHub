@@ -26,7 +26,7 @@
             app:menu="@menu/bottom_navigation_menu"
             android:background="@color/white"
             app:labelVisibilityMode="unlabeled"
-            app:elevation="0dp"
+            android:elevation="20dp"
             app:itemPaddingTop="10dp"
             app:itemPaddingBottom="10dp"
             app:itemRippleColor="@color/white"

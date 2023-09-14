@@ -3,6 +3,7 @@
     <style name="Theme.OfferHub" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Other style attributes -->
         <!-- Set the status bar color -->
+        <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:statusBarColor">@color/violetaClaro</item>
     </style>
 
