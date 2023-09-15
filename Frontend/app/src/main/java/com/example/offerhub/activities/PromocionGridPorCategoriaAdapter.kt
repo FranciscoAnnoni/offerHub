@@ -110,7 +110,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
     }
 
     inner class PromocionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textViewCategory = itemView.findViewById<TextView>(R.id.txtCategoria)
+        val textViewCategory = itemView.findViewById<TextView>(R.id.tvPromocionComercio)
         val favIcon = itemView.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = itemView.findViewById<ImageView>(R.id.imgComercio)
         val layoutTarjetaPromo = itemView.findViewById<ConstraintLayout>(R.id.layoutTarjetaPromo)

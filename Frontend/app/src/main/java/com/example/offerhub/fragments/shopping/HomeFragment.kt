@@ -6,6 +6,7 @@ import android.R.attr.y
 import PromocionGridPorCategoriaAdapter
 import UserViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.MenuItem

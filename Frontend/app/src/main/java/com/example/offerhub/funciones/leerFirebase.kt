@@ -227,8 +227,6 @@ class LecturaBD {
                                     val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
                                     val comercio: String? = data.child("comercio").getValue(String::class.java)
                                     val coroutineScope = CoroutineScope(Dispatchers.Main)
-<<<<<<< Updated upstream
-=======
                                     var logo: String? = ""
 
                                     coroutineScope.launch {
@@ -247,24 +245,27 @@ class LecturaBD {
                                     var hasta: LocalDate?
                                     if(data.child("vigenciaDesde").getValue(String::class.java) != "No posee"){ desde = vigenciaDesdeString?.let { LocalDate.parse(it, formato) }} else {desde = null}
                                     if(data.child("vigenciaHasta").getValue(String::class.java) != "No posee"){hasta = vigenciaHastaString?.let { LocalDate.parse(it, formato)}} else {hasta = null}
->>>>>>> Stashed changes
-                                    val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  data.child("comercio").getValue(String::class.java),
+                                    val instancia = Promocion(
+                                        data.key,
+                                        data.child("categoria").getValue(String::class.java),
+                                        data.child("comercio").getValue(String::class.java),
                                         data.child("cuotas").getValue(String::class.java),
                                         data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                        data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
+                                        data.child("porcentaje").getValue(String::class.java),
+                                        data.child("proveedor").getValue(String::class.java),
                                         data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tipoPromocion").getValue(String::class.java),
-                                        data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
-<<<<<<< Updated upstream
-                                        data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
-                                        data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
-                                        vigenciaHastaString?.let { LocalDate.parse(it, formato)},
-                                        data.child("tipoPromocion").getValue(String::class.java),""
-=======
-                                        data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),
-                                        data.child("url").getValue(String::class.java),desde, hasta, data.child("tipoPromocion").getValue(String::class.java), logo
->>>>>>> Stashed changes
+                                        data.child("titulo").getValue(String::class.java),
+                                        data.child("topeNro").getValue(String::class.java),
+                                        data.child("topeTexto").getValue(String::class.java),
+                                        data.child("tyc").getValue(String::class.java),
+                                        data.child("descripcion").getValue(String::class.java),
+                                        data.child("url").getValue(String::class.java),
+                                        desde,
+                                        hasta,
+                                        data.child("tipoPromocion").getValue(String::class.java),
+                                        logo
                                     )
                                     lista.add(instancia as T)
                                 } "Usuario" ->{
