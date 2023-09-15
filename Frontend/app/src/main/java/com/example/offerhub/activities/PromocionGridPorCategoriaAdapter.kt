@@ -53,20 +53,20 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
                     params.marginStart = 0
                     holder.layoutTarjetaPromo.layoutParams = params
                 }
-                promocionViewHolder.textViewCategory.text = promocion.titulo
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
 
                 coroutineScope.launch {
-                   /* val logoBitmap = Comercio(
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
-                    if (logoBitmap != null) {
-                        promocionViewHolder.imgViewCategory.setImageBitmap(logoBitmap)
-                    }*/
+                    promocionViewHolder.textViewCategory.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
+                    /* val logoBitmap = Comercio(
+                         "",
+                         "",
+                         "",
+                         "",
+                         ""
+                     ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
+                     if (logoBitmap != null) {
+                         promocionViewHolder.imgViewCategory.setImageBitmap(logoBitmap)
+                     }*/
                     val isFavorite = instancia.traerUsuarioActual()
                         ?.let { instancia.existePromocionEnFavoritos(it, promocion.id) } == true
                     promocionViewHolder.favIcon.setImageResource(getFavResource(isFavorite))
