@@ -118,14 +118,16 @@ class Funciones {
     }
 
 
-    suspend fun obtenerPromocionesFavoritas(usuario: Usuario): List<Promocion> = coroutineScope {
+    suspend fun obtenerPromocionesFavoritas(usuario: Usuario): MutableList<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
         val instancia = LeerId()
-
-        for(id in usuario.favoritos!!){
-            if (id != null) {
-                instancia.obtenerPromocionPorId(id)?.let { promociones.add(it) }
+        if(usuario.favoritos != null) {
+            for (id in usuario.favoritos!!) {
+                Log.d("Hola", id.toString())
+                if (id != null) {
+                    instancia.obtenerPromocionPorId(id)?.let { promociones.add(it) }
+                }
             }
         }
 

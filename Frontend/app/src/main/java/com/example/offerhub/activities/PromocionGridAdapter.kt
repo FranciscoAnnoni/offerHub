@@ -9,6 +9,7 @@ import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.Usuario
 import com.example.offerhub.funciones.getFavResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +36,20 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         //val gridViewItem = inflater.inflate(R.layout.fragment_promo_card, null)
         val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
         val instancia=Funciones()
-        val textViewCategory = gridViewItem.findViewById<TextView>(R.id.txtCategoria)
+        var usuario: Usuario
+        val tvComercio = gridViewItem.findViewById<TextView>(R.id.tvPromocionComercio)
+        val tvDescuento = gridViewItem.findViewById<TextView>(R.id.tvPromocionDescuento)
         val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
 
-        textViewCategory.text = promocion.titulo
+       // tvComercio.text = instancia.traerInfoComercio(promocion.comercio)
+
+        if (promocion.porcentaje == null) {
+            tvDescuento.text =promocion.tipoPromocion
+        } else {
+            tvDescuento.text = promocion.porcentaje + "%"
+        }
+
        // imgViewCategory.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.cat_default))
         // Utiliza la función base64ToBitmap para obtener el Bitmap del logotipo
         /*
@@ -47,7 +57,11 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         val coroutineScope = CoroutineScope(Dispatchers.Main)
 
         coroutineScope.launch {
-            val logoBitmap = Comercio(
+            tvComercio.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
+        }
+
+        coroutineScope.launch {
+            /*val logoBitmap = Comercio(
                 "",
                 "",
                 "",
@@ -56,13 +70,12 @@ class PromocionGridAdapter(private val context: Context, private val promociones
             ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
             if (logoBitmap != null) {
                 imgViewCategory.setImageBitmap(logoBitmap)
-            }
+            }*/
             val isFavorite= instancia.traerUsuarioActual()
                 ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
             favIcon.setImageResource(getFavResource(isFavorite))
         }
 
-        // Agrega cualquier otra configuración específica de tu diseño aquí
 
         return gridViewItem
     }

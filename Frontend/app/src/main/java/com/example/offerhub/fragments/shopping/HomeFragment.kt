@@ -1,23 +1,29 @@
 package com.example.offerhub.fragments.shopping
 
-import CategoryGridAdapter
 import PromocionGridAdapter
+import android.R.attr.x
+import android.R.attr.y
 import PromocionGridPorCategoriaAdapter
 import UserViewModel
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.core.view.size
 import androidx.core.widget.NestedScrollView
+import androidx.appcompat.widget.ForwardingListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -30,9 +36,8 @@ import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
-import com.example.offerhub.data.Categoria
+import com.example.offerhub.Usuario
 import com.example.offerhub.databinding.FragmentHomeBinding
-import com.example.offerhub.funciones.getFavResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +50,18 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
     var isFavorite = false
     var listenerHabilitado = false
     private val userViewModel: UserViewModel by activityViewModels()
+
+
+    override fun onPause() {
+        super.onPause()
+        scrollPosition = binding.promocionesGridView.scrollY
+    }
+    override fun onResume() {
+        super.onResume()
+        binding.promocionesGridView.post {
+            binding.promocionesGridView.scrollTo(0, scrollPosition)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -216,4 +233,50 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
         return alturaTotal
     }
+
+
+    /*override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+       // val promocion = v.getTag(R.id.promocion_tag) as Promocion
+
+        *//*val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val funciones = Funciones()
+        *//*
+        val info = menuInfo as AdapterView.AdapterContextMenuInfo
+        val position = info.position
+
+        val promocion = listaPromociones[position]
+
+        coroutineScope.launch {
+            isFavorite= funciones.traerUsuarioActual()
+                ?.let { funciones.existePromocionEnFavoritos(it,promocion.id) } == true
+        }
+
+        if (isFavorite) {
+            menu.add(0, v.id, 0, "Quitar de Favoritos")
+        } else {
+            menu.add(0, v.id, 0, "Agregar a Favoritos")
+        }
+
+
+
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+
+        if(item.title == "Quitar de Favoritos"){
+                //your code
+            }
+        else if(item.title == "Agregar a Favoritos"){
+                //your code
+            }else{
+            return false;
+        }
+        return true;
+    }*/
 }

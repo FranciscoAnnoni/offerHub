@@ -2,11 +2,14 @@ package com.example.offerhub.fragments.shopping
 
 import PromocionGridAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
@@ -35,45 +38,39 @@ class FavFragment: Fragment(R.layout.fragment_fav){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var instancia = Funciones()
+        var funciones = Funciones()
         val listView = view.findViewById<GridView>(R.id.gvFavoritos) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        val tvNoFavoritos = view.findViewById<TextView>(R.id.tvNoFavoritos)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         var datos: MutableList<Promocion> = mutableListOf()
-        var tarjetas: List<String?> = listOf("-NcDHYyW9d0QE9gyP8Nt", "-NcDH_GMqKIPLS45m4uA", "-NcDHaymq_ZTES7qQi8z")
-        var favoritos: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHaAMYXz2y6-VrOol", "-NcDHbt8duv0PY2Mg-HS")
-        var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
-        var wishlistRubro: List<String?> = listOf("Supermercados")
-        var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
-        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro,"0")
-        var promocionMock = Promocion(
-            "123456",
-            "Gastronomía",
-            "1810",
-            "",
-            listOf("Lunes", "Martes", "Miercoles"),
-            "30",
-            "",
-            listOf("Guatemala"),
-            listOf("Santander"),
-            "descuento",
-            "30% de Descuento en Efectivo",
-            "",
-            "",
-            "",
-            "",
-            "",
-            org.threeten.bp.LocalDate.now(),
-            org.threeten.bp.LocalDate.now(),
-            "",
-            ""
-        )
+
 
         // Llamar a la función que obtiene los datos.
         val job = coroutineScope.launch {
             try {
-                val datos: List<Promocion> = listOf(promocionMock, promocionMock, promocionMock, promocionMock, promocionMock, promocionMock)
-                val adapter = PromocionGridAdapter(view.context, datos)
-                listView.adapter = adapter
+                val usuarioActual = (funciones.traerUsuarioActual() as Usuario?)!!
+                Log.d("Hola","1")
+                val datos: List<Promocion> = funciones.obtenerPromocionesFavoritas(usuarioActual)
+                Log.d("Hola","2")
+                if  (datos != null && datos.isEmpty())  {
+                    Log.d("Hola","3")
+                    listView.visibility = View.GONE
+                    tvNoFavoritos.visibility = View.VISIBLE
+                }else {
+                    Log.d("Hola","4")
+                    listView.visibility = View.VISIBLE
+                    tvNoFavoritos.visibility = View.GONE
+                    val adapter = PromocionGridAdapter(view.context, datos)
+                    listView.adapter = adapter
+
+                    listView.setOnItemClickListener { parent, _, position, _ ->
+                        val selectedPromo = adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
+                        val action = FavFragmentDirections.actionFavFragmentToPromoDetailFragment(selectedPromo)
+                        findNavController().navigate(action)
+                    }
+
+                }
+
             } catch (e: Exception) {
                 println("Error al obtener promociones: ${e.message}")
             }
