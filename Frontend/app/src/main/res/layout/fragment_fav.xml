@@ -40,7 +40,6 @@
         app:layout_constraintTop_toBottomOf="@id/tvFavoritos"
         android:textSize="25dp"
         android:gravity="center_vertical"
-        android:textAlignment="center"
         android:padding="4dp"
         android:visibility="gone"
         />

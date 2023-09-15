@@ -103,7 +103,7 @@ while i < len(seccion_categorias):
                     #print("\t\t  Descripción: " + _ ).text) NO TIENEN LAS DE GALICIA
                     anda = True
 
-                    sleep(0.5)
+                    sleep(1.5)
                     prueba = driver.find_elements(By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-lmyTeu fkTwKR")]')
                     
                     if len(prueba) == 0:

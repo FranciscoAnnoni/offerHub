@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
 import androidx.fragment.app.Fragment
+import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.R
 import com.example.offerhub.data.Categoria
@@ -40,55 +41,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             try {
                 /*val datos: List<Comercio> =
                     instancia.leerBdClaseSinc("Comercio", "categoria", "Gastronomía")*/
-                val datos = listOf(
-                    Categoria(
-                        view.context,
-                        "Gastronomía",
-                        "cat_gastronomia"
-                    ),
-                    Categoria(view.context, "Vehículos", "cat_vehiculos"),
-                    Categoria(
-                        view.context,
-                        "Salud y Bienestar",
-                        "cat_salud_y_bienestar"
-                    ),
-                    Categoria(view.context, "Hogar", "cat_hogar"),
-                    Categoria(
-                        view.context,
-                        "Viajes y Turismo",
-                        "cat_viajes"
-                    ),
-                    Categoria(
-                        view.context,
-                        "Entretenimiento",
-                        "cat_entretenimiento"
-                    ),
-                    Categoria(
-                        view.context,
-                        "Indumentaria",
-                        "cat_indumentaria"
-                    ),
-                    Categoria(
-                        view.context,
-                        "Supermercados",
-                        "cat_supermercados"
-                    ),
-                    Categoria(
-                        view.context,
-                        "Electrónica",
-                        "cat_electronica"
-                    ),
-                    Categoria(view.context, "Educación", "cat_educacion"),
-                    Categoria(view.context, "Niños", "cat_ninos"),
-                    Categoria(view.context, "Regalos", "cat_regalos"),
-                    Categoria(view.context, "Bebidas", "cat_bebidas"),
-                    Categoria(view.context, "Joyería", "cat_joyeria"),
-                    Categoria(view.context, "Librerías", "cat_librerias"),
-                    Categoria(view.context, "Mascotas", "cat_mascotas"),
-                    Categoria(view.context, "Servicios", "cat_servicios"),
-                    Categoria(view.context, "Otros", "cat_otros")
-                    // Agrega más elementos según sea necesario
-                )
+                val datos = Funciones().obtenerCategorias(view.context)
                 val adapter = CategoryGridAdapter(view.context, datos)
                 listView.adapter = adapter
             } catch (e: Exception) {

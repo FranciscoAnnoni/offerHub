@@ -35,8 +35,6 @@ class UserAccountViewModel @Inject constructor(
     private val db: FirebaseDatabase
 ) : AndroidViewModel(app) {
 
-
-
     private val _user = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
     val user = _user.asStateFlow()
 

@@ -54,15 +54,7 @@ class Comercio{
         this.cuil = cuil
     }
 
-    //Funcion que convierte de base64 a bitmap para luego poder mostrar como imagen
-     fun base64ToBitmap(logo: String?): Bitmap? {
-        if (logo.isNullOrBlank()) {
-            return null
-        }
 
-        val decodedBytes = Base64.decode(logo, Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-    }
 
    //Desde codigo xml con id: imageView se llamaria de la siguiente forma:
     //val bitmap = base64ToBitmap(base64Image)
@@ -153,11 +145,11 @@ class Promocion(
     }
     fun obtenerDesc(): kotlin.String {
         if(this.tipoPromocion=="Reintegro" || this.tipoPromocion=="Descuento"){
-            return this.porcentaje.toString()+"%"
+            return this.porcentaje.toString()
         } else if (this.tipoPromocion=="2x1") {
             return "2x1"
         } else if (this.tipoPromocion=="Cuotas"){
-            return this.cuotas+" cuotas"
+            return this.cuotas.toString()
         }
         return ""
     }
@@ -251,7 +243,8 @@ class LecturaBD {
                                             data.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                             data.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                             data.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {})
+                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                                    data.child("homeModoFull").getValue(String::class.java)
                                         )
                                     }
                                 }

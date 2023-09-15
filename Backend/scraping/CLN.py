@@ -253,6 +253,7 @@ for boton in seccion_categorias:
         promocion.porcentaje=numeros["porcentaje"]
         promocion.cuotas=numeros["cuotas"]
         promocion.comercio = idComercio
+        promocion.descripcion = titulo+ ": " + oferta
         promocion.topeTexto = ""
         promocion.topeNro = ""
         promocion.proveedor = idEntidad

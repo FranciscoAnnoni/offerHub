@@ -17,7 +17,7 @@
     <!-- Es para la reutilizacion de las casillas del registro y login -->
     <style name="EditTextRounded">
         <item name="android:layout_width">330dp</item>
-        <item name="android:layout_height">54dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:background">@drawable/rounded_text_background</item>
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>
@@ -65,7 +65,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">42sp</item>
+        <item name="android:textSize">40sp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -144,11 +144,7 @@
    <dimen name="h4TextSize">35sp</dimen>
    <dimen name="h2TextSize">17sp</dimen>
    <dimen name="h3TextSize">22sp</dimen>
-    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
-    </style>
+
 
     <style name="tabLayout_text" parent="TextAppearance.AppCompat">
         <item name="color">@color/black</item>
@@ -184,9 +180,24 @@
         <item name="android:trackTint">@color/violetaMasClaro</item>
     </style>
 
+
     <style name="roundedCornersImageView" parent="" >
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10%</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="RoundedCornersDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowBackground">@drawable/search_box_background</item>
+        <item name="android:textColor">@color/violetaMasClaro</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
 </resources>

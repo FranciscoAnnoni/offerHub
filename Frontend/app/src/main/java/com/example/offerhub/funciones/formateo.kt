@@ -3,7 +3,9 @@ package com.example.offerhub.funciones
 import java.text.Normalizer
 import java.util.regex.Pattern
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.util.Base64
 import com.example.offerhub.R
 import org.threeten.bp.LocalDate
 
@@ -74,5 +76,15 @@ fun formatearFecha(fecha: LocalDate?): String {
     val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val date = inputFormat.parse(fecha.toString())
     return outputFormat.format(date)
+}
+
+//Funcion que convierte de base64 a bitmap para luego poder mostrar como imagen
+fun base64ToBitmap(logo: String?): Bitmap? {
+    if (logo.isNullOrBlank()) {
+        return null
+    }
+
+    val decodedBytes = Base64.decode(logo, Base64.DEFAULT)
+    return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 }
 

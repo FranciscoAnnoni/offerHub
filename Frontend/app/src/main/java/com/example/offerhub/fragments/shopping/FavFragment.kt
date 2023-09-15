@@ -1,6 +1,7 @@
 package com.example.offerhub.fragments.shopping
 
 import PromocionGridAdapter
+import UserViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.GridView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
@@ -26,7 +28,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
 
     private lateinit var binding: FragmentFavBinding
     private var scrollPosition: Int = 0
-
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onPause() {
         super.onPause()
@@ -59,8 +61,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
         // Llamar a la función que obtiene los datos.
         val job = coroutineScope.launch {
             try {
-                val usuarioActual = (funciones.traerUsuarioActual() as Usuario?)!!
-                val datos: List<Promocion> = funciones.obtenerPromocionesFavoritas(usuarioActual)
+                val datos: List<Promocion> = userViewModel.listadoDePromosDisp.filter { it -> userViewModel.favoritos?.contains(it.id) == true }
 
                 if  (datos.isEmpty())  {
                     listView.visibility = View.GONE
@@ -68,7 +69,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
                 }else {
                     listView.visibility = View.VISIBLE
                     tvNoFavoritos.visibility = View.GONE
-                    val adapter = PromocionGridAdapter(view.context, datos)
+                    val adapter = PromocionGridAdapter(view.context, datos,userViewModel)
                     listView.adapter = adapter
 
                     listView.setOnItemClickListener { parent, _, position, _ ->

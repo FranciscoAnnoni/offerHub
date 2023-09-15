@@ -1,6 +1,8 @@
 package com.example.offerhub
 
+import android.content.Context
 import android.util.Log
+import com.example.offerhub.data.Categoria
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.*
@@ -134,6 +136,10 @@ class Funciones {
         usuario.favoritos?.contains(elementoId) == true
     }
 
+    suspend fun existePromocionEnReintegros(usuario: Usuario, elementoId: String?): Boolean = coroutineScope {
+        usuario.promocionesReintegro?.contains(elementoId) == true
+    }
+
     suspend fun obtenerPromocionesReintegro(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
@@ -227,6 +233,57 @@ class Funciones {
         }
 
         nombre
+    }
+
+    fun obtenerCategorias(contexto: Context) : List<Categoria>{
+        return listOf(
+            Categoria(
+                contexto,
+                "Gastronomía",
+                "cat_gastronomia"
+            ),
+            Categoria(contexto, "Vehículos", "cat_vehiculos"),
+            Categoria(
+                contexto,
+                "Salud y Bienestar",
+                "cat_salud_y_bienestar"
+            ),
+            Categoria(contexto, "Hogar", "cat_hogar"),
+            Categoria(
+                contexto,
+                "Viajes y Turismo",
+                "cat_viajes"
+            ),
+            Categoria(
+                contexto,
+                "Entretenimiento",
+                "cat_entretenimiento"
+            ),
+            Categoria(
+                contexto,
+                "Indumentaria",
+                "cat_indumentaria"
+            ),
+            Categoria(
+                contexto,
+                "Supermercados",
+                "cat_supermercados"
+            ),
+            Categoria(
+                contexto,
+                "Electrónica",
+                "cat_electronica"
+            ),
+            Categoria(contexto, "Educación", "cat_educacion"),
+            Categoria(contexto, "Niños", "cat_ninos"),
+            Categoria(contexto, "Regalos", "cat_regalos"),
+            Categoria(contexto, "Bebidas", "cat_bebidas"),
+            Categoria(contexto, "Joyería", "cat_joyeria"),
+            Categoria(contexto, "Librerías", "cat_librerias"),
+            Categoria(contexto, "Mascotas", "cat_mascotas"),
+            Categoria(contexto, "Servicios", "cat_servicios"),
+            Categoria(contexto, "Otros", "cat_otros")
+        )
     }
 }
 

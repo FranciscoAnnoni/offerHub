@@ -1,4 +1,5 @@
 import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,15 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.Usuario
+import com.example.offerhub.funciones.base64ToBitmap
 import com.example.offerhub.funciones.getFavResource
+import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PromocionGridAdapter(private val context: Context, private val promociones: List<Promocion>) : BaseAdapter() {
+class PromocionGridAdapter(private val context: Context, private val promociones: List<Promocion>,
+                           private val userViewModel: UserViewModel) : BaseAdapter() {
 
     override fun getCount(): Int {
         return promociones.size
@@ -36,14 +40,13 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         //val gridViewItem = inflater.inflate(R.layout.fragment_promo_card, null)
         val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
         val instancia=Funciones()
-        var usuario: Usuario
         val tvComercio = gridViewItem.findViewById<TextView>(R.id.tvPromocionComercio)
         val tvDescuento = gridViewItem.findViewById<TextView>(R.id.tvPromocionDescuento)
         val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
-        val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
+        val imgViewCategory = gridViewItem.findViewById<ShapeableImageView>(R.id.imgComercio)
 
        // tvComercio.text = instancia.traerInfoComercio(promocion.comercio)
-
+    promocion.obtenerDesc()
         if (promocion.porcentaje == null) {
             tvDescuento.text =promocion.tipoPromocion
         } else {
@@ -59,21 +62,18 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         coroutineScope.launch {
             tvComercio.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
         }
-
+        var logoBitmap: Bitmap? =null
         coroutineScope.launch {
-            val logoBitmap = Comercio(
-                "",
-                "",
-                "",
-                "",
-                ""
-            ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
+            logoBitmap = base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
+
+        }.invokeOnCompletion {
+            coroutineScope.launch {
             if (logoBitmap != null) {
                 imgViewCategory.setImageBitmap(logoBitmap)
             }
-            val isFavorite= instancia.traerUsuarioActual()
-                ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
+            val isFavorite= userViewModel.favoritos?.contains(promocion.id) == true
             favIcon.setImageResource(getFavResource(isFavorite))
+            }
         }
 
 

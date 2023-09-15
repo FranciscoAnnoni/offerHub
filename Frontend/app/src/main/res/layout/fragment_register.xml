@@ -12,135 +12,128 @@
 
 
         <ImageView
+            android:id="@+id/atras"
+            android:layout_marginTop="36dp"
+            android:layout_width="22dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:rotationY="180"
+            app:tint="@color/violeta" />
+
+        <!--                  Imagen                -->
+        <ImageView
             android:id="@+id/logo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="24dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
             android:contentDescription="@null"
             android:src="@drawable/offerhub_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+
+            style="@style/titulos"
             android:id="@+id/textRegistrarSesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:fontFamily="sans-serif"
+            android:layout_marginTop="-10dp"
             android:gravity="center"
             android:text="Registrar nueva cuenta"
-            android:textColor="@color/violeta"
-            android:textSize="42sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo"
             tools:ignore="MissingConstraints" />
 
-
         <!-- Datos a rellenar -->
 
         <TextView
-            android:layout_width="150dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/nombre_y_apellido"
-            android:textColor="@color/violetaMasClaro"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/edNamerRegister"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.157"
-            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/nombreyApellido"
+            style="@style/textoChicoVioleta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-15dp"
+            android:layout_marginTop="24dp"
+            android:padding="5dp"
+            android:text="Nombre y Apellido"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
-            app:layout_constraintVertical_bias="0.239"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edNamerRegister"
             style="@style/EditTextRounded"
-            android:layout_width="330dp"
-            android:layout_height="54dp"
-            android:layout_marginTop="65dp"
+            android:layout_width="290dp"
+            android:layout_height="45dp"
             android:hint="@string/nombre_y_apellido"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/nombreyApellido"
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:layout_width="59dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/email"
-            android:textColor="@color/violetaMasClaro"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/edEmailRegister"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.113"
-            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/email"
+            style="@style/textoChicoVioleta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="5dp"
+            android:text="Email"
+            android:layout_marginStart="-15dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/edNamerRegister"
-            app:layout_constraintVertical_bias="0.084"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edEmailRegister"
             style="@style/EditTextRounded"
-            android:layout_width="330dp"
-            android:layout_height="54dp"
-            android:layout_marginTop="50dp"
+            android:layout_width="290dp"
+            android:layout_height="45dp"
             android:hint="@string/email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edNamerRegister"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/email"
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:layout_width="107dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/password"
-            android:textColor="@color/violetaMasClaro"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/edPassowrdRegister"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.131"
-            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/password"
+            style="@style/textoChicoVioleta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="5dp"
+            android:text="Contraseña"
+            android:layout_marginStart="-15dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/edEmailRegister"
-            app:layout_constraintVertical_bias="0.129"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edPassowrdRegister"
             style="@style/EditTextRounded"
-            android:layout_width="330dp"
-            android:layout_height="54dp"
-            android:layout_marginTop="50dp"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edEmailRegister"
+            android:layout_width="290dp"
+            android:layout_height="45dp"
+            android:hint="@string/email"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/password"
             tools:ignore="MissingConstraints" />
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/btnRegister"
             style="@style/RoundedButtonBackground"
-            android:layout_width="150dp"
-            android:layout_height="54dp"
-            android:layout_marginTop="48dp"
+            android:layout_width="112dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="30dp"
             android:text="Registrar"
-            android:textSize="17sp"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edPassowrdRegister"
@@ -153,14 +146,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.10" />
+            app:layout_constraintGuide_percent="0.15" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.90" />
+            app:layout_constraintGuide_percent="0.85" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

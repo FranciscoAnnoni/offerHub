@@ -1,11 +1,15 @@
 package com.example.offerhub.fragments.loginRegister
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -16,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
 import com.example.offerhub.databinding.FragmentLoginBinding
+import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.ProfileViewModel
@@ -24,14 +29,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class LoginFragment:Fragment(R.layout.fragment_login) {
-   private lateinit var binding: FragmentLoginBinding
-
-    //private lateinit var sharedViewModel: ProfileViewModel para el log out exitoso
-
-    private lateinit var rootViewLogin: View // Reemplaza con tu vista raíz de la actividad
-
+class LoginFragment : Fragment(R.layout.fragment_login) {
+    private lateinit var binding: FragmentLoginBinding
+    private lateinit var rootViewLogin: View
     private val viewModel by viewModels<LoginViewModel>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,31 +41,77 @@ class LoginFragment:Fragment(R.layout.fragment_login) {
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater)
         return binding.root
-
+    }
+    // Función para ocultar el teclado
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //es para poder enviar un mensaje de Log out exitoso pero no pude
-        /*
-        sharedViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        if(sharedViewModel.logoutSuccessLiveData.value == true){
-            Snackbar.make(rootViewLogin, "Logout exitoso",Snackbar.LENGTH_SHORT).show()
-            // Restablecer el valor en el ViewModel compartido
-            sharedViewModel.logoutSuccessLiveData.value = false
-        }
-        */
+        rootViewLogin = view
 
-        rootViewLogin = view // Asignar la vista raíz del fragmento
-
-        binding.registerNow.setOnClickListener{
-         findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        // Configura el campo de correo electrónico
+        binding.edEmailLogin.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
+                binding.edPasswordLogin.requestFocus()
+                return@setOnEditorActionListener true
+            }
+            false
         }
 
+        // Configura el campo de contraseña
+        binding.edPasswordLogin.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
+                hideKeyboard()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
+        binding.tvUpdatePassword.setOnClickListener {
+            setupBottomSheetDialog { email ->
+                viewModel.resetPassword(email)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.resetPassword.collect {
+                when (it) {
+                    is Resource.Loading -> {
+                        // Handle loading state
+                    }
+                    is Resource.Success -> {
+                        Snackbar.make(
+                            requireView(),
+                            "Se ha enviado un correo electrónico a su cuenta para restablecer la contraseña.",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                    is Resource.Error -> {
+                        Snackbar.make(
+                            requireView(),
+                            "Error: ${it.message}",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                    else -> Unit
+                }
+            }
+        }
+
+        binding.registerNow.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
 
         binding.apply {
-            btnLogin.setOnClickListener{
+            btnLogin.setOnClickListener {
                 val email = edEmailLogin.text.toString().trim()
                 val password = edPasswordLogin.text.toString()
 
@@ -72,31 +120,37 @@ class LoginFragment:Fragment(R.layout.fragment_login) {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.login.collect{
-                when(it){
+            viewModel.login.collect {
+                when (it) {
                     is Resource.Loading -> {
                         binding.btnLogin.startAnimation()
                     }
                     is Resource.Success -> {
-                        Snackbar.make(rootViewLogin, "Login exitoso", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            rootViewLogin,
+                            "Login exitoso",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                         binding.btnLogin.revertAnimation()
                         binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
 
-                        Snackbar.make(rootViewLogin, "Login exitoso", Snackbar.LENGTH_SHORT).show()
-                       Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
-                           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                           startActivity(intent)
-                       }
+                        Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
                     }
                     is Resource.Error -> {
-                        Snackbar.make(rootViewLogin, "Error de Login, la contraseña o el mail son incorrectos", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            rootViewLogin,
+                            "Error de Login, la contraseña o el correo son incorrectos",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                         binding.btnLogin.revertAnimation()
                         binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
                     }
                     else -> Unit
                 }
             }
-
         }
     }
 }
