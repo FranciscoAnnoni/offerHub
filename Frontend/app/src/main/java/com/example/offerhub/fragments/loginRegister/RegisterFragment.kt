@@ -60,6 +60,10 @@ class RegisterFragment:Fragment() {
             }
         }
 
+        binding.atras.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         lifecycleScope.launchWhenStarted {
             viewModel.register.collect{
                 when(it){

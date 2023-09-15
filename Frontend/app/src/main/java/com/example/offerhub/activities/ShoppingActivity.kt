@@ -1,16 +1,19 @@
 package com.example.offerhub.activities
 import CategoryGridAdapter
+import UserViewModel
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.GridView
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.offerhub.Comercio
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.LecturaBD
+import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.data.Categoria
 import com.example.offerhub.databinding.ActivityShoppingBinding
@@ -19,10 +22,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ShoppingActivity : AppCompatActivity() {
-
+    var listadoDePromosDisp: List<Promocion> = listOf()
     val binding by lazy {
         ActivityShoppingBinding.inflate(layoutInflater)
     }
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProvider(this).get(UserViewModel::class.java)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

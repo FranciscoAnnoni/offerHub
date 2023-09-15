@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">offerHub</string>
+    <string name="app_name">OfferHub</string>
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="nombre_y_apellido">Nombre y Apellido</string>

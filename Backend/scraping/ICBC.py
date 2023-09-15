@@ -31,7 +31,7 @@ options.add_argument("--window-size=1920,1200")
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 # Navegar hasta la página de beneficios 
-
+wait = WebDriverWait(driver, 900000)
 
 print("-----Inicio Scraping (ICBC)-----")
 driver.get('https://www.beneficios.icbc.com.ar/promo')
@@ -41,7 +41,7 @@ entidad = Entidad()
 entidad.nombre = "Banco ICBC"
 entidad.tipo = "Bancaria"
 entidad.telefono= "0810-444-4652 - Atención de lunes a viernes de 8 a 20 horas."
-idEntidad = entidad.guardar()
+idEntidad = ""#entidad.guardar()
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 last_height = driver.execute_script("return document.body.scrollHeight")
@@ -63,7 +63,7 @@ while True:#i<2:#False:
 
    last_height = new_height
 
-seccion_categorias = driver.find_elements(By.XPATH, '//a[contains(@class,"box-beneficio")]')
+seccion_categorias = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[contains(@class,"box-beneficio")]')))
 cantElementos = len(seccion_categorias)
 print("Cantidad de Promociones: "+str(cantElementos))
 #de la lista obtenida muestra link asociado y texto de cada elemento
@@ -83,14 +83,17 @@ for boton in seccion_categorias:
     print("\tCategoria: "+categoria)
     boton.click()
     time.sleep(2)
-    logo=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/div[contains(@class,"brand-logo")]').find_element(By.XPATH, './/img').get_attribute("src")
+    try:
+        logo=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/div[contains(@class,"brand-logo")]').find_element(By.XPATH, './/img').get_attribute("src")
+    except:
+        logo = ""
     print("\tURL Logo: "+logo)
-    limits=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_elements(By.XPATH, './/time')
+    limits=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_elements(By.XPATH, './/time')
     vigencia= list(map(lambda x: x.get_attribute("innerHTML"), limits))
     #print("\tVigencia: " + vigencia)
     try:
         ##urlComercio=str(driver.execute_script('if(document.querySelector(".brand-link")){return document.querySelector(".brand-link").href}else{return ""}'))
-        urlComercioBtn=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/a[contains(@class,"brand-link")]')
+        urlComercioBtn=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_element(By.XPATH, './/a[contains(@class,"brand-link")]')
         urlComercio=urlComercioBtn.get_attribute("href")
         print("\tURL Comercio: "+urlComercio)
     except NoSuchElementException:
@@ -100,42 +103,65 @@ for boton in seccion_categorias:
     comercio.logo=utilidades.imagenABase64(logo)
     comercio.url=urlComercio
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
-    idComercio=comercio.guardar()
+    idComercio=""#comercio.guardar()
     try:
         descripcion=driver.find_element(By.XPATH, '//li[contains(@class,"description")]').get_attribute("innerHTML")
     except NoSuchElementException:
         descripcion=""
     print("\tDescripcion: "+descripcion)
-    segmentos=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_elements(By.XPATH, './/div[contains(@class,"ticket-group-internal")]')
+    segmentos=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_elements(By.XPATH, './/div[contains(@class,"ticket-group-internal")]')
     condiciones=[]
     try:
-        exclusivoModo=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, '//div[contains(@class,"exclusivo-modo")]')
+        exclusivoModo=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_element(By.XPATH, '//div[contains(@class,"exclusivo-modo")]')
         condiciones=["Exclusivo para pagos con MODO"]
     except NoSuchElementException:
         exclusivoModo=False
-    tope=boton.find_element(By.XPATH, '//li[contains(@class,"tope")]').get_attribute("innerHTML")
-    diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
+
+    if len(boton.find_element(By.XPATH, '//li[contains(@class,"tope")]').get_attribute("innerHTML")) != 0:    
+        tope=boton.find_element(By.XPATH, '//li[contains(@class,"tope")]').get_attribute("innerHTML").split(":")[1].split("<")[0][1:]
+    else:
+        tope = ""
+    print("TOPEEE: -"+tope+"-")
+
+    dias = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
+    diasSemana = []
     actives=driver.execute_script('return Array.from(document.querySelectorAll(".days span")).map(function(e){ return e.classList[0];}).join()').split(",")
-    dias=[]
     i=0
     print(" ")
     for active in actives:
         if active=="active":
-            dias.append(diasSemana[i])
-            print("\t\t"+diasSemana[i])
+            if dias[i] == "LU":
+                diasSemana.append("Lunes") 
+            elif dias[i] == "MA":
+                diasSemana.append("Martes")
+            elif dias[i] == "MI":
+                diasSemana.append("Miércoles")
+            elif dias[i] == "JU":
+                diasSemana.append("Jueves")
+            elif dias[i] == "VI":
+                diasSemana.append("Viernes")
+            elif dias[i] == "SA":
+                diasSemana.append("Sábado")
+            elif dias[i] == "DO":
+                diasSemana.append("Domingo")
         i+=1
+
+    print("\tDias: ")
+    for dia in diasSemana:
+        print("\t\t"+dia)
+
     print("\tTope: " + tope)
     print("\tTarjetas: ")
     nombresTarjetas=[]
-    tarjetas=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/div[contains(@class,"accept")]').find_elements(By.XPATH, './/span')
+    tarjetas=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_element(By.XPATH, './/div[contains(@class,"accept")]').find_elements(By.XPATH, './/span')
     for tarjeta in tarjetas:
         nombreTarjeta=str(tarjeta.get_attribute("class")).replace("visad","Visa Debito").title()
         nombresTarjetas.append(nombreTarjeta)
         print("\t\t"+nombreTarjeta)
-    tyc=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_element(By.XPATH, './/div[contains(@class,"legal")]').find_element(By.XPATH, './/p').get_attribute("innerHTML")
+    tyc=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_element(By.XPATH, './/div[contains(@class,"legal")]').find_element(By.XPATH, './/p').get_attribute("innerHTML")
     print("\tTyC: " + tyc)
     print("\t\tSucursales: ")
-    pcias=driver.find_element(By.XPATH, '//div[contains(@class,"detalle-beneficio")]').find_elements(By.XPATH, './/div[contains(@class,"filter-item")]')
+    pcias=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_elements(By.XPATH, './/div[contains(@class,"filter-item")]')
     idsSucursales=[]
     for pcia in pcias:
         nombre=pcia.find_element(By.XPATH, './/h4').text
@@ -156,7 +182,8 @@ for boton in seccion_categorias:
                     if nombre.lower() not in direccion.lower():
                         direccion=direccion+" "+nombre.lower().replace("provincia de ","")
                         sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
-                idsSucursales.append(sucursal.guardar())
+                sucursal.direccion = sucursal.direccion[2:]
+                idsSucursales.append("")#sucursal.guardar())
     i=0
     for segmento in segmentos:
         promos=segmento.find_elements(By.XPATH, './/div[contains(@class,"ticket")]')
@@ -188,34 +215,52 @@ for boton in seccion_categorias:
                         else: 
                             tarjeta.tipoTarjeta="Crédito"
                         tarjeta.procesadora=nombreTarjeta.replace(" Debito","").replace(" Credito","")
-                        idTarjetas.append(tarjeta.guardar())
+                        idTarjetas.append("")#tarjeta.guardar())
+                    
                     if 'ticket-payroll' in promo.get_attribute('class').split():
                         promocionCondiciones.append("SI DEPOSITÁS TU SUELDO EN ICBC")
                         print("\t\tCondicion: SI DEPOSITÁS TU SUELDO EN ICBC")
                     promocion.titulo=titulo+": "+tituloPromo
-                    if "%" in tituloPromo or "descuento" in tituloPromo:
-                        promocion.topeTexto = reintegro
-                        promocion.topeNro = re.sub(r'<[^>]+>', '', reintegro)
+                    
+                    if "%" in tituloPromo or "descuento" in tituloPromo and tope.find("$") and tope != "":
+                        promocion.topeTexto = tope
+                        try:
+                            promocion.topeNro = tope[tope.find("$") + 1:].split()[0]
+                        except:
+                            promocion.topeNro = ""
+                        print("ÁAAAAAA "+promocion.topeNro)
                     else:
                         promocion.tope=""
                         promocion.topeNro=""
-                    promocion.setearTipoPromocion(tituloPromo,promocion.tope)
+
+                    promocion.setearTipoPromocion(tituloPromo,tope)
                     numeros=promocion.obtenerPorcentajeYCantCuotas(tituloPromo)
                     promocion.porcentaje=numeros["porcentaje"]
+                    print(promocion.porcentaje)
                     promocion.cuotas=numeros["cuotas"]
+                    print(promocion.cuotas)
                     promocion.comercio=idComercio
+                    print(promocion.comercio)
                     promocion.condiciones=promocionCondiciones
+                    print(promocion.condiciones)
                     promocion.proveedor=idEntidad
+                    print(promocion.proveedor)
                     promocion.tarjetas=idTarjetas
+                    print(promocion.tarjetas)
                     promocion.url=url
+                    print(promocion.url)
                     promocion.setearFecha("vigenciaDesde",vigencia[0])
                     promocion.setearFecha("vigenciaHasta",vigencia[1])
                     promocion.setearCategoria(categoria)
-                    promocion.dias=dias
+                    promocion.dias=diasSemana
+                    print(promocion.dias)
                     promocion.sucursales=idsSucursales
+                    print(promocion.sucursales)
                     promocion.tyc=tyc
+                    print(promocion.tyc)
                     promocion.descripcion=descripcion
-                    promocion.guardar()
+                    print(promocion.descripcion)
+
     driver.execute_script('return document.querySelector(".btn-close").click()')
     time.sleep(1)
     

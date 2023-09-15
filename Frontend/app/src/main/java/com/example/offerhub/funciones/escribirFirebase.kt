@@ -100,9 +100,10 @@ class Usuario{
     var wishlistComercio: List<String?>?
     var wishlistRubro: List<String?>?
     var promocionesReintegro: List<String?>?
+    var homeModoFull: String?
 
     // Constructor primario
-    constructor(id: String, nombre: String, correo: String?, tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?){
+    constructor(id: String, nombre: String, correo: String?, tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?,homeModoFull: String?){
         this.id = id
         this.nombre = nombre
         this.correo = correo
@@ -111,6 +112,7 @@ class Usuario{
         this.wishlistComercio = wishlistComercio
         this.wishlistRubro = wishlistRubro
         this.promocionesReintegro = promocionesReintegro
+        this.homeModoFull=homeModoFull
     }
 }
 
