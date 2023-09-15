@@ -61,7 +61,7 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         }
 
         coroutineScope.launch {
-            val logoBitmap = Comercio(
+            /*val logoBitmap = Comercio(
                 "",
                 "",
                 "",
@@ -70,7 +70,7 @@ class PromocionGridAdapter(private val context: Context, private val promociones
             ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
             if (logoBitmap != null) {
                 imgViewCategory.setImageBitmap(logoBitmap)
-            }
+            }*/
             val isFavorite= instancia.traerUsuarioActual()
                 ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
             favIcon.setImageResource(getFavResource(isFavorite))

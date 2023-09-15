@@ -2,6 +2,7 @@ package com.example.offerhub.fragments.shopping
 
 import PromocionGridAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,19 +26,7 @@ import java.time.LocalDate
 class FavFragment: Fragment(R.layout.fragment_fav){
 
     private lateinit var binding: FragmentFavBinding
-    private var scrollPosition: Int = 0
 
-
-    override fun onPause() {
-        super.onPause()
-        scrollPosition = binding.gvFavoritos.scrollY
-    }
-    override fun onResume() {
-        super.onResume()
-        binding.gvFavoritos.post {
-            binding.gvFavoritos.scrollTo(0, scrollPosition)
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,12 +49,15 @@ class FavFragment: Fragment(R.layout.fragment_fav){
         val job = coroutineScope.launch {
             try {
                 val usuarioActual = (funciones.traerUsuarioActual() as Usuario?)!!
+                Log.d("Hola","1")
                 val datos: List<Promocion> = funciones.obtenerPromocionesFavoritas(usuarioActual)
-
-                if  (datos.isEmpty())  {
+                Log.d("Hola","2")
+                if  (datos != null && datos.isEmpty())  {
+                    Log.d("Hola","3")
                     listView.visibility = View.GONE
                     tvNoFavoritos.visibility = View.VISIBLE
                 }else {
+                    Log.d("Hola","4")
                     listView.visibility = View.VISIBLE
                     tvNoFavoritos.visibility = View.GONE
                     val adapter = PromocionGridAdapter(view.context, datos)
