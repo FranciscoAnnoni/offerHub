@@ -1,6 +1,7 @@
 package com.example.offerhub.fragments.shopping
 
 import TarjetasPromocionAdapter
+import UserViewModel
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Color
@@ -19,6 +20,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginLeft
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -44,6 +46,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     var isFavorite = false
     var isNotificado = false
     var isTyCExpanded = false
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -119,14 +122,14 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             if (isFavorite) {
                 coroutineScope.launch {
                     instancia.agregarPromocionAFavoritos(
-                        instancia.traerUsuarioActual()?.id.toString(),
+                        userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }
             } else {
                 coroutineScope.launch {
                     instancia.elimiarPromocionDeFavoritos(
-                        instancia.traerUsuarioActual()?.id.toString(),
+                        userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }
@@ -142,14 +145,14 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             if (isNotificado) {
                 coroutineScope.launch {
                     instancia.agregarPromocionAReintegro(
-                        instancia.traerUsuarioActual()?.id.toString(),
+                        userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }
             } else {
                 coroutineScope.launch {
                     instancia.elimiarPromocionDeReintegro(
-                        instancia.traerUsuarioActual()?.id.toString(),
+                        userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }
