@@ -1,11 +1,12 @@
 package com.example.offerhub
 
+import android.content.Context
 import android.util.Log
+import com.example.offerhub.data.Categoria
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import java.util.Locale
 
 class Funciones {
     val instancialeerId = LeerId()
@@ -31,10 +32,10 @@ class Funciones {
 
 
 
-    suspend fun obtenerPromociones(usuario: Usuario): MutableList<Promocion> = coroutineScope {
+    suspend fun obtenerPromociones(usuario: Usuario?): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val i = 0
-        val deferredPromos = usuario.tarjetas?.map { tarjeta ->
+        val deferredPromos = usuario?.tarjetas?.map { tarjeta ->
             coroutineScope.async {
                 if(i == 0){
                     val promosComunes = obtenerPromocionesComunes()
@@ -131,6 +132,14 @@ class Funciones {
         promociones
     }
 
+    suspend fun existePromocionEnFavoritos(usuario: Usuario, elementoId: String?): Boolean = coroutineScope {
+        usuario.favoritos?.contains(elementoId) == true
+    }
+
+    suspend fun existePromocionEnReintegros(usuario: Usuario, elementoId: String?): Boolean = coroutineScope {
+        usuario.promocionesReintegro?.contains(elementoId) == true
+    }
+
     suspend fun obtenerPromocionesReintegro(usuario: Usuario): List<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
@@ -186,32 +195,37 @@ class Funciones {
         usuario
     }
 
-    fun tarjetasComunes(usuario:Usuario,promocion:Promocion):List<String>{
+    fun tarjetasComunes(usuario:Usuario?,promocion:Promocion):List<String>{
         val lista = mutableListOf<String>()
-        for (tarj in usuario.tarjetas!!){
-            if(promocion.tarjetas?.contains(tarj) == true){
-                if (tarj != null) {
-                    lista.add(tarj)
+        if (usuario != null) {
+            for (tarj in usuario.tarjetas!!){
+                if(promocion.tarjetas?.contains(tarj) == true){
+                    if (tarj != null) {
+                        lista.add(tarj)
+                    }
                 }
             }
         }
         return lista
     }
 
-    suspend fun traerLogoComercio(idComercio: String): String? = coroutineScope {
+    suspend fun traerInfoComercio(idComercio: String?,attr:String): String? = coroutineScope {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
-        val dataSnapshot = database.child("Comercio").child(idComercio).get().await()
-        var logo: String? = ""
+        val dataSnapshot = database.child("Comercio").child(idComercio.toString()).get().await()
+        var value: String? = ""
 
         if (dataSnapshot.exists()) {
-            logo = dataSnapshot.child("logo").getValue(String::class.java)
+            value = dataSnapshot.child(attr).getValue(String::class.java)
         }
-        logo
+        value
     }
 
-    suspend fun traerNombeEntidad(idEntidad: String): String? = coroutineScope {
+    suspend fun traerLogoComercio(idComercio: String?): String? = coroutineScope {
+        traerInfoComercio(idComercio,"logo")
+    }
+    suspend fun traerNombeEntidad(idEntidad: String?): String? = coroutineScope {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
-        val dataSnapshot = database.child("Entidad").child(idEntidad).get().await()
+        val dataSnapshot = database.child("Entidad").child(idEntidad.toString()).get().await()
         var nombre: String? = ""
 
         if (dataSnapshot.exists()) {
@@ -219,6 +233,57 @@ class Funciones {
         }
 
         nombre
+    }
+
+    fun obtenerCategorias(contexto: Context) : List<Categoria>{
+        return listOf(
+            Categoria(
+                contexto,
+                "Gastronomía",
+                "cat_gastronomia"
+            ),
+            Categoria(contexto, "Vehículos", "cat_vehiculos"),
+            Categoria(
+                contexto,
+                "Salud y Bienestar",
+                "cat_salud_y_bienestar"
+            ),
+            Categoria(contexto, "Hogar", "cat_hogar"),
+            Categoria(
+                contexto,
+                "Viajes y Turismo",
+                "cat_viajes"
+            ),
+            Categoria(
+                contexto,
+                "Entretenimiento",
+                "cat_entretenimiento"
+            ),
+            Categoria(
+                contexto,
+                "Indumentaria",
+                "cat_indumentaria"
+            ),
+            Categoria(
+                contexto,
+                "Supermercados",
+                "cat_supermercados"
+            ),
+            Categoria(
+                contexto,
+                "Electrónica",
+                "cat_electronica"
+            ),
+            Categoria(contexto, "Educación", "cat_educacion"),
+            Categoria(contexto, "Niños", "cat_ninos"),
+            Categoria(contexto, "Regalos", "cat_regalos"),
+            Categoria(contexto, "Bebidas", "cat_bebidas"),
+            Categoria(contexto, "Joyería", "cat_joyeria"),
+            Categoria(contexto, "Librerías", "cat_librerias"),
+            Categoria(contexto, "Mascotas", "cat_mascotas"),
+            Categoria(contexto, "Servicios", "cat_servicios"),
+            Categoria(contexto, "Otros", "cat_otros")
+        )
     }
 }
 

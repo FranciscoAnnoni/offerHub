@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/fondo"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardProductImages"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/viewPagerProductImages"
+                android:layout_width="match_parent"
+                android:src="@drawable/cat_default"
+                android:scaleType="centerCrop"
+                android:layout_height="match_parent"/>
+
+            <ImageView
+                android:id="@+id/imageClose"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_close"
+                android:padding="5dp"
+                android:layout_margin="10dp"
+                app:tint="@color/g_white"/>
+            <ImageView
+                android:id="@+id/imageFav"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_fav"
+                android:padding="5dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="right"
+                app:tint="@color/g_white"/>
+
+
+        </androidx.cardview.widget.CardView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearTitlePrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
+            app:layout_constraintTop_toBottomOf="@id/cardProductImages"
+            android:background="@drawable/rounded_detail_titulobox_blanco"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/promoBenef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textColor="#462e7a"
+                android:layout_marginStart="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
+                android:text="XX"
+                app:layout_constraintBottom_toTopOf="@+id/guideline" />
+            <TextView
+                android:id="@+id/promoBenefTipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textColor="#462e7a"
+                app:layout_constraintStart_toEndOf="@+id/promoBenef"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:text="%"
+                app:layout_constraintBottom_toTopOf="@+id/guideline" />
+
+            <TextView
+                android:id="@+id/promoComercio"
+                android:textColor="#8b52f6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintStart_toEndOf="@+id/promoBenefTipo"
+                app:layout_constraintEnd_toStartOf="@+id/icono_enlace"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
+                android:text="Comercio"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/guideline" />
+            <ImageView
+                android:id="@+id/icono_enlace"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_link"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="true"
+                android:background="@drawable/border_promocion"
+                android:backgroundTint="#7D3DD0"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="20dp"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"
+                android:contentDescription="Abrir enlace en navegador" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.9" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/infoPromo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearTitlePrice"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/promoTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripcion"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                 />
+            <TextView
+                android:id="@+id/promoDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripcion"
+                android:textColor="@color/g_gray700"
+                android:textSize="15sp"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintTop_toBottomOf="@id/promoTitulo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                 />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerDisponibilidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintTop_toBottomOf="@+id/promoDesc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/tituloDisponibilidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/diasPromo"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"> <!-- Añade android:gravity -->
+
+                <ImageView
+                    android:id="@+id/imgDisponibilidad"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_calendar"
+                    app:tint="#b5abc9"/>
+
+                <TextView
+                    android:id="@+id/txtDisponibilidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#b5abc9"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:text="Disponibilidad de la Promoción"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/diasPromo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="30dp"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tituloDisponibilidad"
+                android:orientation="horizontal">
+
+                <!-- Círculo para el día Lunes -->
+                <TextView
+                    android:id="@+id/circleLunes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="LU" />
+
+                <!-- Círculo para el día Martes -->
+                <TextView
+                    android:id="@+id/circleMartes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="MA" />
+                <TextView
+                    android:id="@+id/circleMiercoles"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="MI" />
+                <TextView
+                    android:id="@+id/circleJueves"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="JU" />
+                <TextView
+                    android:id="@+id/circleViernes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="VI" />
+                <TextView
+                    android:id="@+id/circleSabado"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="SA" />
+                <TextView
+                    android:id="@+id/circleDomingo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="DO" />
+                <!-- Agrega círculos para los otros días de la semana de manera similar -->
+
+            </LinearLayout>
+                <TextView
+                    android:id="@+id/promoVigencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/g_gray700"
+                    android:textSize="17sp"
+                    android:layout_marginTop="20dp"
+                    android:paddingLeft="40dp"
+                    android:textStyle="bold"
+                    android:gravity="left"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/diasPromo"
+                    android:text="Desde 10/10/2023 hasta 10/10/2024" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerTope"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/containerDisponibilidad"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/tituloTope"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"> <!-- Añade android:gravity -->
+
+                    <ImageView
+                        android:id="@+id/imgTope"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_reintegro"
+                        app:tint="#b5abc9"/>
+
+                    <TextView
+                        android:id="@+id/txtTituloTope"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#b5abc9"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:text="Tope de Reintegro"/>
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtTope"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/g_gray700"
+                    android:textSize="17sp"
+                    android:layout_marginTop="20dp"
+                    android:paddingLeft="40dp"
+                    android:textStyle="bold"
+                    android:gravity="left"
+                    app:layout_constraintTop_toBottomOf="@id/tituloTope"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="Se le enviara un mail recordandole de chequear el reintegro."/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerTarjetas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/containerTope"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/tituloSeccionTarjetas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"> <!-- Añade android:gravity -->
+
+                    <ImageView
+                        android:id="@+id/imgSeccionTarjetas"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_creditcard"
+                        app:tint="#b5abc9"/>
+
+                    <TextView
+                        android:id="@+id/txtSeccionTarjetas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#b5abc9"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:text="Tarjetas de la Promoción"/>
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewTarjetas"
+                    app:layout_constraintTop_toBottomOf="@id/tituloSeccionTarjetas"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerNotificar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="35dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/containerTarjetas"
+                android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/tituloNotifReintegro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/txtNotifReintegroExplicacion"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"> <!-- Añade android:gravity -->
+
+                <ImageView
+                    android:id="@+id/imgNotifReintegro"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_reintegro"
+                    app:tint="#b5abc9"/>
+
+                <TextView
+                    android:id="@+id/txtNotifReintegro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#b5abc9"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:text="Notificar Reintegro"/>
+            </LinearLayout>
+                <TextView
+                    android:id="@+id/txtNotifReintegroExplicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/g_gray700"
+                    app:layout_constraintTop_toTopOf="@id/tituloNotifReintegro"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="15sp"
+                    android:paddingLeft="40dp"
+                    android:textStyle="bold"
+                    android:text="Se le enviara un mail recordandole de chequear el reintegro."/>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtNotifReintegroExplicacion"
+                    android:layout_gravity="center">
+
+                    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                        android:id="@+id/btnNotificar"
+                        style="@style/RoundedButtonBackgroundLight"
+                        android:layout_width="wrap_content"
+                        android:padding="5dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Notificar"
+                        android:textSize="17sp" />
+
+                </androidx.cardview.widget.CardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/tituloTyc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/containerNotificar"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/imgTyC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_info"
+                    app:tint="#b5abc9"/>
+
+                <TextView
+                    android:id="@+id/txtTyC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#b5abc9"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:text="Terminos y Condiciones"/>
+
+                <ImageView
+                    android:id="@+id/imageToggleTyC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical|right"
+                    android:src="@drawable/ic_expand_more"
+                    android:layout_margin="10dp"
+                    app:tint="#b5abc9"
+                    />
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/promoTyC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="40dp"
+                style="@style/h3"
+                android:textColor="@color/g_gray700"
+                app:layout_constraintTop_toBottomOf="@id/tituloTyc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:text="Terminos y Condiciones"/>
+            <View
+                android:id="@+id/topLine"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/g_line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/promoTyC"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

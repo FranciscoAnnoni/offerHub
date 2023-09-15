@@ -9,7 +9,20 @@
         android:id="@+id/homeFragment"
         android:name="com.example.offerhub.fragments.shopping.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_promoDetailFragment"
+            app:destination="@id/promoDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/promoDetailFragment"
+        android:name="com.example.offerhub.fragments.shopping.PromoDetailFragment"
+        android:label="PromoDetailFragment"
+        tools:layout="@layout/fragment_promo_detail" >
+    <argument
+        android:name="promocion"
+        app:argType="com.example.offerhub.Promocion" />
+    </fragment>
     <fragment
         android:id="@+id/favFragment"
         android:name="com.example.offerhub.fragments.shopping.FavFragment"

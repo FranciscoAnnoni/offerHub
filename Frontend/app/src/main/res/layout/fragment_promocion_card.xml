@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:id="@+id/layoutTarjetaPromo"
+    android:layout_height="wrap_content"
+    android:background="@color/fondo"
+    android:layout_marginBottom="20dp"
+    android:layout_marginLeft="20dp"
+
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:id="@+id/cuadrado1"
+        android:layout_width="120dp"
+        android:layout_height="170dp"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        android:background="@drawable/border_promocion"
+        >
+
+        <ImageView
+            android:id="@+id/promoFav"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_fav"
+            android:layout_gravity="right"
+            />
+
+
+        <!-- Agrega tu imagen aquí -->
+        <ImageView
+            android:id="@+id/imgComercio"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="3dp"
+            android:padding="10dp"
+            android:src="@drawable/cat_default"
+            android:background="@drawable/border_imagen_promocion"
+
+            />
+
+        <!-- Agrega tu texto aquí -->
+        <TextView
+            android:id="@+id/txtCategoria"
+            style="@style/blueButtonStyle"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:maxWidth="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Havanna"
+            android:textSize="14sp" />
+
+</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
