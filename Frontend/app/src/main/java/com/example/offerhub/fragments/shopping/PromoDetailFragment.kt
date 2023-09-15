@@ -120,6 +120,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
             // Cambiar la imagen según el estado
             if (isFavorite) {
+                userViewModel.favoritos.add(promocion)
                 coroutineScope.launch {
                     instancia.agregarPromocionAFavoritos(
                         userViewModel.id.toString(),
@@ -128,6 +129,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 }
             } else {
                 coroutineScope.launch {
+                    userViewModel.favoritos.remove(promocion)
                     instancia.elimiarPromocionDeFavoritos(
                         userViewModel.id.toString(),
                         promocion.id.toString()
