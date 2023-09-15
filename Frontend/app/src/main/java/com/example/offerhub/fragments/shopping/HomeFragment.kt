@@ -3,6 +3,7 @@ package com.example.offerhub.fragments.shopping
 import CategoryGridAdapter
 import PromocionGridAdapter
 import PromocionGridPorCategoriaAdapter
+import UserViewModel
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,8 @@ import android.widget.TextView
 import androidx.core.view.size
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,8 +43,8 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentHomeBinding
     private var scrollPosition: Int = 0
     var isFavorite = false
-    var modoVerTodas =false
-    var listenerHabilitado = true
+    var listenerHabilitado = false
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +52,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
+
         return binding.root
     }
 
@@ -64,12 +68,10 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 
-        fun cargarVista() {
-            if (modoVerTodas) {
-                val progressBar = view.findViewById<ProgressBar>(R.id.progressBar2)
 
+        fun cargarVista() {
+            if (userViewModel.homeModoFull=="1") {
                 val promoFav = view.findViewById<ImageView>(R.id.promoFav)
-                progressBar.visibility = View.VISIBLE
                 promosContainer.visibility=View.VISIBLE
                 homeScrollView.visibility = View.GONE
                 listView.visibility = View.GONE
@@ -78,9 +80,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                 // Llamar a la función que obtiene los datos.
                 val job = coroutineScope.launch {
                     try {
-                        val datos: List<Promocion> =
-                            funciones.obtenerPromociones(funciones.traerUsuarioActual())
-                        val adapter = PromocionGridAdapter(view.context, datos)
+                        val adapter = PromocionGridAdapter(view.context, userViewModel.listadoDePromosDisp)
                         listView.adapter = adapter
                         listView.setOnItemClickListener { parent, _, position, _ ->
                             val selectedPromo =
@@ -92,14 +92,12 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                             findNavController().navigate(action)
                         }
                         listView.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
 
                     } catch (e: Exception) {
                         println("Error al obtener promociones: ${e.message}")
                     }
                 }
             } else {
-                val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
                 //val listView = view.findViewById<GridView>(R.id.promocionesGridView)
                 //  val promoFav = view.findViewById<ImageView>(R.id.promoFav)
 
@@ -109,66 +107,17 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                 // Llamar a la función que obtiene los datos.
                 val job = coroutineScope.launch {
 
-
+                    // Seteo Visibilidad
                     homeScrollView.visibility = View.VISIBLE
-                    progressBar.visibility = View.VISIBLE
                     categoriasContainer.visibility = View.GONE
                     promosContainer.visibility = View.GONE
                     categoriasContainer.visibility = View.GONE
-                    val categorias = listOf(
-                        Categoria(
-                            view.context,
-                            "Gastronomía",
-                            "cat_gastronomia"
-                        ),
-                        Categoria(view.context, "Vehículos", "cat_vehiculos"),
-                        Categoria(
-                            view.context,
-                            "Salud y Bienestar",
-                            "cat_salud_y_bienestar"
-                        ),
-                        Categoria(view.context, "Hogar", "cat_hogar"),
-                        Categoria(
-                            view.context,
-                            "Viajes y Turismo",
-                            "cat_viajes"
-                        ),
-                        Categoria(
-                            view.context,
-                            "Entretenimiento",
-                            "cat_entretenimiento"
-                        ),
-                        Categoria(
-                            view.context,
-                            "Indumentaria",
-                            "cat_indumentaria"
-                        ),
-                        Categoria(
-                            view.context,
-                            "Supermercados",
-                            "cat_supermercados"
-                        ),
-                        Categoria(
-                            view.context,
-                            "Electrónica",
-                            "cat_electronica"
-                        ),
-                        Categoria(view.context, "Educación", "cat_educacion"),
-                        Categoria(view.context, "Niños", "cat_ninos"),
-                        Categoria(view.context, "Regalos", "cat_regalos"),
-                        Categoria(view.context, "Bebidas", "cat_bebidas"),
-                        Categoria(view.context, "Joyería", "cat_joyeria"),
-                        Categoria(view.context, "Librerías", "cat_librerias"),
-                        Categoria(view.context, "Mascotas", "cat_mascotas"),
-                        Categoria(view.context, "Servicios", "cat_servicios"),
-                        Categoria(view.context, "Otros", "cat_otros")
-                    )
-                    val todasPromociones: List<Promocion> =
-                        Funciones().obtenerPromociones(Funciones().traerUsuarioActual())
+                    //Obtengo el listado de categorias.
+                    val categorias = funciones.obtenerCategorias(view.context)
                     for (categoria in categorias) {
                         // Crea un título de categoría
                         val promociones: List<Promocion> =
-                            todasPromociones.filter { it.categoria == categoria.nombre }.take(11)
+                            userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
                         if (promociones.size > 0) {
                             val categoriaTitle = TextView(requireContext())
                             categoriaTitle.text = categoria.nombre
@@ -208,32 +157,44 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
                         }
                     }
-                    progressBar.visibility = View.GONE
                     categoriasContainer.visibility = View.VISIBLE
                 }
             }
         }
-        val job = coroutineScope.launch {
-            modoVerTodas= Funciones().traerUsuarioActual()?.homeModoFull == "1"
-            Funciones().traerUsuarioActual()?.homeModoFull?.let { Log.d("modoFull", it) }
-listenerHabilitado=false
-            mySwitch.isChecked=modoVerTodas
+        coroutineScope.launch {
+            val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+            progressBar.visibility = View.VISIBLE
+            if (userViewModel.listadoDePromosDisp.isEmpty()) {
+                // Si no, obtén las promociones y guárdalas en el ViewModel
+                userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(Funciones().traerUsuarioActual())
+            }
+            Log.d("homeModoFull",userViewModel.homeModoFull.toString())
+            if(userViewModel.homeModoFull==null){
+                userViewModel.homeModoFull=Funciones().traerUsuarioActual()?.homeModoFull
+            }
+            if(userViewModel.id==null){
+                userViewModel.id=Funciones().traerUsuarioActual()?.id
+            }
+            Log.d("homeModoFull",userViewModel.homeModoFull.toString())
+            listenerHabilitado=false
+            mySwitch.isChecked= userViewModel.homeModoFull=="1"
             listenerHabilitado=true
+            progressBar.visibility = View.GONE
+        }.invokeOnCompletion {
             cargarVista()
         }
-        mySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        mySwitch.setOnClickListener {
             if(listenerHabilitado){
-                modoVerTodas=!modoVerTodas
+
             val coroutineScope = CoroutineScope(Dispatchers.Main)
 
             // Llamar a la función que obtiene los datos.
             val job = coroutineScope.launch {
-                Funciones().traerUsuarioActual()?.let {
+                userViewModel.homeModoFull=if(userViewModel.homeModoFull=="1") "0" else "1"
                     EscribirBD().editarAtributoDeClase("Usuario",
-                        it.id,"homeModoFull",if(modoVerTodas) "1" else "0")
-                }
+                        userViewModel.id.toString(),"homeModoFull",userViewModel.homeModoFull.toString())
+                cargarVista()
             }
-            cargarVista()
         }
         }
 

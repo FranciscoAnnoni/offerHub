@@ -48,7 +48,11 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
                 val promocion = promociones[position]
                 val instancia = Funciones()
                 val promocionViewHolder = holder as PromocionViewHolder
-
+                if(position==0){
+                    val params = holder.layoutTarjetaPromo.layoutParams as ViewGroup.MarginLayoutParams
+                    params.marginStart = 0
+                    holder.layoutTarjetaPromo.layoutParams = params
+                }
                 promocionViewHolder.textViewCategory.text = promocion.titulo
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -109,6 +113,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
         val textViewCategory = itemView.findViewById<TextView>(R.id.txtCategoria)
         val favIcon = itemView.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = itemView.findViewById<ImageView>(R.id.imgComercio)
+        val layoutTarjetaPromo = itemView.findViewById<ConstraintLayout>(R.id.layoutTarjetaPromo)
         // Agrega más vistas aquí para mostrar detalles adicionales de la promoción si es necesario
         init {
             itemView.setOnClickListener {
