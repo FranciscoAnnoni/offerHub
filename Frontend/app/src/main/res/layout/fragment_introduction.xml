@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fondo">
+    android:background="@drawable/fondo_degradado">
 
     <!--
 <ImageView
@@ -34,12 +34,68 @@
     app:layout_constraintTop_toTopOf="@id/guideline4"
     app:layout_constraintVertical_bias="0.321" />
 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoIntro">
+
+        <TextView
+            style="@style/titulos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Con "
+            android:textColor="@color/violeta"
+            android:textSize="25sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoIntro"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/offerHub"
+            style="@style/titulos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="OfferHub"
+            android:textColor="@color/violetaMasClaro"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoIntro"
+            tools:ignore="MissingConstraints" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tituloIntroduccion"
+        style="@style/titulos"
+        android:layout_width="310dp"
+        android:layout_height="169dp"
+        android:gravity="center"
+        android:layout_marginTop="-6dp"
+        android:text="centraliza todas tus promociones en un solo lugar!"
+        android:textColor="@color/violeta"
+        android:textSize="25sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoIntro"
+        tools:ignore="MissingConstraints" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/logoIntro"
         android:layout_width="593dp"
         android:layout_height="303dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="75dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,34 +104,17 @@
         app:lottie_rawRes="@raw/animation4"
         tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/tituloIntroduccion"
-        style="@style/titulos"
-        android:layout_width="310dp"
-        android:layout_height="169dp"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:text="Centraliza todas tus promociones en un solo lugar"
-        android:textColor="@color/violeta"
-        android:textSize="35sp"
-        android:textStyle="bold|normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logoIntro"
-        tools:ignore="MissingConstraints" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/botonStart"
         style="@style/RoundedButtonBackground"
-        android:layout_width="132dp"
-        android:layout_height="57dp"
+        android:layout_width="112dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="32dp"
         android:backgroundTint="@color/violetaClaro"
         android:text="Continuar"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 

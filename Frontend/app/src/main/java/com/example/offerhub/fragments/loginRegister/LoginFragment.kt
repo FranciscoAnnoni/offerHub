@@ -69,7 +69,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)
             ) {
-                binding.btnLogin.performClick()
                 hideKeyboard()
                 return@setOnEditorActionListener true
             }
