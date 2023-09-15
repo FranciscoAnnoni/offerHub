@@ -1,26 +1,28 @@
 package com.example.offerhub.fragments.shopping
 
-import CategoryGridAdapter
 import PromocionGridAdapter
+import android.R.attr.x
+import android.R.attr.y
 import android.os.Bundle
-import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.ProgressBar
-import androidx.core.view.size
-import androidx.core.widget.NestedScrollView
+import androidx.appcompat.widget.ForwardingListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
-import com.example.offerhub.data.Categoria
+import com.example.offerhub.Usuario
 import com.example.offerhub.databinding.FragmentHomeBinding
-import com.example.offerhub.funciones.getFavResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +33,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentHomeBinding
     private var scrollPosition: Int = 0
     var isFavorite = false
+
 
     override fun onPause() {
         super.onPause()
@@ -58,6 +61,9 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         var funciones = Funciones()
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
         val listView = view.findViewById<GridView>(R.id.promocionesGridView)
+
+        //registerForContextMenu(listView)
+
         val promoFav = view.findViewById<ImageView>(R.id.promoFav)
         progressBar.visibility = View.VISIBLE
         listView.visibility = View.GONE
@@ -74,31 +80,10 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                     val selectedPromo = adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
                     val action = HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(selectedPromo)
                     findNavController().navigate(action)
+
                 }
-//                promoFav.setOnClickListener {  view->
-//                    isFavorite = !isFavorite // Cambiar el estado al contrario
-//                    val selectedPromoId = view.getTag(R.id.promocion_id) as String
-//                    // Cambiar la imagen según el estado
-//                    var favoriteImageResource =R.drawable.ic_fav
-//                    if (isFavorite) {
-//                        coroutineScope.launch {
-//                            funciones.agregarPromocionAFavoritos(
-//                                funciones.traerUsuarioActual()?.id.toString(),
-//                                selectedPromoId
-//                            )
-//                        }
-//                    } else {
-//                        coroutineScope.launch {
-//                            funciones.elimiarPromocionDeFavoritos(
-//                                funciones.traerUsuarioActual()?.id.toString(),
-//                                selectedPromoId
-//                            )
-//                        }
-//                    }
-//
-//                    // Establecer la imagen en la ImageView
-//                    promoFav.setImageResource(getFavResource(isFavorite))
-//                }
+
+               // listView.setOnItemLongClickListener { parent, view, position, id ->  }
                 val alturaTotal = resources.getDimensionPixelSize(R.dimen.altura_grid_view)
                 val params = listView.layoutParams
                 params.height = alturaTotal
@@ -110,7 +95,6 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                 println("Error al obtener promociones: ${e.message}")
             }
         }
-
 
 
     }
@@ -131,4 +115,50 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
         return alturaTotal
     }
+
+
+    /*override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+       // val promocion = v.getTag(R.id.promocion_tag) as Promocion
+
+        *//*val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val funciones = Funciones()
+        *//*
+        val info = menuInfo as AdapterView.AdapterContextMenuInfo
+        val position = info.position
+
+        val promocion = listaPromociones[position]
+
+        coroutineScope.launch {
+            isFavorite= funciones.traerUsuarioActual()
+                ?.let { funciones.existePromocionEnFavoritos(it,promocion.id) } == true
+        }
+
+        if (isFavorite) {
+            menu.add(0, v.id, 0, "Quitar de Favoritos")
+        } else {
+            menu.add(0, v.id, 0, "Agregar a Favoritos")
+        }
+
+
+
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+
+        if(item.title == "Quitar de Favoritos"){
+                //your code
+            }
+        else if(item.title == "Agregar a Favoritos"){
+                //your code
+            }else{
+            return false;
+        }
+        return true;
+    }*/
 }

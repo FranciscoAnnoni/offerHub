@@ -22,9 +22,9 @@
             <ImageView
                 android:id="@+id/viewPagerProductImages"
                 android:layout_width="match_parent"
-                android:src="@drawable/cat_default"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:layout_height="match_parent"/>
+                android:src="@drawable/cat_default" />
 
             <ImageView
                 android:id="@+id/imageClose"
