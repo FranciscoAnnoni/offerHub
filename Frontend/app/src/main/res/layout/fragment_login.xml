@@ -16,9 +16,9 @@
         <!--                  Imagen                -->
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="24dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
             android:contentDescription="@null"
             android:src="@drawable/offerhub_logo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
         <TextView
             android:id="@+id/textInicioSesion"
             style="@style/titulos"
-            android:layout_marginTop="-9dp"
+            android:layout_marginTop="-10dp"
             android:text="OfferHub"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,46 +39,53 @@
             tools:ignore="MissingConstraints" />
 
         <!--                  Campos para completar por el usuario                -->
+
         <TextView
             android:id="@+id/nombreEmail"
             style="@style/textoChicoVioleta"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:text="@string/email"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="-15dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/textInicioSesion"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edEmailLogin"
             style="@style/EditTextRounded"
+            android:layout_width="290dp"
+            android:layout_height="45dp"
             android:hint="@string/email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/nombreEmail"
             tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/nombrePassword"
             style="@style/textoChicoVioleta"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginStart="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:padding="5dp"
+            android:layout_marginStart="-15dp"
             android:text="@string/password"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/edEmailLogin"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edPasswordLogin"
             style="@style/EditTextRounded"
+            android:layout_width="290dp"
+            android:layout_height="45dp"
             android:hint="@string/password"
             android:inputType="textPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/nombrePassword"
             tools:ignore="MissingConstraints" />
 
@@ -99,11 +106,11 @@
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/btnLogin"
             style="@style/RoundedButtonBackground"
-            android:layout_width="140dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="48dp"
+            android:layout_width="112dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="55dp"
             android:text="Continuar"
-            android:textSize="17sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edPasswordLogin"
@@ -126,18 +133,17 @@
         <ImageView
             android:id="@+id/googleLogin"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:src="@drawable/google_login"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/registerNow" />
 
         <TextView
             style="@style/textoChicoNegro"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="17dp"
             android:text="¿No tenés una cuenta?"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -178,8 +184,7 @@
         <TextView
             android:id="@+id/sosEmpresa"
             style="@style/textoChicoNegro"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="25dp"
             android:text="¿Sos una Empresa?"
             app:layout_constraintBottom_toBottomOf="@id/loginEmpresa"
             app:layout_constraintEnd_toEndOf="parent"
@@ -218,14 +223,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.10" />
+            app:layout_constraintGuide_percent="0.15" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.90" />
+            app:layout_constraintGuide_percent="0.85" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
