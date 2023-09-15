@@ -84,14 +84,54 @@
         android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="@id/homeHeader"
         app:layout_constraintTop_toBottomOf="@id/homeHeader"
+        app:layout_constraintEnd_toStartOf="@id/switchHomeMode"
         android:textSize="25sp"
         />
-
+    <Switch
+        android:id="@+id/switchHomeMode"
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/homeHeader"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@id/tvPromocionesDisponibles"
+        android:layout_height="wrap_content"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/homeScrollView"
+        android:visibility="gone"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPromocionesDisponibles"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+    <LinearLayout
+        android:id="@+id/categoriasContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
     <LinearLayout
         android:id="@+id/containerPromos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPromocionesDisponibles"
@@ -120,7 +160,7 @@
             android:gravity="center"
             />
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progressBar2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"

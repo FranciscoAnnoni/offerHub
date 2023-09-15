@@ -86,7 +86,8 @@ class RegisterViewModel @Inject constructor(
            listOf(),
            listOf(),
            listOf(),
-           listOf()
+           listOf(),
+           "0"
        )
 
         val database: FirebaseDatabase =

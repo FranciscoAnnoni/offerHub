@@ -251,7 +251,8 @@ class LecturaBD {
                                             data.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                             data.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                             data.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {})
+                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                                    data.child("homeModoFull").getValue(String::class.java)
                                         )
                                     }
                                 }

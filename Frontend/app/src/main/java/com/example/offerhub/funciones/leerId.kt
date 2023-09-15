@@ -97,6 +97,7 @@ class LeerId {
 
         if (dataSnapshot.exists()) {
             val correo = dataSnapshot.child("correo").getValue(String::class.java)
+            val homeModoFull = dataSnapshot.child("homeModoFull").getValue(String::class.java)?:"0"
             val nombre = dataSnapshot.child("nombre").getValue(String::class.java) ?: ""
             val tarjetas = dataSnapshot.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
             val favoritos = dataSnapshot.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {})
@@ -104,7 +105,7 @@ class LeerId {
             val wishlistRubro = dataSnapshot.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {})
             val promocionesReintegro = dataSnapshot.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {})
 
-            Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro)
+            Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro,homeModoFull)
         } else {
             Log.d("ID", "El usuario es NULO")
             null // El usuario no existe
