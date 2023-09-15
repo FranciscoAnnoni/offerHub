@@ -44,7 +44,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
         var wishlistComercio: List<String?> = listOf("-NcDHYhXsoVxe4Hr_Qtj", "-NcDHahG-cL1CBcg3amc", "-NcDHcR075g8wtxSJQ46")
         var wishlistRubro: List<String?> = listOf("Supermercados")
         var reintegro: List<String?> = listOf("-NcDH_0240n4Qg2x_GN1", "-NcDHbt8duv0PY2Mg-HS")
-        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro)
+        var usuario = Usuario("1","Adam Bareiro", "adam9@gmail.com", tarjetas, favoritos, wishlistComercio, wishlistRubro, reintegro,"0")
         var promocionMock = Promocion(
             "123456",
             "Gastronomía",
