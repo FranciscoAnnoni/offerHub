@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.linearLogOut.setOnClickListener{
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)
             builder.setTitle("Cerrar sesión")
             builder.setMessage("¿Está seguro de que desea cerrar sesión?")
 

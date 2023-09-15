@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.settings
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import com.example.offerhub.Usuario
 import com.example.offerhub.activities.LoginRegisterActivity
 import com.example.offerhub.data.User
 import com.example.offerhub.databinding.FragmentUserAccountBinding
+import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.UserAccountViewModel
@@ -54,6 +56,30 @@ class UserAccountFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.imageCloseUserAccount.setOnClickListener {
             findNavController().navigate(R.id.action_userAccountFragment_to_profileFragment)
+        }
+
+        binding.tvUpdatePassword.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Restablecer Contraseña")
+            builder.setMessage("¿Está seguro de que deseas cambiar la Contraseña actual?\nRecibirás un correo electrónico para restablecerla.")
+
+
+            // Agregar un botón "Sí" para confirmar el cierre de sesión
+            builder.setPositiveButton("Sí") { dialogInterface, _ ->
+                currentUser?.email?.let { it1 -> auth.sendPasswordResetEmail(it1) }
+                Snackbar.make(requireView(), "Se ha enviado un correo electrónico a su cuenta para restablecer la contraseña.", Snackbar.LENGTH_LONG).show()
+            }
+
+            // Agregar un botón "No" para cancelar el cierre de sesión
+            builder.setNegativeButton("No") { dialogInterface, _ ->
+                // Cierra el cuadro de diálogo
+                dialogInterface.dismiss()
+            }
+
+            // Mostrar el cuadro de diálogo
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+
         }
 
         rootView = view // Asignar la vista raíz del fragmento

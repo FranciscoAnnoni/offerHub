@@ -9,7 +9,9 @@
     <!--                  Inicio del apartado de Login                  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-12dp">
 
         <!--                  Imagen                -->
         <ImageView
@@ -25,11 +27,11 @@
 
         <!--                  Titulo                -->
         <TextView
-            style="@style/titulos"
-            android:textStyle="bold"
             android:id="@+id/textInicioSesion"
+            style="@style/titulos"
             android:layout_marginTop="-9dp"
             android:text="OfferHub"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +43,8 @@
             android:id="@+id/nombreEmail"
             style="@style/textoChicoVioleta"
             android:layout_marginHorizontal="40dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="20dp"
             android:padding="5dp"
             android:text="@string/email"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +64,8 @@
             android:id="@+id/nombrePassword"
             style="@style/textoChicoVioleta"
             android:layout_marginHorizontal="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:text="@string/password"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,25 +75,33 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edPasswordLogin"
             style="@style/EditTextRounded"
-            android:layout_marginTop="4dp"
             android:hint="@string/password"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.506"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/nombrePassword"
             tools:ignore="MissingConstraints" />
 
-
         <!--                  Boton de Continuar para enviar los datos                -->
 
         <!--                  Texto para registrarse debajo del boton de login                -->
+        <TextView
+            android:id="@+id/tvUpdatePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text=" Olvidé mi contraseña/Cambiar contraseña"
+            app:layout_constraintStart_toStartOf="@id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/edPasswordLogin"
+            app:spinning_bar_color="@color/white"
+            tools:ignore="MissingConstraints" />
+
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/btnLogin"
             style="@style/RoundedButtonBackground"
-            android:layout_width="150dp"
-            android:layout_height="54dp"
-            android:layout_marginTop="40dp"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="48dp"
             android:text="Continuar"
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -99,22 +111,11 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
-            style="@style/textoChicoNegro"
-            android:layout_marginTop="8dp"
-            android:text="¿No tenés una cuenta?"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnLogin"
-            tools:ignore="MissingConstraints" />
-
-
-        <!--  Esto es el nombre Registrarse en violeta -->
-        <TextView
-            style="@style/textoChicoVioleta"
             android:id="@+id/registerNow"
+            style="@style/textoChicoVioleta"
             android:layout_width="146dp"
             android:layout_height="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:gravity="center"
             android:text="Registrate"
             app:layout_constraintEnd_toEndOf="parent"
@@ -126,11 +127,25 @@
             android:id="@+id/googleLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:src="@drawable/google_login"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registerNow"/>
+            app:layout_constraintTop_toBottomOf="@id/registerNow" />
+
+        <TextView
+            style="@style/textoChicoNegro"
+            android:layout_marginTop="16dp"
+            android:text="¿No tenés una cuenta?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin"
+            tools:ignore="MissingConstraints" />
+
+
+        <!--  Esto es el nombre Registrarse en violeta -->
 
 
         <!--                  Esto es la parte de Abajo                -->
@@ -152,11 +167,11 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="120dp"
+            android:layout_marginBottom="35dp"
             android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@id/sosEmpresa"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/sosEmpresa"
-            android:layout_marginBottom="35dp"
             tools:ignore="MissingConstraints" />
 
 
@@ -164,37 +179,36 @@
             android:id="@+id/sosEmpresa"
             style="@style/textoChicoNegro"
             android:layout_marginTop="18dp"
+            android:layout_marginBottom="30dp"
             android:text="¿Sos una Empresa?"
+            app:layout_constraintBottom_toBottomOf="@id/loginEmpresa"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/loginEmpresa"
-            android:layout_marginBottom="30dp"
             tools:ignore="MissingConstraints" />
 
         <TextView
-            style="@style/textoChicoVioleta"
             android:id="@+id/loginEmpresa"
+            style="@style/textoChicoVioleta"
             android:layout_marginHorizontal="40dp"
             android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="Registrar o Ingresar como Empresa"
+            app:layout_constraintBottom_toBottomOf="@id/linea2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="@id/linea2"
-            />
+            tools:ignore="MissingConstraints" />
 
         <View
             android:id="@+id/linea2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="18dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/fondo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="10dp"
             tools:ignore="MissingConstraints" />
 
 
@@ -204,7 +218,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.0" />
+            app:layout_constraintGuide_percent="0.10" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
