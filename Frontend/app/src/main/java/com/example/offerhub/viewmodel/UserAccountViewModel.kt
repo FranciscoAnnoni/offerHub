@@ -50,6 +50,11 @@ class UserAccountViewModel @Inject constructor(
         getUser()
     }
 
+    val usuario = auth.currentUser;
+    val userUid = usuario?.uid
+    val instancia = Funciones()
+
+
     //OBTENEMOS EL USUAREIO EN CUESTION
     fun getUser() {
         viewModelScope.launch {
@@ -59,7 +64,7 @@ class UserAccountViewModel @Inject constructor(
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
             try {
-               val instancia = Funciones()
+
                val usuario = instancia.traerUsuarioActual()
 
                 viewModelScope.launch {
@@ -96,8 +101,6 @@ class UserAccountViewModel @Inject constructor(
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
             try {
-                val userUid = auth.currentUser?.uid
-                val instancia = Funciones()
 
                 userUid?.let { it1 -> instancia.editarPerfil(it1,"nombre",nombreyApellido) }
 
@@ -119,9 +122,21 @@ class UserAccountViewModel @Inject constructor(
                 Log.d("Resultado","ERROR")
             }
         }
+
+
     }
 
 
+    fun deleteUser() {
+        // Current signed-in user to delete
+        auth.signOut()
+        usuario?.delete()
+        if (userUid != null) {
+            instancia.elimiarUsuario(userUid)
+        }
+
+
+    }
 
      /*
     //GUARDAR EL USUARIO
