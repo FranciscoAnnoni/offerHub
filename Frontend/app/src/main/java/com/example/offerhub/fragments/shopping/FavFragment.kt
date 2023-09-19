@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
+import com.example.offerhub.Globals
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
@@ -51,7 +52,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
         // Llamar a la función que obtiene los datos.
         val job = coroutineScope.launch {
             try {
-                val usuarioActual = (funciones.traerUsuarioActual() as Usuario?)!!
+                val usuarioActual = Globals.asegurarUsuario()!!
                 Log.d("Hola","1")
 
                 coroutineScope.launch {
@@ -68,7 +69,7 @@ class FavFragment: Fragment(R.layout.fragment_fav){
                         Log.d("Hola","4")
                         listView.visibility = View.VISIBLE
                         tvNoFavoritos.visibility = View.GONE
-                        val adapter = PromocionGridAdapter(view.context, userViewModel.favoritos)
+                        val adapter = PromocionGridAdapter(view.context, userViewModel.favoritos,userViewModel)
                         listView.adapter = adapter
 
                         listView.setOnItemClickListener { parent, _, position, _ ->

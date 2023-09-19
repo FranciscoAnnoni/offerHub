@@ -5,5 +5,6 @@ class UserViewModel : ViewModel() {
     var id: String?=null
     var listadoDePromosDisp: List<Promocion> = emptyList()
     var favoritos: MutableList<Promocion> = mutableListOf()
+    var reintegros: MutableList<Promocion> = mutableListOf()
     var homeModoFull: String? = null
 }

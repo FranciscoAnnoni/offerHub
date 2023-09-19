@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
+import com.example.offerhub.Globals
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.Usuario
@@ -15,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PromocionGridAdapter(private val context: Context, private val promociones: List<Promocion>) : BaseAdapter() {
+class PromocionGridAdapter(private val context: Context, private val promociones: List<Promocion>,private val userViewModel: UserViewModel) : BaseAdapter() {
 
     override fun getCount(): Int {
         return promociones.size
@@ -71,8 +72,7 @@ class PromocionGridAdapter(private val context: Context, private val promociones
             if (logoBitmap != null) {
                 imgViewCategory.setImageBitmap(logoBitmap)
             }*/
-            val isFavorite= instancia.traerUsuarioActual()
-                ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
+            val isFavorite= userViewModel.favoritos.contains(promocion)
             favIcon.setImageResource(getFavResource(isFavorite))
         }
 

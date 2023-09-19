@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ShoppingActivity : AppCompatActivity() {
-    var listadoDePromosDisp: List<Promocion> = listOf()
     val binding by lazy {
         ActivityShoppingBinding.inflate(layoutInflater)
     }

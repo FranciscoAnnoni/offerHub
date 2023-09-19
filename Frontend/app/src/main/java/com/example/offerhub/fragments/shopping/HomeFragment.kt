@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.EscribirBD
 import com.example.offerhub.Funciones
+import com.example.offerhub.Globals
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
@@ -77,6 +78,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         var instancia = InterfaceSinc()
         var funciones = Funciones()
+
         val categoriasContainer = view.findViewById<LinearLayout>(R.id.categoriasContainer)
         val promosContainer = view.findViewById<LinearLayout>(R.id.containerPromos)
         val homeScrollView = view.findViewById<ScrollView>(R.id.homeScrollView)
@@ -87,17 +89,18 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
 
         fun cargarVista() {
-            if (userViewModel.homeModoFull=="1") {
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+            val job = coroutineScope.launch {
+            if (Globals.asegurarUsuario()!!.homeModoFull=="1") {
                 val promoFav = view.findViewById<ImageView>(R.id.promoFav)
                 promosContainer.visibility=View.VISIBLE
                 homeScrollView.visibility = View.GONE
                 listView.visibility = View.GONE
-                val coroutineScope = CoroutineScope(Dispatchers.Main)
                 var datos: MutableList<String> = mutableListOf()
                 // Llamar a la función que obtiene los datos.
-                val job = coroutineScope.launch {
+
                     try {
-                        val adapter = PromocionGridAdapter(view.context, userViewModel.listadoDePromosDisp)
+                        val adapter = PromocionGridAdapter(view.context, userViewModel.listadoDePromosDisp,userViewModel)
                         listView.adapter = adapter
                         listView.setOnItemClickListener { parent, _, position, _ ->
                             val selectedPromo =
@@ -113,7 +116,6 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                     } catch (e: Exception) {
                         println("Error al obtener promociones: ${e.message}")
                     }
-                }
             } else {
                 //val listView = view.findViewById<GridView>(R.id.promocionesGridView)
                 //  val promoFav = view.findViewById<ImageView>(R.id.promoFav)
@@ -165,7 +167,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                                             )
                                         findNavController().navigate(action)
                                     }
-                                })
+                                },userViewModel)
                             recyclerView.adapter = adapter
 
                             // Agrega el título y el RecyclerView al contenedor
@@ -178,23 +180,20 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
                 }
             }
         }
+            }
         coroutineScope.launch {
             val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
             progressBar.visibility = View.VISIBLE
             if (userViewModel.listadoDePromosDisp.isEmpty()) {
                 // Si no, obtén las promociones y guárdalas en el ViewModel
-                userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(Funciones().traerUsuarioActual())
+                userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(Globals.asegurarUsuario())
             }
-            Log.d("homeModoFull",userViewModel.homeModoFull.toString())
-            if(userViewModel.homeModoFull==null){
-                userViewModel.homeModoFull=Funciones().traerUsuarioActual()?.homeModoFull
+            if (userViewModel.favoritos.isEmpty()) {
+                // Si no, obtén las promociones y guárdalas en el ViewModel
+                userViewModel.favoritos = Funciones().obtenerPromocionesFavoritas(Globals.asegurarUsuario()!!)
             }
-            if(userViewModel.id==null){
-                userViewModel.id=Funciones().traerUsuarioActual()?.id
-            }
-            Log.d("homeModoFull",userViewModel.homeModoFull.toString())
             listenerHabilitado=false
-            mySwitch.isChecked= userViewModel.homeModoFull=="1"
+            mySwitch.isChecked= Globals.asegurarUsuario()!!.homeModoFull=="1"
             listenerHabilitado=true
             progressBar.visibility = View.GONE
         }.invokeOnCompletion {
@@ -207,9 +206,9 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
             // Llamar a la función que obtiene los datos.
             val job = coroutineScope.launch {
-                userViewModel.homeModoFull=if(userViewModel.homeModoFull=="1") "0" else "1"
+                Globals.asegurarUsuario()!!.homeModoFull=if(Globals.asegurarUsuario()!!.homeModoFull=="1") "0" else "1"
                     EscribirBD().editarAtributoDeClase("Usuario",
-                        userViewModel.id.toString(),"homeModoFull",userViewModel.homeModoFull.toString())
+                        Globals.asegurarUsuario()!!.id.toString(),"homeModoFull",Globals.asegurarUsuario()!!.homeModoFull.toString())
                 cargarVista()
             }
         }
@@ -234,49 +233,4 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         return alturaTotal
     }
 
-
-    /*override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-       // val promocion = v.getTag(R.id.promocion_tag) as Promocion
-
-        *//*val coroutineScope = CoroutineScope(Dispatchers.Main)
-        val funciones = Funciones()
-        *//*
-        val info = menuInfo as AdapterView.AdapterContextMenuInfo
-        val position = info.position
-
-        val promocion = listaPromociones[position]
-
-        coroutineScope.launch {
-            isFavorite= funciones.traerUsuarioActual()
-                ?.let { funciones.existePromocionEnFavoritos(it,promocion.id) } == true
-        }
-
-        if (isFavorite) {
-            menu.add(0, v.id, 0, "Quitar de Favoritos")
-        } else {
-            menu.add(0, v.id, 0, "Agregar a Favoritos")
-        }
-
-
-
-
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-
-        if(item.title == "Quitar de Favoritos"){
-                //your code
-            }
-        else if(item.title == "Agregar a Favoritos"){
-                //your code
-            }else{
-            return false;
-        }
-        return true;
-    }*/
 }

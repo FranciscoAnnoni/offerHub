@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
+import com.example.offerhub.Globals
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.funciones.getFavResource
@@ -17,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PromocionGridPorCategoriaAdapter(private val context: Context, private val promociones: List<Promocion>, private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PromocionGridPorCategoriaAdapter(private val context: Context, private val promociones: List<Promocion>, private val onItemClickListener: OnItemClickListener,private val userViewModel: UserViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // Tipos de elementos en el RecyclerView
     private val TIPO_PROMOCION = 1
@@ -67,8 +68,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
                      if (logoBitmap != null) {
                          promocionViewHolder.imgViewCategory.setImageBitmap(logoBitmap)
                      }*/
-                    val isFavorite = instancia.traerUsuarioActual()
-                        ?.let { instancia.existePromocionEnFavoritos(it, promocion.id) } == true
+                    val isFavorite= userViewModel.favoritos.contains(promocion)
                     promocionViewHolder.favIcon.setImageResource(getFavResource(isFavorite))
                 }
                 // Configura más vistas para mostrar detalles adicionales de la promoción si es necesario
