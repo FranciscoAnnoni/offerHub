@@ -53,7 +53,7 @@ class PromocionGridAdapter(private val context: Context, private val promociones
         val userViewModel = UserViewModelSingleton.getUserViewModel()
         coroutineScope.launch {
             tvComercio.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
-            var logo:Bitmap?=null
+           /* var logo:Bitmap?=null
             if(userViewModel.logoComercios.containsKey(promocion.comercio)){
                 logo = userViewModel.logoComercios[promocion.comercio]
 
@@ -68,7 +68,8 @@ class PromocionGridAdapter(private val context: Context, private val promociones
                 .load(logo)
                 .placeholder(R.drawable.offerhub_logo_color) // Drawable de carga mientras se descarga la imagen
                 .error(android.R.drawable.ic_dialog_alert) // Drawable de error si no se puede cargar la imagen
-                .into(imgViewCategory)
+                .thumbnail(0.25f)
+                .into(imgViewCategory)*/
 
         }
 

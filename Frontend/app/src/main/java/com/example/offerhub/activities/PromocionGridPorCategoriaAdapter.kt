@@ -65,7 +65,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
 
                     val userViewModel = UserViewModelSingleton.getUserViewModel()
                     var logo: Bitmap?=null
-                    if(userViewModel.logoComercios.containsKey(promocion.comercio)){
+                    /*if(userViewModel.logoComercios.containsKey(promocion.comercio)){
                         logo = userViewModel.logoComercios[promocion.comercio]
 
                     } else{
@@ -79,7 +79,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
                         .load(logo)
                         .placeholder(R.drawable.offerhub_logo_color) // Drawable de carga mientras se descarga la imagen
                         .error(android.R.drawable.ic_dialog_alert) // Drawable de error si no se puede cargar la imagen
-                        .into(promocionViewHolder.imgViewCategory)
+                        .into(promocionViewHolder.imgViewCategory)*/
                     val isFavorite = userViewModel.favoritos.any{ it.id == promocion.id }
                     promocionViewHolder.favIcon.setImageResource(getFavResource(isFavorite))
                 }
