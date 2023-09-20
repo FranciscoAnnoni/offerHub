@@ -62,7 +62,7 @@ class LeerId {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.d("Error","Error en lectura de bd")
+                Log.d("DB - Error","Error en lectura de bd")
             }
         })
     }
@@ -86,7 +86,7 @@ class LeerId {
                 callback(ids)
             }
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.d("Error","Error en lectura de bd")
+                Log.d("DB - Error","Error en lectura de bd")
             }
         })
     }
@@ -107,7 +107,7 @@ class LeerId {
 
             Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro,homeModoFull)
         } else {
-            Log.d("ID", "El usuario es NULO")
+            Log.d("DB - ID", "El usuario es NULO")
             null // El usuario no existe
         }
     }
@@ -157,7 +157,7 @@ class LeerId {
                 }
             }
 
-            Log.d("logo", "${ logo }")
+            Log.d("DB - obtenerPromocionPorId", "${ logo }")
 
             val estado = dataSnapshot.child("estado").getValue(String::class.java)
 

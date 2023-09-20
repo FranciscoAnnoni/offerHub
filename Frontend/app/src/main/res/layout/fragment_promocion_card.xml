@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:gravity="center_vertical|center_horizontal"
-            android:text="Havanna"
+            android:text="Comercio"
             android:textSize="14sp" />
 
         <TextView

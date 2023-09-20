@@ -33,11 +33,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.EscribirBD
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
+import com.example.offerhub.KelineApplication
 import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.Usuario
 import com.example.offerhub.databinding.FragmentHomeBinding
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,8 +51,6 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
     private var scrollPosition: Int = 0
     var isFavorite = false
     var listenerHabilitado = false
-    private val userViewModel: UserViewModel by activityViewModels()
-
 
     override fun onPause() {
         super.onPause()
@@ -83,11 +83,11 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         val listView = view.findViewById<GridView>(R.id.promocionesGridView)
         val mySwitch = view.findViewById<Switch>(R.id.switchHomeMode)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
-
+        val userViewModel = UserViewModelSingleton.getUserViewModel()
 
 
         fun cargarVista() {
-            if (userViewModel.homeModoFull=="1") {
+            if (userViewModel.usuario!!.homeModoFull=="1") {
                 val promoFav = view.findViewById<ImageView>(R.id.promoFav)
                 promosContainer.visibility=View.VISIBLE
                 homeScrollView.visibility = View.GONE
@@ -181,20 +181,27 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         coroutineScope.launch {
             val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
             progressBar.visibility = View.VISIBLE
+
+            if(userViewModel.usuario==null){
+                userViewModel.usuario = Funciones().traerUsuarioActual()
+            }else {
+                Log.d("YA Existe usuario 123221",userViewModel.usuario!!.nombre)
+            }
+            Log.d("Logueandome",userViewModel.usuario!!.nombre)
+            Log.d("Logueandome",userViewModel.listadoDePromosDisp.count().toString())
+            Log.d("Logueandome",userViewModel.favoritos.count().toString())
             if (userViewModel.listadoDePromosDisp.isEmpty()) {
                 // Si no, obtén las promociones y guárdalas en el ViewModel
-                userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(Funciones().traerUsuarioActual())
+                userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuario!!)
             }
-            Log.d("homeModoFull",userViewModel.homeModoFull.toString())
-            if(userViewModel.homeModoFull==null){
-                userViewModel.homeModoFull=Funciones().traerUsuarioActual()?.homeModoFull
+            if(userViewModel.favoritos.isEmpty()){
+                userViewModel.favoritos = funciones.obtenerPromocionesFavoritas(userViewModel.usuario!!)
             }
-            if(userViewModel.id==null){
-                userViewModel.id=Funciones().traerUsuarioActual()?.id
+            if(userViewModel.reintegros.isEmpty()){
+                userViewModel.reintegros = funciones.obtenerPromocionesReintegro(userViewModel.usuario!!)
             }
-            Log.d("homeModoFull",userViewModel.homeModoFull.toString())
             listenerHabilitado=false
-            mySwitch.isChecked= userViewModel.homeModoFull=="1"
+            mySwitch.isChecked= userViewModel.usuario!!.homeModoFull=="1"
             listenerHabilitado=true
             progressBar.visibility = View.GONE
         }.invokeOnCompletion {
@@ -207,9 +214,9 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
             // Llamar a la función que obtiene los datos.
             val job = coroutineScope.launch {
-                userViewModel.homeModoFull=if(userViewModel.homeModoFull=="1") "0" else "1"
+                userViewModel.usuario!!.homeModoFull=if(userViewModel.usuario!!.homeModoFull=="1") "0" else "1"
                     EscribirBD().editarAtributoDeClase("Usuario",
-                        userViewModel.id.toString(),"homeModoFull",userViewModel.homeModoFull.toString())
+                        userViewModel.usuario!!.id.toString(),"homeModoFull",userViewModel.usuario!!.homeModoFull.toString())
                 cargarVista()
             }
         }
@@ -233,50 +240,4 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
 
         return alturaTotal
     }
-
-
-    /*override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-       // val promocion = v.getTag(R.id.promocion_tag) as Promocion
-
-        *//*val coroutineScope = CoroutineScope(Dispatchers.Main)
-        val funciones = Funciones()
-        *//*
-        val info = menuInfo as AdapterView.AdapterContextMenuInfo
-        val position = info.position
-
-        val promocion = listaPromociones[position]
-
-        coroutineScope.launch {
-            isFavorite= funciones.traerUsuarioActual()
-                ?.let { funciones.existePromocionEnFavoritos(it,promocion.id) } == true
-        }
-
-        if (isFavorite) {
-            menu.add(0, v.id, 0, "Quitar de Favoritos")
-        } else {
-            menu.add(0, v.id, 0, "Agregar a Favoritos")
-        }
-
-
-
-
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-
-        if(item.title == "Quitar de Favoritos"){
-                //your code
-            }
-        else if(item.title == "Agregar a Favoritos"){
-                //your code
-            }else{
-            return false;
-        }
-        return true;
-    }*/
 }

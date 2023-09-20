@@ -42,7 +42,7 @@ class ProfileViewModel @Inject constructor(
         coroutineScope.launch {
             try {
                 val instancia = Funciones()
-                val usuario = instancia.traerUsuarioActual()
+                val usuario = UserViewModelSingleton.getUserViewModel().usuario
 
                 viewModelScope.launch {
                     if(usuario != null){

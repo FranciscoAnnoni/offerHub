@@ -173,7 +173,7 @@ class EscribirBD {
             val sucursalReferencia = referenciaSuc.push()
             sucursalReferencia.setValue(sucursal)
         }else{
-            Log.d("Comercio inexistente","El cuil del comercio aun no se encuentra registrado o no fue encontrado")
+            Log.d("DB - Comercio inexistente","El cuil del comercio aun no se encuentra registrado o no fue encontrado")
         }
     }
 

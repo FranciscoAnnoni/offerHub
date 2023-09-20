@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
+import com.example.offerhub.KelineApplication
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentPromoDetailBinding
 import com.example.offerhub.funciones.getContrastColor
@@ -35,6 +36,7 @@ import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
 import com.example.offerhub.viewmodel.PromoDetailViewModel
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,11 +44,9 @@ import kotlinx.coroutines.launch
 class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     private val args by navArgs<PromoDetailFragmentArgs>()
     private lateinit var binding: FragmentPromoDetailBinding
-    private val viewModel by viewModels<PromoDetailViewModel>()
     var isFavorite = false
     var isNotificado = false
     var isTyCExpanded = false
-    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +60,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val userViewModel = UserViewModelSingleton.getUserViewModel()
         val promocion = args.promocion
         val instancia = Funciones()
         binding.imageClose.setOnClickListener {
@@ -103,15 +103,13 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
-            var tarjetasComunes = instancia.tarjetasComunes(instancia.traerUsuarioActual(), promocion)
+            var tarjetasComunes = instancia.tarjetasComunes(userViewModel.usuario, promocion)
             val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
 
             recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recyclerViewTarjetas.adapter = adapter
-            isFavorite = instancia.traerUsuarioActual()
-                ?.let { instancia.existePromocionEnFavoritos(it, promocion.id) } == true
-            isNotificado = instancia.traerUsuarioActual()
-                ?.let { instancia.existePromocionEnReintegros(it, promocion.id) } == true
+            val isFavorite = userViewModel.favoritos.any{ it.id == promocion.id }
+            val isNotificado = userViewModel.reintegros.any{ it.id == promocion.id }
             binding.imageFav.setImageResource(getFavResource(isFavorite))
             binding.btnNotificar.text=if (isNotificado) "Eliminar Notificacion" else "Notificar"
         }
@@ -119,19 +117,19 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             isFavorite = !isFavorite // Cambiar el estado al contrario
 
             // Cambiar la imagen según el estado
-            if (isFavorite) {
+            if (!userViewModel.favoritos.contains(promocion)) {
                 userViewModel.favoritos.add(promocion)
-                coroutineScope.launch {
-                    instancia.agregarPromocionAFavoritos(
-                        userViewModel.id.toString(),
-                        promocion.id.toString()
-                    )
-                }
+                    coroutineScope.launch {
+                        instancia.agregarPromocionAFavoritos(
+                            userViewModel.usuario!!.id,
+                            promocion.id.toString()
+                        )
+                    }
             } else {
+                userViewModel.favoritos.remove(promocion)
                 coroutineScope.launch {
-                    userViewModel.favoritos.remove(promocion)
                     instancia.elimiarPromocionDeFavoritos(
-                        userViewModel.id.toString(),
+                        userViewModel.usuario!!.id.toString(),
                         promocion.id.toString()
                     )
                 }
@@ -145,16 +143,18 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
             // Cambiar la imagen según el estado
             if (isNotificado) {
+                userViewModel.reintegros.add(promocion)
                 coroutineScope.launch {
                     instancia.agregarPromocionAReintegro(
-                        userViewModel.id.toString(),
+                        userViewModel.usuario!!.id.toString(),
                         promocion.id.toString()
                     )
                 }
             } else {
+                userViewModel.reintegros.remove(promocion)
                 coroutineScope.launch {
                     instancia.elimiarPromocionDeReintegro(
-                        userViewModel.id.toString(),
+                        userViewModel.usuario!!.id.toString(),
                         promocion.id.toString()
                     )
                 }
