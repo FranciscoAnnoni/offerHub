@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Con "
+            android:text="¡Con "
             android:textColor="@color/violeta"
             android:textSize="25sp"
             android:textStyle="normal"
@@ -71,6 +71,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logoIntro"
             tools:ignore="MissingConstraints" />
+
+        <TextView
+            style="@style/titulos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text=" centralizá"
+            android:textColor="@color/violeta"
+            android:textSize="25sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoIntro"
+            tools:ignore="MissingConstraints" />
     </LinearLayout>
 
 
@@ -79,9 +93,9 @@
         style="@style/titulos"
         android:layout_width="310dp"
         android:layout_height="169dp"
+        android:layout_marginTop="-20dp"
         android:gravity="center"
-        android:layout_marginTop="-6dp"
-        android:text="centraliza todas tus promociones en un solo lugar!"
+        android:text="todas tus promociones en un solo lugar!"
         android:textColor="@color/violeta"
         android:textSize="25sp"
         android:textStyle="normal"

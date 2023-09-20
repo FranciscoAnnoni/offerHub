@@ -144,6 +144,40 @@ class UserAccountFragment: Fragment() {
         }
 
 
+        binding.buttonDelete.setOnClickListener{
+
+            binding.apply{
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Eliminar Cuenta Permanentemenete")
+                builder.setMessage("¿Está seguro de que desea eliminar la cuenta actual?\n Estos cambios son permanentes y no habra manera de recuperar la cuenta")
+
+
+                // Agregar un botón "Sí" para confirmar el cierre de sesión
+                builder.setPositiveButton("Sí") { dialogInterface, _ ->
+
+                    viewModel.deleteUser()
+                    Snackbar.make(requireView(), "Se ha eliminado la cuenta correctamente", Snackbar.LENGTH_LONG).show()
+                    val intent = Intent(requireActivity(), LoginRegisterActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+
+                }
+
+
+                // Agregar un botón "No" para cancelar el cierre de sesión
+                builder.setNegativeButton("No") { dialogInterface, _ ->
+                    // Cierra el cuadro de diálogo
+                    dialogInterface.dismiss()
+                }
+
+                // Mostrar el cuadro de diálogo
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+
+            }
+
+
+        }
 
     }
 
@@ -165,6 +199,7 @@ class UserAccountFragment: Fragment() {
             buttonSave.visibility = View.VISIBLE
             textView.visibility = View.VISIBLE
             textView2.visibility = View.VISIBLE
+            buttonDelete.visibility = View.VISIBLE
         }
     }
 
@@ -178,6 +213,7 @@ class UserAccountFragment: Fragment() {
             buttonSave.visibility = View.INVISIBLE
             textView.visibility = View.INVISIBLE
             textView2.visibility = View.INVISIBLE
+            buttonDelete.visibility = View.INVISIBLE
         }
     }
 
