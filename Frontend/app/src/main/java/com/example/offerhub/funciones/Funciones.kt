@@ -174,6 +174,7 @@ class Funciones {
     }
 
 
+
     suspend fun traerUsuarioActual(): Usuario? = coroutineScope {
 
         val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth

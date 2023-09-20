@@ -140,42 +140,6 @@ class EscribirBD {
 
     }
 
-    fun registrarComercio(comercio:Comercio,sucursales:List<SucursalEscritura>) {
-        val database: FirebaseDatabase =
-            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val referenciaCom: DatabaseReference = database.reference.child("/Comercio")
-
-        val comercioReferencia = referenciaCom.push()
-        comercioReferencia.setValue(comercio)
-
-        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
-        for (sucursal in sucursales){
-            sucursal.idComercio = comercioReferencia.key
-            val sucursalReferencia = referenciaSuc.push()
-            sucursalReferencia.setValue(sucursal)
-        }
-    }
-
-    suspend fun validarComercioNuevo(comercio:Comercio): Boolean {
-        var instancia = LeerId()
-        val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }
-        return resultado == null
-    }
-
-    suspend fun agregarSucursal(cuilComercio:String,sucursal: SucursalEscritura) {
-        val database: FirebaseDatabase =
-            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
-        var instancia = LeerId()
-        val resultado = instancia.obtenerIdSinc("Comercio", "cuil",cuilComercio)
-        if (resultado!=null){
-            sucursal.idComercio=resultado
-            val sucursalReferencia = referenciaSuc.push()
-            sucursalReferencia.setValue(sucursal)
-        }else{
-            Log.d("Comercio inexistente","El cuil del comercio aun no se encuentra registrado o no fue encontrado")
-        }
-    }
 
     fun escribirPromocion(promocion: PromocionEscritura) {
 
@@ -185,7 +149,7 @@ class EscribirBD {
 
         val promoReferencia = referencia.push()
         promoReferencia.setValue(promocion)
-        }
+    }
 
     fun escribirUsuariosEnFirebase(usuarios: List<Usuario>) {
         val database: FirebaseDatabase =
@@ -268,28 +232,5 @@ class EscribirBD {
         instancia.escribirUsuariosEnFirebase(usuariosNuevos)
 
 
-ESCRIBIR PROMOCION:
-        val dias: List<String?> = listOf("Lunes")
-        val sucursales: List<String?> = listOf("almagro")
-        val tarjetas: List<String?> = listOf("No posee")
-        var promo1 = PromocionEscritura("Prueba3","Offerhub","3",dias,"30","jp",sucursales,tarjetas,"descuento","promopiola","2000","dos mil","ninguno","hola.com","2020-03-03","2025-01-01","pendiente")
-        var instancia = EscribirBD()
-        instancia.escribirPromocion(promo1)
 
-
-REGISTRAR COMERCIO
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
-        var cuil = 2040420213
-        val instancia = EscribirBD()
-        val comercio1= Comercio(null,"pepitos","otros",null,cuil.toString())
-        val sucursal = SucursalEscritura(null,"Julian Alvarez",null,"30.0","20.0")
-        val lista = listOf(sucursal)
-        coroutineScope.launch {
-            if(instancia.validarComercioNuevo(comercio1)){
-                instancia.registrarComercio(comercio1,lista)
-            }
-            else{
-                Log.d("Comercio existente","El comercio que se trata de escribir ya se encuentra registrado en el sistema")
-            }
-        }
  */
