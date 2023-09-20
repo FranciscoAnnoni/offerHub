@@ -34,28 +34,30 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/searchBar"
+            android:id="@+id/buscar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/rounded_text_background">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/buscadores"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:paddingStart="15dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:singleLine="true"
-                android:text="Buscar Promocion"
+                android:hint="Buscar Promocion"
                 android:textSize="15sp"
+                android:backgroundTint="@android:color/transparent"
+                app:layout_constraintEnd_toStartOf="@id/logoLupa"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
             <ImageView
+                android:id="@+id/logoLupa"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="20dp"
