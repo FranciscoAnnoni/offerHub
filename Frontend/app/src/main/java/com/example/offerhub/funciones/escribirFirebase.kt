@@ -139,8 +139,7 @@ class EscribirBD {
             }
 
     }
-
-
+    
     fun escribirPromocion(promocion: PromocionEscritura) {
 
         val database: FirebaseDatabase =

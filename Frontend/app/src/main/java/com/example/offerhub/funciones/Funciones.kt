@@ -127,7 +127,6 @@ class Funciones {
         val instancia = LeerId()
         if(usuario.favoritos != null) {
             for (id in usuario.favoritos!!) {
-                Log.d("Hola", id.toString())
                 if (id != null) {
                     instancia.obtenerPromocionPorId(id)?.let { promociones.add(it) }
                 }
@@ -145,7 +144,7 @@ class Funciones {
         usuario.promocionesReintegro?.contains(elementoId) == true
     }
 
-    suspend fun obtenerPromocionesReintegro(usuario: Usuario): List<Promocion> = coroutineScope {
+    suspend fun obtenerPromocionesReintegro(usuario: Usuario): MutableList<Promocion> = coroutineScope {
         val promocionesTotales = obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
 
@@ -185,17 +184,17 @@ class Funciones {
         var usuario : Usuario?
 
         if (currentUser != null) {
-            Log.d("IDCurrentUser", "${currentUser.uid}")
+            Log.d("DB - IDCurrentUser", "${currentUser.uid}")
         }
 
         if (currentUser != null) {
             usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
             if (usuario != null) {
-                Log.d("ID", "${usuario.nombre}")
+                Log.d("DB - ID", "${usuario.nombre}")
             }
         } else {
             usuario =  null
-            Log.d("ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
+            Log.d("DB - ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
         }
 
         usuario
