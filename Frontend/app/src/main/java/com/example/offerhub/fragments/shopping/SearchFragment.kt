@@ -2,12 +2,17 @@ package com.example.offerhub.fragments.shopping
 
 import CategoryGridAdapter
 import SearchViewModel
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.GridView
 import androidx.fragment.app.Fragment
@@ -37,6 +42,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         return binding.root
     }
 
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -59,31 +69,17 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
 // mi codigo de buscador
 
-        val searchBar = view.findViewById<TextInputEditText>(R.id.buscadores)
 
-
-
-        searchBar.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val searchQuery = s.toString()
-                if (searchQuery.isNotEmpty()) {
-                    // Realizar la búsqueda y actualizar la interfaz de usuario con los resultados
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val results = viewModel.searchPromotions(searchQuery)
-                        // Actualiza tu adaptador o vista con los resultados
-                        //val adapter = CategoryGridAdapter(view.context, results)
-                       // gridView.adapter = adapter
-                    }
-                } else {
-                    // Limpiar la vista si la consulta está vacía
-
-                }
+        binding.buscadores.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
+                //Log.d("texto Busqueda", binding.buscadores.text.toString().trim())
+                hideKeyboard()
+                return@setOnEditorActionListener true
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
+            false
+        }
 
 
     }
