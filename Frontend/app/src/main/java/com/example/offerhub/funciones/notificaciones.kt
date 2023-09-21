@@ -8,10 +8,14 @@ import com.google.firebase.messaging.FirebaseMessaging
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.graphics.drawable.IconCompat
+import com.example.offerhub.R
 
 class AlarmaNotificacion:BroadcastReceiver(){
 
@@ -19,27 +23,28 @@ class AlarmaNotificacion:BroadcastReceiver(){
         const val NOTIFICATION_ID = 1
     }
 
-    override fun onReceive(context: Context, p1: Intent?) {
-        createSimpleNotification(context)
+    override fun onReceive(context: Context ,p1: Intent?) {
+        val mensaje = p1?.getStringExtra("comercio")
+        createSimpleNotification(context, mensaje)
+
     }
 
-
-
-    fun createSimpleNotification(contexto:Context) {
+    fun createSimpleNotification(contexto:Context, comercio:String?)
+    {
         val intent = Intent(contexto, PromoDetailFragment::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
         val flag = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         val pendingIntent:PendingIntent = PendingIntent.getActivity(contexto, 0, intent, flag)
-
+        val smallIcon = IconCompat.createWithBitmap(BitmapFactory.decodeResource(contexto.resources, R.drawable.offerhub_logo))
         var noti = NotificationCompat.Builder(contexto, CanalNoti.MY_CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_delete)
-            .setContentTitle("Reintegro vencido")
-            .setContentText("Es tiempo de que revises tu reintegro")
+            .setSmallIcon(smallIcon)
+            .setContentTitle("Reintegro en ${comercio}")
+            .setContentText("Revisá tu reintegro")
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("Tiempo de que revises el reintegro de la promocion") //agregar que promo es
+                    .bigText("Es el momento de chequear tu reintegro de la promocion que usaste en ${comercio}") //agregar que promo es
             )
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -47,7 +52,6 @@ class AlarmaNotificacion:BroadcastReceiver(){
 
         val manager = contexto.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(NOTIFICATION_ID, noti)
-
     }
 
     fun notificacion(){

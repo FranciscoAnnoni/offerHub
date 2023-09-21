@@ -145,34 +145,34 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         binding.btnNotificar.setOnClickListener {
             isNotificado = !isNotificado // Cambiar el estado al contrario
 
-
-            // Cambiar la imagen según el estado
-            if (isNotificado) {
-                val intent = Intent(context, AlarmaNotificacion::class.java)
+            coroutineScope.launch {
+                val intent = Intent(context, AlarmaNotificacion::class.java).apply{
+                    putExtra("comercio", Funciones().traerInfoComercio(promocion.comercio,"nombre"))
+                }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     AlarmaNotificacion.NOTIFICATION_ID,
                     intent,
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
+                // Cambiar la imagen según el estado
+                if (isNotificado) {
+                    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (1000), pendingIntent) //a los 30 segundos
 
-                val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (30*1000), pendingIntent) //a los 30 segundos
-                coroutineScope.launch {
                     instancia.agregarPromocionAReintegro(
                         userViewModel.id.toString(),
-                        promocion.id.toString()
+                        promocion.id.toString(),
                     )
-                }
-            } else {
-                coroutineScope.launch {
+                } else {
+                    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    alarmManager.cancel(pendingIntent)
                     instancia.elimiarPromocionDeReintegro(
                         userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }
             }
-
             // Establecer la imagen en la ImageView
             binding.btnNotificar.text=if (isNotificado) "Eliminar Notificacion" else "Notificar"
         }
