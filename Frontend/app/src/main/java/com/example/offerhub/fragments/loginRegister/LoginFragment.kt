@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.loginRegister
 
+import UserViewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +18,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.offerhub.Funciones
+import com.example.offerhub.KelineApplication
+import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
 import com.example.offerhub.databinding.FragmentLoginBinding
@@ -24,8 +28,12 @@ import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.ProfileViewModel
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -33,6 +41,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var rootViewLogin: View
     private val viewModel by viewModels<LoginViewModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,17 +135,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         binding.btnLogin.startAnimation()
                     }
                     is Resource.Success -> {
-                        Snackbar.make(
-                            rootViewLogin,
-                            "Login exitoso",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                        binding.btnLogin.revertAnimation()
-                        binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val userViewModel: UserViewModel by viewModels()
+                           userViewModel.usuario = Funciones().traerUsuarioActual()
+                            userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuario!!)
+                            userViewModel.favoritos = Funciones().obtenerPromocionesFavoritas(userViewModel.usuario!!)
+                            userViewModel.reintegros = Funciones().obtenerPromocionesReintegro(userViewModel.usuario!!)
+                            UserViewModelSingleton.initialize(userViewModel)
+                        }.invokeOnCompletion {
+                            Snackbar.make(
+                                rootViewLogin,
+                                "Login exitoso",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                            binding.btnLogin.revertAnimation()
+                            binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
 
-                        Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
+                            Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                            }
                         }
                     }
                     is Resource.Error -> {

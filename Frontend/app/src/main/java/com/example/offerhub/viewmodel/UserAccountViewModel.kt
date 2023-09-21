@@ -65,7 +65,7 @@ class UserAccountViewModel @Inject constructor(
         coroutineScope.launch {
             try {
 
-               val usuario = instancia.traerUsuarioActual()
+               val usuario = UserViewModelSingleton.getUserViewModel().usuario
 
                 viewModelScope.launch {
                     if(usuario != null){
@@ -102,9 +102,11 @@ class UserAccountViewModel @Inject constructor(
         coroutineScope.launch {
             try {
 
+
+                val usuario = UserViewModelSingleton.getUserViewModel().usuario
+                usuario!!.nombre=nombreyApellido
                 userUid?.let { it1 -> instancia.editarPerfil(it1,"nombre",nombreyApellido) }
 
-                val usuario = instancia.traerUsuarioActual()
 
                 viewModelScope.launch {
                     if(usuario != null){

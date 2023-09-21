@@ -141,6 +141,38 @@ class EscribirBD {
     }
 
 
+        val comercioReferencia = referenciaCom.push()
+        comercioReferencia.setValue(comercio)
+
+        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
+        for (sucursal in sucursales){
+            sucursal.idComercio = comercioReferencia.key
+            val sucursalReferencia = referenciaSuc.push()
+            sucursalReferencia.setValue(sucursal)
+        }
+    }
+
+    suspend fun validarComercioNuevo(comercio:Comercio): Boolean {
+        var instancia = LeerId()
+        val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }
+        return resultado == null
+    }
+
+    suspend fun agregarSucursal(cuilComercio:String,sucursal: SucursalEscritura) {
+        val database: FirebaseDatabase =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
+        var instancia = LeerId()
+        val resultado = instancia.obtenerIdSinc("Comercio", "cuil",cuilComercio)
+        if (resultado!=null){
+            sucursal.idComercio=resultado
+            val sucursalReferencia = referenciaSuc.push()
+            sucursalReferencia.setValue(sucursal)
+        }else{
+            Log.d("DB - Comercio inexistente","El cuil del comercio aun no se encuentra registrado o no fue encontrado")
+        }
+    }
+
     fun escribirPromocion(promocion: PromocionEscritura) {
 
         val database: FirebaseDatabase =

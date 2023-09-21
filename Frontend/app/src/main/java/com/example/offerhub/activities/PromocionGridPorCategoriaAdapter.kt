@@ -1,4 +1,7 @@
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.funciones.getFavResource
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,18 +62,36 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
 
                 coroutineScope.launch {
                     promocionViewHolder.textViewCategory.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
-                    /* val logoBitmap = Comercio(
-                         "",
-                         "",
-                         "",
-                         "",
-                         ""
-                     ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
-                     if (logoBitmap != null) {
-                         promocionViewHolder.imgViewCategory.setImageBitmap(logoBitmap)
-                     }*/
-                    val isFavorite = instancia.traerUsuarioActual()
-                        ?.let { instancia.existePromocionEnFavoritos(it, promocion.id) } == true
+
+                    val userViewModel = UserViewModelSingleton.getUserViewModel()
+                    var logo: Bitmap?=null
+<<<<<<< Updated upstream
+                    /*if(userViewModel.logoComercios.containsKey(promocion.comercio)){
+=======
+                    /*
+                    if(userViewModel.logoComercios.containsKey(promocion.comercio)){
+>>>>>>> Stashed changes
+                        logo = userViewModel.logoComercios[promocion.comercio]
+
+                    } else{
+                        val imgEnBase64=Funciones().traerLogoComercio(promocion.comercio)
+                        val imageByteArray = Base64.decode(imgEnBase64, Base64.DEFAULT)
+                        logo = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+                        userViewModel.logoComercios[promocion.comercio!!]=logo!!
+                    }
+                    // Carga la imagen con Glide
+                    Glide.with(context)
+                        .load(logo)
+                        .placeholder(R.drawable.offerhub_logo_color) // Drawable de carga mientras se descarga la imagen
+                        .error(android.R.drawable.ic_dialog_alert) // Drawable de error si no se puede cargar la imagen
+<<<<<<< Updated upstream
+                        .into(promocionViewHolder.imgViewCategory)*/
+=======
+                        .into(promocionViewHolder.imgViewCategory)
+
+                     */
+>>>>>>> Stashed changes
+                    val isFavorite = userViewModel.favoritos.any{ it.id == promocion.id }
                     promocionViewHolder.favIcon.setImageResource(getFavResource(isFavorite))
                 }
                 // Configura más vistas para mostrar detalles adicionales de la promoción si es necesario
@@ -130,54 +153,4 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
         val btnVerMas = itemView.findViewById<ConstraintLayout>(R.id.btnVerMas)
     }
 
-   /* override fun getCount(): Int {
-        return promociones.size
-    }
-
-    override fun getItem(position: Int): Any {
-        return promociones[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }*/
-
- /*   override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-       val promocion = getItem(position) as Promocion
-
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        //val gridViewItem = inflater.inflate(R.layout.fragment_promo_card, null)
-        val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
-        val instancia=Funciones()
-        val textViewCategory = gridViewItem.findViewById<TextView>(R.id.txtCategoria)
-        val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
-        val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
-
-        textViewCategory.text = promocion.titulo
-       // imgViewCategory.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.cat_default))
-        // Utiliza la función base64ToBitmap para obtener el Bitmap del logotipo
-        *//*
-        textViewCategory.text = comercio.nombre *//*
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
-
-        coroutineScope.launch {
-            val logoBitmap = Comercio(
-                "",
-                "",
-                "",
-                "",
-                ""
-            ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
-            if (logoBitmap != null) {
-                imgViewCategory.setImageBitmap(logoBitmap)
-            }
-            val isFavorite= instancia.traerUsuarioActual()
-                ?.let { instancia.existePromocionEnFavoritos(it,promocion.id) } == true
-            favIcon.setImageResource(getFavResource(isFavorite))
-        }
-
-        // Agrega cualquier otra configuración específica de tu diseño aquí
-
-        return gridViewItem
-    }*/
 }
