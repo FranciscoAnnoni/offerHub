@@ -185,7 +185,7 @@ class LecturaBD {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.d("Error","Error en lectura de bd")
+                Log.d("DB - Error","Error en lectura de bd")
             }
         })
     }
