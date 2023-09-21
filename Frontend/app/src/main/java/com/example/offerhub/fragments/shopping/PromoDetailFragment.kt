@@ -3,6 +3,9 @@ package com.example.offerhub.fragments.shopping
 import TarjetasPromocionAdapter
 import UserViewModel
 import android.animation.ObjectAnimator
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -17,29 +20,26 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
-import androidx.core.view.marginLeft
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
-import com.example.offerhub.KelineApplication
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentPromoDetailBinding
+import com.example.offerhub.funciones.AlarmaNotificacion
+import com.example.offerhub.funciones.CanalNoti
 import com.example.offerhub.funciones.getContrastColor
 import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
-import com.example.offerhub.viewmodel.PromoDetailViewModel
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     private val args by navArgs<PromoDetailFragmentArgs>()
@@ -63,6 +63,8 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         val userViewModel = UserViewModelSingleton.getUserViewModel()
         val promocion = args.promocion
         val instancia = Funciones()
+        val instanciaCanal = CanalNoti()
+        getContext()?.let { instanciaCanal.createChannel(it) }
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -124,6 +126,8 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                             userViewModel.usuario!!.id,
                             promocion.id.toString()
                         )
+
+
                     }
             } else {
                 userViewModel.favoritos.remove(promocion)
@@ -141,20 +145,29 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         binding.btnNotificar.setOnClickListener {
             isNotificado = !isNotificado // Cambiar el estado al contrario
 
+
             // Cambiar la imagen según el estado
             if (isNotificado) {
-                userViewModel.reintegros.add(promocion)
+                val intent = Intent(context, AlarmaNotificacion::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    AlarmaNotificacion.NOTIFICATION_ID,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+
+                val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (30*1000), pendingIntent) //a los 30 segundos
                 coroutineScope.launch {
                     instancia.agregarPromocionAReintegro(
-                        userViewModel.usuario!!.id.toString(),
+                        userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }
             } else {
-                userViewModel.reintegros.remove(promocion)
                 coroutineScope.launch {
                     instancia.elimiarPromocionDeReintegro(
-                        userViewModel.usuario!!.id.toString(),
+                        userViewModel.id.toString(),
                         promocion.id.toString()
                     )
                 }

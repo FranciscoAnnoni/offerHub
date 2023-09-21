@@ -40,6 +40,8 @@ import com.example.offerhub.R
 import com.example.offerhub.Usuario
 import com.example.offerhub.databinding.FragmentHomeBinding
 import com.example.offerhub.viewmodel.UserViewModelSingleton
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -84,6 +86,7 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
         val mySwitch = view.findViewById<Switch>(R.id.switchHomeMode)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         val userViewModel = UserViewModelSingleton.getUserViewModel()
+
 
 
         fun cargarVista() {
@@ -215,8 +218,8 @@ class HomeFragment : Fragment(R.layout.fragment_search) {
             // Llamar a la función que obtiene los datos.
             val job = coroutineScope.launch {
                 userViewModel.usuario!!.homeModoFull=if(userViewModel.usuario!!.homeModoFull=="1") "0" else "1"
-                    EscribirBD().editarAtributoDeClase("Usuario",
-                        userViewModel.usuario!!.id.toString(),"homeModoFull",userViewModel.usuario!!.homeModoFull.toString())
+                EscribirBD().editarAtributoDeClase("Usuario",
+                    userViewModel.usuario!!.id.toString(),"homeModoFull",userViewModel.usuario!!.homeModoFull.toString())
                 cargarVista()
             }
         }
