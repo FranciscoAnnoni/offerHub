@@ -82,7 +82,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
                         .placeholder(R.drawable.offerhub_logo_color) // Drawable de carga mientras se descarga la imagen
                         .error(android.R.drawable.ic_dialog_alert) // Drawable de error si no se puede cargar la imagen
                         .into(promocionViewHolder.imgViewCategory)*/
-                    
+
                     val isFavorite = userViewModel.favoritos.any{ it.id == promocion.id }
                     promocionViewHolder.favIcon.setImageResource(getFavResource(isFavorite))
                 }
