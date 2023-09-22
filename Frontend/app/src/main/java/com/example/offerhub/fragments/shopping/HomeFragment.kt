@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 import java.lang.Math.ceil
 
 
-class HomeFragment : Fragment(R.layout.fragment_search) {
+class HomeFragment : Fragment(R.layout.activity_shopping) {
     private lateinit var binding: FragmentHomeBinding
     private var scrollPosition: Int = 0
     var isFavorite = false

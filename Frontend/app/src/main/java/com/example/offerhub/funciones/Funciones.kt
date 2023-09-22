@@ -161,7 +161,7 @@ class Funciones {
         val filtros = listOf(
             "categoria" to nombreRubro,
         )
-        val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros, usuario)
+        val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros)
 
         promocionesFiltradas
     }
@@ -170,7 +170,7 @@ class Funciones {
         val filtros = listOf(
             "comercio" to idComercio,
         )
-        val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros, usuario)
+        val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros)
 
         promocionesFiltradas
     }

@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PromocionGridAdapter(private val context: Context, private val promociones: List<Promocion>) : BaseAdapter() {
+class PromocionGridAdapter(private val context: Context, private var promociones: List<Promocion>) : BaseAdapter() {
 
     override fun getCount(): Int {
         return promociones.size
@@ -30,6 +30,10 @@ class PromocionGridAdapter(private val context: Context, private val promociones
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    fun actualizarDatos(nuevasPromociones: List<Promocion>) {
+        promociones = nuevasPromociones
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
