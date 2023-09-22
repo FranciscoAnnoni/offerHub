@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
+import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentPromoDetailBinding
 import com.example.offerhub.funciones.AlarmaNotificacion
@@ -35,6 +36,7 @@ import com.example.offerhub.funciones.getContrastColor
 import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
+import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +49,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     var isFavorite = false
     var isNotificado = false
     var isTyCExpanded = false
+    var userViewModel :UserViewModel=UserViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +63,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val userViewModel = UserViewModelSingleton.getUserViewModel()
+        userViewModel = UserViewModelSingleton.getUserViewModel()
         val promocion = args.promocion
         val instancia = Funciones()
         val instanciaCanal = CanalNoti()
@@ -104,23 +107,32 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
+        fun comparar(it:Promocion): Boolean {
+            return it.id == promocion.id
+        }
         coroutineScope.launch {
             var tarjetasComunes = instancia.tarjetasComunes(userViewModel.usuario, promocion)
             val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
 
             recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recyclerViewTarjetas.adapter = adapter
-            val isFavorite = userViewModel.favoritos.any{ it.id == promocion.id }
-            val isNotificado = userViewModel.reintegros.any{ it.id == promocion.id }
+            val isFavorite = userViewModel.favoritos.any{ it -> comparar(it) }
+            val isNotificado = userViewModel.reintegros.any{ it -> comparar(it) }
             binding.imageFav.setImageResource(getFavResource(isFavorite))
             binding.btnNotificar.text=if (isNotificado) "Eliminar Notificacion" else "Notificar"
         }
-        binding.imageFav.setOnClickListener {
-            isFavorite = !isFavorite // Cambiar el estado al contrario
 
+        binding.imageFav.setOnClickListener {
+            fun isFavorite(): Boolean {
+                return userViewModel.favoritos.any { it -> comparar(it) }
+            }
+            Log.d("Cant de FAVORITOS",userViewModel.favoritos.size.toString())
+            Log.d("FAVORITOS",userViewModel.favoritos.joinToString(","))
             // Cambiar la imagen según el estado
-            if (!userViewModel.favoritos.contains(promocion)) {
+            if (!isFavorite()) {
                 userViewModel.favoritos.add(promocion)
+                UserViewModelCache().guardarUserViewModel(userViewModel)
+                Log.d("Agrego Favoritos",UserViewModelSingleton.getSingleUserViewModel()!!.favoritos.size.toString())
                     coroutineScope.launch {
                         instancia.agregarPromocionAFavoritos(
                             userViewModel.usuario!!.id,
@@ -130,24 +142,32 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
                     }
             } else {
-                userViewModel.favoritos.remove(promocion)
+                userViewModel.favoritos.removeIf { it->comparar(it) }
+                UserViewModelCache().guardarUserViewModel(userViewModel)
+                Log.d("Saco Favoritos",userViewModel.favoritos.size.toString())
                 coroutineScope.launch {
                     instancia.elimiarPromocionDeFavoritos(
-                        userViewModel.usuario!!.id.toString(),
+                        userViewModel.usuario!!.id,
                         promocion.id.toString()
                     )
                 }
             }
 
             // Establecer la imagen en la ImageView
-            binding.imageFav.setImageResource(getFavResource(isFavorite))
+            binding.imageFav.setImageResource(getFavResource(isFavorite()))
         }
         binding.btnNotificar.setOnClickListener {
-            isNotificado = !isNotificado // Cambiar el estado al contrario
-
-
             // Cambiar la imagen según el estado
-            if (isNotificado) {
+            Log.d("Cant de Reintegros",userViewModel.reintegros.size.toString())
+            Log.d("Reintegros",userViewModel.reintegros.joinToString(","))
+
+            fun isNotificado(): Boolean {
+                return userViewModel.reintegros.any { it -> comparar(it) }
+            }
+            if (!isNotificado()) {
+                userViewModel.reintegros.add(promocion)
+                UserViewModelCache().guardarUserViewModel(userViewModel)
+                Log.d("Agrego Reintegros",userViewModel.reintegros.size.toString())
                 val intent = Intent(context, AlarmaNotificacion::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
@@ -165,6 +185,9 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                     )
                 }
             } else {
+                userViewModel.reintegros.removeIf { it->comparar(it) }
+                UserViewModelCache().guardarUserViewModel(userViewModel)
+                Log.d("Saco Reintegros",userViewModel.reintegros.size.toString())
                 coroutineScope.launch {
                     instancia.elimiarPromocionDeReintegro(
                         userViewModel.id.toString(),
@@ -174,7 +197,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             }
 
             // Establecer la imagen en la ImageView
-            binding.btnNotificar.text=if (isNotificado) "Eliminar Notificacion" else "Notificar"
+            binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
         }
 
         binding.apply {
