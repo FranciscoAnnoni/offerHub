@@ -21,6 +21,7 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.LecturaBD
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentSearchBinding
     val viewModel by viewModels<SearchViewModel>()
+    private val args by navArgs<SearchFragmentArgs>()
     private var scrollPosition: Int = 0
 
     override fun onCreateView(
@@ -49,16 +51,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding = FragmentSearchBinding.inflate(inflater)
         return binding.root
     }
-    override fun onPause() {
-        super.onPause()
-        scrollPosition = binding.promocionesGridView.scrollY
-    }
-    override fun onResume() {
-        super.onResume()
-        binding.promocionesGridView.post {
-            binding.promocionesGridView.scrollTo(0, scrollPosition)
-        }
-    }
 
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -67,11 +59,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         var instancia = InterfaceSinc()
         val adapter = PromocionGridAdapter(view.context, listOf())
         val promocionesGridView = view.findViewById<GridView>(R.id.promocionesGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
         promocionesGridView.adapter=adapter
+        binding.buscadores.setText("")
         promocionesGridView.setOnItemClickListener { parent, _, position, _ ->
             val selectedPromo =
                 adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
@@ -96,6 +88,55 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             binding.buscadores.setText("")
             adapter.actualizarDatos(listOf())
         }
+        fun buscarPorTexto() {
+            val textoBusqueda = binding.buscadores.text.toString()
+            if(textoBusqueda.length>0) {
+                mostrarResultadosBusqueda()
+                CoroutineScope(Dispatchers.Main).launch {
+                    val listaPromociones = LecturaBD().filtrarPromos(
+                        listOf(
+                            "titulo" to textoBusqueda,
+                            "categoria" to textoBusqueda,
+                        ), false
+                    )
+                    try {
+                        // Actualiza los datos en el adaptador existente
+                        adapter.actualizarDatos(listaPromociones)
+
+                        // Notifica al GridView que los datos han cambiado
+                        adapter.notifyDataSetChanged()
+                        promocionesGridView.adapter = adapter
+                        promoGridView.visibility = View.VISIBLE
+
+
+                    } catch (e: Exception) {
+                        println("Error al obtener promociones: ${e.message}")
+                    }
+                }
+            }
+        }
+
+        fun buscarPorCategoria(nombre:String){
+            mostrarResultadosBusqueda()
+            CoroutineScope(Dispatchers.Main).launch {
+                val listaPromociones = LecturaBD().filtrarPromos(listOf(
+                    "categoria" to nombre,
+                ),false)
+                try {
+                    // Actualiza los datos en el adaptador existente
+                    adapter.actualizarDatos(listaPromociones)
+                    binding.buscadores.setText(nombre)
+                    // Notifica al GridView que los datos han cambiado
+                    adapter.notifyDataSetChanged()
+                    promocionesGridView.adapter=adapter
+                    promoGridView.visibility = View.VISIBLE
+
+
+                } catch (e: Exception) {
+                    println("Error al obtener promociones: ${e.message}")
+                }
+            }
+        }
         var datos: MutableList<String> = mutableListOf()
         // Llamar a la función que obtiene los datos.
         val job = coroutineScope.launch {
@@ -107,25 +148,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 val adapterCat = CategoryGridAdapter(view.context, datos)
                 listView.setOnItemClickListener { parent, _, position, _ ->
                     val selectedCategoria = adapterCat.getItem(position) as Categoria
-                    mostrarResultadosBusqueda()
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val listaPromociones = LecturaBD().filtrarPromos(listOf(
-                            "categoria" to selectedCategoria.nombre,
-                        ),false)
-                        try {
-                            // Actualiza los datos en el adaptador existente
-                            adapter.actualizarDatos(listaPromociones)
-                            binding.buscadores.setText(selectedCategoria.nombre)
-                            // Notifica al GridView que los datos han cambiado
-                            adapter.notifyDataSetChanged()
-                            promocionesGridView.adapter=adapter
-                            promoGridView.visibility = View.VISIBLE
-
-
-                        } catch (e: Exception) {
-                            println("Error al obtener promociones: ${e.message}")
-                        }
-                    }
+                    buscarPorCategoria(selectedCategoria.nombre)
                 }
 
 
@@ -136,28 +159,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
 // mi codigo de buscador
-        fun buscarPorTexto() {
-            mostrarResultadosBusqueda()
-            val textoBusqueda = binding.buscadores.text.toString()
-            CoroutineScope(Dispatchers.Main).launch {
-                val listaPromociones = LecturaBD().filtrarPromos(listOf(
-                    "titulo" to textoBusqueda,
-                    "categoria" to textoBusqueda,
-                ),false)
-                try {
-                    // Actualiza los datos en el adaptador existente
-                    adapter.actualizarDatos(listaPromociones)
-
-                    // Notifica al GridView que los datos han cambiado
-                    adapter.notifyDataSetChanged()
-                    promocionesGridView.adapter=adapter
-                    promoGridView.visibility = View.VISIBLE
 
 
-                } catch (e: Exception) {
-                    println("Error al obtener promociones: ${e.message}")
-                }
-        }}
+        if(args.categoria!==null && args.categoria!="") {
+            val nombreCategoria = args.categoria
+            buscarPorCategoria(nombreCategoria.toString())
+        }
 
         val lupa = view.findViewById<ImageView>(R.id.logoLupa)
         val cerrar = view.findViewById<ImageView>(R.id.logoCerrar)

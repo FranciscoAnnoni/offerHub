@@ -1,28 +1,26 @@
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.fragments.shopping.HomeFragmentDirections
 import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PromocionGridPorCategoriaAdapter(private val context: Context, private val promociones: List<Promocion>, private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, private val promociones: List<Promocion>, private val onItemClickListener: OnItemClickListener, private val onVerMasClickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // Tipos de elementos en el RecyclerView
     private val TIPO_PROMOCION = 1
@@ -33,6 +31,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
 
     interface OnItemClickListener {
         fun onItemClick(promocion: Promocion)
+        fun onVerMasClick()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -90,12 +89,7 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
             }
             TIPO_VER_MAS -> {
                 // Configurar el botón "Ver Más" si es necesario
-                val verMasViewHolder = holder as VerMasViewHolder
-                verMasViewHolder.btnVerMas.setOnClickListener {
-                    // Maneja la navegación al otro fragmento aquí
-                    // Por ejemplo, puedes usar Navigation Component para navegar
-                    // a otro fragmento al hacer clic en "Ver Más"
-                }
+
             }
         }
     }
@@ -143,6 +137,14 @@ class PromocionGridPorCategoriaAdapter(private val context: Context, private val
 
     inner class VerMasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val btnVerMas = itemView.findViewById<ConstraintLayout>(R.id.btnVerMas)
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onVerMasClickListener.onVerMasClick()
+                }
+            }
+        }
     }
 
 }
