@@ -3,19 +3,18 @@ package com.example.offerhub.funciones
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.offerhub.fragments.shopping.PromoDetailFragment
 import com.google.firebase.messaging.FirebaseMessaging
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.drawable.IconCompat
+import com.example.offerhub.Funciones
 import com.example.offerhub.R
+import com.example.offerhub.activities.PromoNotiDetailActivity
 
 class AlarmaNotificacion:BroadcastReceiver(){
 
@@ -25,15 +24,25 @@ class AlarmaNotificacion:BroadcastReceiver(){
 
     override fun onReceive(context: Context ,p1: Intent?) {
         val mensaje = p1?.getStringExtra("comercio")
-        createSimpleNotification(context, mensaje)
+        val promo = p1?.getStringExtra("promocion")
+
+        createSimpleNotification(context, mensaje,promo)
 
     }
 
-    fun createSimpleNotification(contexto:Context, comercio:String?)
+    fun createSimpleNotification(contexto:Context, comercio:String?,promo:String?)
     {
-        val intent = Intent(contexto, PromoDetailFragment::class.java).apply {
+
+        val intent = Intent(contexto, PromoNotiDetailActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+        val prefs = contexto.getSharedPreferences("NotiReintegro", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putString("promocion", promo)
+        editor.apply()
+
+
+
 
         val flag = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         val pendingIntent:PendingIntent = PendingIntent.getActivity(contexto, 0, intent, flag)

@@ -34,8 +34,8 @@ class ShoppingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) // Asegúrate de que este sea el nombre de tu archivo de diseño de actividad.
-        val navController = findNavController(R.id.mainAppFragment)
-        binding.bottomNavigation.setupWithNavController(navController)
+            val navController = findNavController(R.id.mainAppFragment)
+            binding.bottomNavigation.setupWithNavController(navController)
         //setContentView(R.layout.fragment_search) // Asegúrate de que este sea el nombre de tu archivo de diseño de actividad.
 
 

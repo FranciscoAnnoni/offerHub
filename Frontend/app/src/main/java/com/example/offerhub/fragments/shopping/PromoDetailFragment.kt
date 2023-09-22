@@ -148,6 +148,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             coroutineScope.launch {
                 val intent = Intent(context, AlarmaNotificacion::class.java).apply{
                     putExtra("comercio", Funciones().traerInfoComercio(promocion.comercio,"nombre"))
+                    putExtra("promocion",promocion.id.toString())
                 }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
@@ -165,12 +166,12 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                         promocion.id.toString(),
                     )
                 } else {
-                    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    alarmManager.cancel(pendingIntent)
                     instancia.elimiarPromocionDeReintegro(
                         userViewModel.id.toString(),
                         promocion.id.toString()
                     )
+                    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    alarmManager.cancel(pendingIntent)
                 }
             }
             // Establecer la imagen en la ImageView

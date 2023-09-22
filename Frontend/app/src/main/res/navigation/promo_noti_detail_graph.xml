@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shopping_graph"
+    app:startDestination="@id/promoNotiDetailFragment">
+    <fragment
+        android:id="@+id/promoNotiDetailFragment"
+        android:name="com.example.offerhub.fragments.promoNotiDetail.PromoNotiDetailFragment"
+        android:label="PromoNotiDetailFragment" />
+</navigation>
+
+
