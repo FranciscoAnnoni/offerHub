@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import com.example.offerhub.funciones.formatearFecha
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -19,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
+import java.text.Normalizer
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -345,9 +347,15 @@ class LecturaBD {
 
     }
 
-    suspend fun filtrarPromos(filtros: List<Pair<String, String>>, usuario: Usuario): List<Promocion> {
+    fun String.removeAccents(): String {
+        val normalized = Normalizer.normalize(this, Normalizer.Form.NFD)
+        return Regex("[^\\p{ASCII}]").replace(normalized, "")
+    }
+
+    suspend fun filtrarPromos(filtros: List<Pair<String, String>>, usarAnd: Boolean=true): List<Promocion> {
         var instancia = Funciones()
-        var promos = instancia.obtenerPromociones(usuario)
+        var promos = UserViewModelSingleton.getUserViewModel().listadoDePromosDisp
+        var promosAux : MutableList<Promocion> = mutableListOf()
         var i = 0
         val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -355,50 +363,44 @@ class LecturaBD {
             val campoFiltro = filtros[i].first
             val valorFiltro = filtros[i].second
 
-            when(campoFiltro) {
-                    "categoria" -> {
-                        promos = promos.filter { promo -> promo.categoria == valorFiltro }.toMutableList()
-
-                    } "comercio" -> {
-                        promos = promos.filter { promo -> promo.comercio == valorFiltro }.toMutableList()
-
-                    } "dias" -> {
-                        promos = promos.filter { promo -> promo.dias!!.contains(valorFiltro)  }.toMutableList()
-
-                    } "porcentaje" -> {
-                        promos = promos.filter { promo -> promo.porcentaje == valorFiltro }.toMutableList()
-
-                    } "proveedor" -> {
-                        promos = promos.filter { promo -> promo.proveedor == valorFiltro }.toMutableList()
-
-                    } "tarjetas" -> {
-                        promos = promos.filter { promo -> promo.tarjetas!!.contains(valorFiltro)  }.toMutableList()
-
-                    } "tipoPromocion" -> {
-                        promos = promos.filter { promo -> promo.tipoPromocion == valorFiltro }.toMutableList()
-
-                    } "topeNro" -> {
-                        promos = promos.filter { promo -> promo.topeNro == valorFiltro }.toMutableList()
-
-                    } "topeTexto" -> {
-                        promos = promos.filter { promo -> promo.topeTexto == valorFiltro }.toMutableList()
-
-                    } "vigenciaDesde" -> {
-                        val fechaLocal = LocalDate.parse(valorFiltro, formato)
-                        promos = promos.filter { promo -> promo.vigenciaDesde == fechaLocal }.toMutableList()
-
-                    } "vigenciaHasta" -> {
-                        val fechaLocal = LocalDate.parse(valorFiltro, formato)
-                        promos = promos.filter { promo -> promo.vigenciaHasta == fechaLocal }.toMutableList()
-
-                    }
-                    else -> throw IllegalArgumentException("Atributo desconocido")
-                }
-            i += 1
+            val filtro: (Promocion) -> Boolean = when (campoFiltro) {
+                "titulo" -> { promo ->
+                    val titulo = promo.titulo
+                    titulo != null && titulo.removeAccents()
+                        .lowercase()
+                        .contains(valorFiltro.removeAccents().lowercase()) }
+                "categoria" -> { promo ->
+                    val categoria = promo.categoria
+                    categoria != null && categoria.removeAccents()
+                        .lowercase()
+                        .contains(valorFiltro.removeAccents().lowercase()) }
+                "dias" -> { promo -> promo.dias!!.contains(valorFiltro) }
+                "porcentaje" -> { promo -> promo.porcentaje == valorFiltro }
+                "proveedor" -> { promo -> promo.proveedor == valorFiltro }
+                "tarjetas" -> { promo -> promo.tarjetas!!.contains(valorFiltro) }
+                "tipoPromocion" -> { promo -> promo.tipoPromocion == valorFiltro }
+                "topeNro" -> { promo -> promo.topeNro == valorFiltro }
+                "topeTexto" -> { promo -> promo.topeTexto == valorFiltro }
+                "vigenciaDesde" -> {promo -> promo.vigenciaDesde == LocalDate.parse(valorFiltro, formato) }
+                "vigenciaHasta" -> { promo -> promo.vigenciaHasta == LocalDate.parse(valorFiltro, formato) }
+                else -> throw IllegalArgumentException("Atributo desconocido")
             }
 
-        return promos
+            if (usarAnd) {
+                // Filtrar con operador AND (todos los filtros deben coincidir)
+                promosAux = promos.filter { promo -> filtro(promo) }.toMutableList()
+            } else {
+                // Filtrar con operador OR (al menos un filtro debe coincidir)
+                val promosFiltradas = promos.filter { promo -> filtro(promo) }.toMutableList()
+                promosAux.addAll(promosFiltradas)
+            }
+
+            i++
+        }
+
+        return promosAux.distinct()
     }
+
 
 
     suspend fun  obtenerPromosPorTarjeta(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
