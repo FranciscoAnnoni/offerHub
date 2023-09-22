@@ -62,7 +62,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:gravity="center_vertical|center_horizontal"
-            android:text="15%"
+            android:text="%"
             android:textSize="14sp" />
 
         <ImageView

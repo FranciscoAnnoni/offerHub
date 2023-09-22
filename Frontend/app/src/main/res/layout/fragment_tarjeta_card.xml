@@ -64,7 +64,7 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:maxWidth="100dp"
-                android:text="Banco"
+                android:text="Segmento"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -76,7 +76,7 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:maxWidth="100dp"
-                android:text="Banco"
+                android:text="Procesadora"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -88,7 +88,7 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:maxWidth="100dp"
-                android:text="Banco"
+                android:text="Tipo Tarjeta"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
         </LinearLayout>
