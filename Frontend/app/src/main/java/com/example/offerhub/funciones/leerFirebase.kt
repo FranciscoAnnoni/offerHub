@@ -122,7 +122,7 @@ class Promocion(
     val url: String?,
     val vigenciaDesde: LocalDate?,
     val vigenciaHasta: LocalDate?,
-    val estado: String?,
+    val estado: String?
 ) : Parcelable {
     fun obtenerTextoVigencia(): String? {
         val vigenciaDesde = this.vigenciaDesde
@@ -154,21 +154,22 @@ class Promocion(
         return ""
     }
 
-    suspend fun obtenerSucursales(){
+    suspend fun obtenerSucursales() {
         val listaSucursales: MutableList<Sucursal> = mutableListOf()
         val instancia = LeerId()
 
-        for(idSucursal in this.idSucursales!!){
-            if (idSucursal != null) {
-                var sucursal = instancia.obtenerSucursalPorId(idSucursal)
-                if (sucursal != null) {
-                    listaSucursales.add(sucursal)
+        this.idSucursales?.forEach { idSucursal ->
+            idSucursal?.let { id ->
+                val sucursal = instancia.obtenerSucursalPorId(id)
+                sucursal?.let {
+                    listaSucursales.add(it)
                 }
             }
         }
 
         this.sucursales = listaSucursales
     }
+
 }
 
 class LecturaBD {
@@ -222,10 +223,21 @@ class LecturaBD {
                                     lista.add(instancia as T)
                                 }
                                 "Sucursal" ->{
+                                    var latitud = data.child("latitud").getValue(String::class.java)
+                                    if (latitud != null) {
+                                        if(latitud.contains("posee") || latitud.contains("Error")){
+                                            latitud = "0"
+                                        }
+                                    }
+                                    var longitud = data.child("longitud").getValue(String::class.java)
+                                    if (longitud != null) {
+                                        if(longitud.contains("posee") || longitud.contains("Error")){
+                                            longitud = "0"
+                                        }
+                                    }
                                     val instancia = Sucursal(data.key,data.child("direccion").getValue(String::class.java),  data.child("idComercio").getValue(String::class.java),
-                                        data.child("latitud").getValue(String::class.java)?.toDouble(),
-                                        data.child("longitud").getValue(String::class.java)
-                                            ?.toDouble()
+                                        latitud?.toDouble(),
+                                        longitud?.toDouble()
                                     )
                                     lista.add(instancia as T)
                                 }

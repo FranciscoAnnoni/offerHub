@@ -194,13 +194,22 @@ class LeerId {
         val dataSnapshot = database.child("Sucursal").child(id).get().await()
 
         if (dataSnapshot.exists()) {
+            var latitud = dataSnapshot.child("latitud").getValue(String::class.java)
+            if (latitud != null) {
+                if(latitud.contains("posee")|| latitud.contains("Error")){
+                    latitud = "0.1"
+                }
+            }
+            var longitud = dataSnapshot.child("longitud").getValue(String::class.java)
+            if (longitud != null) {
+                if(longitud.contains("posee") || longitud.contains("Error")){
+                    longitud = "0.1"
+                }
+            }
             val key = dataSnapshot.key
             val direccion = dataSnapshot.child("direccion").getValue(String::class.java)
             val idComercio = dataSnapshot.child("idComercio").getValue(String::class.java)
-            val latitud = dataSnapshot.child("latitud").getValue(String::class.java)?.toDouble()
-            val longitud = dataSnapshot.child("longitud").getValue(String::class.java)?.toDouble()
-            val coroutineScope = CoroutineScope(Dispatchers.Main)
-            val sucursal = Sucursal(key,direccion,idComercio,latitud,longitud)
+            val sucursal = Sucursal(key,direccion,idComercio,latitud?.toDouble(),longitud?.toDouble())
             return sucursal
         } else {
             return null
