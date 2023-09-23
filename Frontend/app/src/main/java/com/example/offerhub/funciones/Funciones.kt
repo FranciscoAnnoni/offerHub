@@ -53,6 +53,7 @@ class Funciones {
                 }
             }
         }
+        Log.d("DB - Obteniendo Promociones","Se estan descargando promociones de la DB")
         deferredPromos?.awaitAll()
         listaPromos
     }
@@ -121,14 +122,18 @@ class Funciones {
     }
 
 
-    suspend fun obtenerPromocionesFavoritas(usuario: Usuario): MutableList<Promocion> = coroutineScope {
-        val promocionesTotales = obtenerPromociones(usuario)
+    suspend fun obtenerPromocionesFavoritas(usuario: Usuario,promosDisp:MutableList<Promocion> = mutableListOf()): MutableList<Promocion> = coroutineScope {
+        val promocionesTotales = if(promosDisp.size>0) promosDisp else obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
         val instancia = LeerId()
         if(usuario.favoritos != null) {
             for (id in usuario.favoritos!!) {
                 if (id != null) {
-                    instancia.obtenerPromocionPorId(id)?.let { promociones.add(it) }
+                    var promo=promocionesTotales.find { it -> it.id==id }
+                    if(promo!=null){
+                        promociones.add(promo)
+                    }
+                    //instancia.obtenerPromocionPorId(id)?.let { promociones.add(it) }
                 }
             }
         }
@@ -144,8 +149,8 @@ class Funciones {
         usuario.promocionesReintegro?.contains(elementoId) == true
     }
 
-    suspend fun obtenerPromocionesReintegro(usuario: Usuario): MutableList<Promocion> = coroutineScope {
-        val promocionesTotales = obtenerPromociones(usuario)
+    suspend fun obtenerPromocionesReintegro(usuario: Usuario,promosDisp:MutableList<Promocion> = mutableListOf()): MutableList<Promocion> = coroutineScope {
+        val promocionesTotales = if(promosDisp.size>0) promosDisp else obtenerPromociones(usuario)
         val promociones : MutableList<Promocion> = mutableListOf()
 
         for(promocion in promocionesTotales){
@@ -157,7 +162,7 @@ class Funciones {
         promociones
     }
 
-    suspend fun buscarPromocionesPorRubro(usuario: Usuario, nombreRubro: String): List<Promocion> = coroutineScope {
+   /* suspend fun buscarPromocionesPorRubro(usuario: Usuario, nombreRubro: String): List<Promocion> = coroutineScope {
         val filtros = listOf(
             "categoria" to nombreRubro,
         )
@@ -173,7 +178,7 @@ class Funciones {
         val promocionesFiltradas = instanciaLectura.filtrarPromos(filtros)
 
         promocionesFiltradas
-    }
+    }*/
 
 
 

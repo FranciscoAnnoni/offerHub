@@ -63,6 +63,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun logout(){
+        UserViewModelCache().vaciarCache()
         auth.signOut()
 
     }

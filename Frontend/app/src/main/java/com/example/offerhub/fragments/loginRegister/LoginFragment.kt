@@ -28,6 +28,7 @@ import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.ProfileViewModel
+import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -137,11 +138,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     is Resource.Success -> {
                         CoroutineScope(Dispatchers.Main).launch {
                             val userViewModel: UserViewModel by viewModels()
-                           userViewModel.usuario = Funciones().traerUsuarioActual()
-                            userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuario!!)
-                            userViewModel.favoritos = Funciones().obtenerPromocionesFavoritas(userViewModel.usuario!!)
-                            userViewModel.reintegros = Funciones().obtenerPromocionesReintegro(userViewModel.usuario!!)
-                            UserViewModelSingleton.initialize(userViewModel)
+                            val userViewModelCache = UserViewModelCache()
+                            val userViewModelCacheado = userViewModelCache.cargarUserViewModel()
+                                if (userViewModelCacheado != null) {
+                                    UserViewModelSingleton.initialize(userViewModelCacheado)
+                                } else {
+                                    userViewModel.usuario =Funciones().traerUsuarioActual()
+                                    userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuario!!)
+                                    userViewModel.favoritos = Funciones().obtenerPromocionesFavoritas(userViewModel.usuario!!,userViewModel.listadoDePromosDisp as MutableList<Promocion>)
+                                    userViewModel.reintegros = Funciones().obtenerPromocionesReintegro(userViewModel.usuario!!,userViewModel.listadoDePromosDisp as MutableList<Promocion>)
+                                    userViewModelCache.guardarUserViewModel(userViewModel)
+                                    UserViewModelSingleton.initialize(userViewModel)
+                                }
                         }.invokeOnCompletion {
                             Snackbar.make(
                                 rootViewLogin,

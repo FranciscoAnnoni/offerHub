@@ -1,47 +1,32 @@
 package com.example.offerhub.fragments.shopping
 
 import PromocionGridAdapter
-import android.R.attr.x
-import android.R.attr.y
 import PromocionGridPorCategoriaAdapter
-import UserViewModel
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextMenu
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
-import androidx.core.view.size
-import androidx.core.widget.NestedScrollView
-import androidx.appcompat.widget.ForwardingListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.EscribirBD
 import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
-import com.example.offerhub.KelineApplication
-import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
-import com.example.offerhub.Usuario
 import com.example.offerhub.databinding.FragmentHomeBinding
+import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
-import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,7 +39,7 @@ class HomeFragment : Fragment(R.layout.activity_shopping) {
     var isFavorite = false
     var listenerHabilitado = false
 
-    override fun onPause() {
+    /*override fun onPause() {
         super.onPause()
         scrollPosition = binding.promocionesGridView.scrollY
     }
@@ -63,7 +48,7 @@ class HomeFragment : Fragment(R.layout.activity_shopping) {
         binding.promocionesGridView.post {
             binding.promocionesGridView.scrollTo(0, scrollPosition)
         }
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -139,42 +124,62 @@ class HomeFragment : Fragment(R.layout.activity_shopping) {
                         val promociones: List<Promocion> =
                             userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
                         if (promociones.size > 0) {
-                            val categoriaTitle = TextView(requireContext())
-                            categoriaTitle.text = categoria.nombre
-                            categoriaTitle.textSize = 20f
-                            categoriaTitle.setPadding(0, 16, 0, 8)
+                            if (requireContext() != null) {
+                                val categoriaTitle = TextView(requireContext())
+                                categoriaTitle.text = categoria.nombre
+                                categoriaTitle.textSize = 20f
+                                categoriaTitle.setPadding(0, 16, 0, 8)
 
-                            // Crea un RecyclerView para esta categoría
-                            val recyclerView = RecyclerView(requireContext())
-                            recyclerView.layoutManager = LinearLayoutManager(
-                                requireContext(),
-                                RecyclerView.HORIZONTAL,
-                                false
-                            )
+                                // Crea un RecyclerView para esta categoría
+                                val recyclerView = RecyclerView(requireContext())
+                                recyclerView.layoutManager = LinearLayoutManager(
+                                    requireContext(),
+                                    RecyclerView.HORIZONTAL,
+                                    false
+                                )
 
-                            // Obtén las promociones para esta categoría (reemplaza esto con tu lógica real)
+                                // Obtén las promociones para esta categoría (reemplaza esto con tu lógica real)
 
 
-                            // Configura el adaptador para el RecyclerView
-                            val adapter = PromocionGridPorCategoriaAdapter(
-                                requireContext(),
-                                promociones,
-                                object : PromocionGridPorCategoriaAdapter.OnItemClickListener {
-                                    override fun onItemClick(promocion: Promocion) {
-                                        // Maneja el clic en el elemento aquí
-                                        val action =
-                                            HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(
-                                                promocion
-                                            )
-                                        findNavController().navigate(action)
-                                    }
-                                })
-                            recyclerView.adapter = adapter
+                                // Configura el adaptador para el RecyclerView
+                                val adapter = PromocionGridPorCategoriaAdapter(
+                                    activity!!,
+                                    promociones,
+                                    object : PromocionGridPorCategoriaAdapter.OnItemClickListener {
+                                        override fun onItemClick(promocion: Promocion) {
+                                            // Maneja el clic en el elemento aquí
+                                            val action =
+                                                HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(
+                                                    promocion
+                                                )
+                                            findNavController().navigate(action)
+                                        }
 
-                            // Agrega el título y el RecyclerView al contenedor
-                            categoriasContainer.addView(categoriaTitle)
-                            categoriasContainer.addView(recyclerView)
+                                        override fun onVerMasClick() {
+                                            TODO("Not yet implemented")
+                                        }
+                                    },
+                                    object : PromocionGridPorCategoriaAdapter.OnItemClickListener {
+                                        override fun onItemClick(promocion: Promocion) {
+                                            TODO("Not yet implemented")
+                                        }
 
+                                        override fun onVerMasClick() {
+                                            // Maneja el clic en el elemento aquí
+                                            val action =
+                                                HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                                                    categoria.nombre
+                                                )
+                                            findNavController().navigate(action)
+                                        }
+                                    })
+                                recyclerView.adapter = adapter
+
+                                // Agrega el título y el RecyclerView al contenedor
+                                categoriasContainer.addView(categoriaTitle)
+                                categoriasContainer.addView(recyclerView)
+
+                            }
                         }
                     }
                     categoriasContainer.visibility = View.VISIBLE
@@ -193,16 +198,6 @@ class HomeFragment : Fragment(R.layout.activity_shopping) {
             Log.d("Logueandome",userViewModel.usuario!!.nombre)
             Log.d("Logueandome",userViewModel.listadoDePromosDisp.count().toString())
             Log.d("Logueandome",userViewModel.favoritos.count().toString())
-            if (userViewModel.listadoDePromosDisp.isEmpty()) {
-                // Si no, obtén las promociones y guárdalas en el ViewModel
-                userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuario!!)
-            }
-            if(userViewModel.favoritos.isEmpty()){
-                userViewModel.favoritos = funciones.obtenerPromocionesFavoritas(userViewModel.usuario!!)
-            }
-            if(userViewModel.reintegros.isEmpty()){
-                userViewModel.reintegros = funciones.obtenerPromocionesReintegro(userViewModel.usuario!!)
-            }
             listenerHabilitado=false
             mySwitch.isChecked= userViewModel.usuario!!.homeModoFull=="1"
             listenerHabilitado=true
@@ -218,6 +213,7 @@ class HomeFragment : Fragment(R.layout.activity_shopping) {
             // Llamar a la función que obtiene los datos.
             val job = coroutineScope.launch {
                 userViewModel.usuario!!.homeModoFull=if(userViewModel.usuario!!.homeModoFull=="1") "0" else "1"
+                UserViewModelCache().guardarUserViewModel(userViewModel)
                 EscribirBD().editarAtributoDeClase("Usuario",
                     userViewModel.usuario!!.id.toString(),"homeModoFull",userViewModel.usuario!!.homeModoFull.toString())
                 cargarVista()

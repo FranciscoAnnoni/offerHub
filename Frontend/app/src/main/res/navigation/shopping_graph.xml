@@ -9,19 +9,22 @@
         android:id="@+id/homeFragment"
         android:name="com.example.offerhub.fragments.shopping.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_promoDetailFragment"
             app:destination="@id/promoDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/promoDetailFragment"
         android:name="com.example.offerhub.fragments.shopping.PromoDetailFragment"
         android:label="PromoDetailFragment"
-        tools:layout="@layout/fragment_promo_detail" >
-    <argument
-        android:name="promocion"
-        app:argType="com.example.offerhub.Promocion" />
+        tools:layout="@layout/fragment_promo_detail">
+        <argument
+            android:name="promocion"
+            app:argType="com.example.offerhub.Promocion" />
     </fragment>
     <fragment
         android:id="@+id/favFragment"
@@ -30,11 +33,9 @@
         tools:layout="@layout/fragment_fav">
         <action
             android:id="@+id/action_favFragment_to_promoDetailFragment"
-            app:destination="@id/promoDetailFragment"
-            />
+            app:destination="@id/promoDetailFragment" />
 
     </fragment>
-
 
     <fragment
         android:id="@+id/profileFragment"
@@ -57,11 +58,15 @@
         <action
             android:id="@+id/action_searchFragment_to_promoDetailFragment"
             app:destination="@id/promoDetailFragment" />
+        <argument
+            android:name="categoria"
+            android:defaultValue=""
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/userAccountFragment"
         android:name="com.example.offerhub.fragments.settings.UserAccountFragment"
-        android:label="UserAccountFragment" >
+        android:label="UserAccountFragment">
         <action
             android:id="@+id/action_userAccountFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
