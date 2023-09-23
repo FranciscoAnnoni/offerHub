@@ -91,25 +91,15 @@ class Tarjeta{
         this.entidad = entidad
     }
 }
-
-class Sucursal{
+@Parcelize
+class Sucursal(
     // Propiedades (atributos) de la clase
-    var id: String?
-    var direccion: String?
-    var idComercio: String?
-    var latitud: Double?
+    var id: String?,
+    var direccion: String?,
+    var idComercio: String?,
+    var latitud: Double?,
     var longitud: Double?
-
-
-    // Constructor primario
-    constructor(id:String?,direccion: String?, idComercio: String?,latitud: Double?,longitud: Double?) {
-        this.id = id
-        this.direccion = direccion
-        this.idComercio = idComercio
-        this.latitud = latitud
-        this.longitud = longitud
-    }
-}
+    ): Parcelable
 
 @Parcelize
 class Promocion(
@@ -120,7 +110,8 @@ class Promocion(
     val dias: List<String?>?,
     var porcentaje: String?,
     var proveedor: String?,
-    val sucursales: List<String?>?,
+    val idSucursales: List<String?>?,
+    var sucursales: List<Sucursal?>?,
     val tarjetas: List<String?>?,
     val tipoPromocion: String?,
     val titulo: String?,
@@ -132,7 +123,6 @@ class Promocion(
     val vigenciaDesde: LocalDate?,
     val vigenciaHasta: LocalDate?,
     val estado: String?,
-    val logo: String?
 ) : Parcelable {
     fun obtenerTextoVigencia(): String? {
         val vigenciaDesde = this.vigenciaDesde
@@ -162,6 +152,22 @@ class Promocion(
             return this.cuotas.toString()
         }
         return ""
+    }
+
+    suspend fun obtenerSucursales(){
+        val listaSucursales: MutableList<Sucursal> = mutableListOf()
+        val instancia = LeerId()
+
+        for(idSucursal in this.idSucursales!!){
+            if (idSucursal != null) {
+                var sucursal = instancia.obtenerSucursalPorId(idSucursal)
+                if (sucursal != null) {
+                    listaSucursales.add(sucursal)
+                }
+            }
+        }
+
+        this.sucursales = listaSucursales
     }
 }
 
@@ -256,6 +262,7 @@ class LecturaBD {
                                         data.child("porcentaje").getValue(String::class.java),
                                         data.child("proveedor").getValue(String::class.java),
                                         data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                        mutableListOf(),
                                         data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tipoPromocion").getValue(String::class.java),
                                         data.child("titulo").getValue(String::class.java),
@@ -266,8 +273,8 @@ class LecturaBD {
                                         data.child("url").getValue(String::class.java),
                                         desde,
                                         hasta,
-                                        data.child("tipoPromocion").getValue(String::class.java),
-                                        logo
+                                        data.child("tipoPromocion").getValue(String::class.java)
+
                                     )
                                     lista.add(instancia as T)
                                 } "Usuario" ->{
@@ -424,13 +431,14 @@ class LecturaBD {
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
                                 data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                mutableListOf(),
                                 data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("tipoPromocion").getValue(String::class.java),
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
                                 data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
                                 data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
                                 vigenciaHastaString?.let { LocalDate.parse(it, formato) },
-                                data.child("estado").getValue(String::class.java),"")
+                                data.child("estado").getValue(String::class.java))
                             lista.add(instancia)
                         }
 
