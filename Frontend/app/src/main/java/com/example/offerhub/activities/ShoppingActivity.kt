@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.offerhub.Comercio
@@ -26,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ShoppingActivity : AppCompatActivity() {
     var listadoDePromosDisp: List<Promocion> = listOf()
+    private lateinit var navController: NavController
     val binding by lazy {
         ActivityShoppingBinding.inflate(layoutInflater)
     }
@@ -34,8 +36,8 @@ class ShoppingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) // Asegúrate de que este sea el nombre de tu archivo de diseño de actividad.
-            val navController = findNavController(R.id.mainAppFragment)
-            binding.bottomNavigation.setupWithNavController(navController)
+        navController = findNavController(R.id.mainAppFragment)
+        binding.bottomNavigation.setupWithNavController(navController)
         //setContentView(R.layout.fragment_search) // Asegúrate de que este sea el nombre de tu archivo de diseño de actividad.
 
 
