@@ -207,6 +207,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             // Establecer la imagen en la ImageView
             binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
         }
+        }
 
         binding.apply {
             var text =promocion.obtenerDesc()
