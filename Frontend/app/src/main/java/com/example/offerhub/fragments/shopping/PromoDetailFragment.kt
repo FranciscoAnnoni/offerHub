@@ -167,22 +167,23 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                     putExtra("promocion",promocion.id.toString())
                 }
 
-            fun isNotificado(): Boolean {
-                return userViewModel.reintegros.any { it -> comparar(it) }
-            }
+                fun isNotificado(): Boolean {
+                    return userViewModel.reintegros.any { it -> comparar(it) }
+                }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     AlarmaNotificacion.NOTIFICATION_ID,
                     intent,
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
-            if (!isNotificado()) {
-                userViewModel.reintegros.add(promocion)
-                UserViewModelCache().guardarUserViewModel(userViewModel)
-                Log.d("Agrego Reintegros",userViewModel.reintegros.size.toString())
+                if (!isNotificado()) {
+                    userViewModel.reintegros.add(promocion)
+                    UserViewModelCache().guardarUserViewModel(userViewModel)
+                    Log.d("Agrego Reintegros",userViewModel.reintegros.size.toString())
 
-                // Cambiar la imagen según el estado
-                if (isNotificado) {
+                    // Cambiar la imagen según el estado
+
+                    Log.d("entre","entre")
                     val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (1000), pendingIntent) //a los 30 segundos
 
@@ -190,23 +191,22 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                         userViewModel.id.toString(),
                         promocion.id.toString(),
                     )
+                } else {
+                    userViewModel.reintegros.removeIf { it->comparar(it) }
+                    UserViewModelCache().guardarUserViewModel(userViewModel)
+                    Log.d("Saco Reintegros",userViewModel.reintegros.size.toString())
+                    coroutineScope.launch {
+                        instancia.elimiarPromocionDeReintegro(
+                            userViewModel.id.toString(),
+                            promocion.id.toString()
+                        )
+                        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        alarmManager.cancel(pendingIntent)
+                    }
                 }
-            } else {
-                userViewModel.reintegros.removeIf { it->comparar(it) }
-                UserViewModelCache().guardarUserViewModel(userViewModel)
-                Log.d("Saco Reintegros",userViewModel.reintegros.size.toString())
-                coroutineScope.launch {
-                    instancia.elimiarPromocionDeReintegro(
-                        userViewModel.id.toString(),
-                        promocion.id.toString()
-                    )
-                    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    alarmManager.cancel(pendingIntent)
-                }
-            }
             // Establecer la imagen en la ImageView
-            binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
-        }
+                binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
+            }
         }
 
         binding.apply {
