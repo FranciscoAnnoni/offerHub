@@ -161,43 +161,52 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             Log.d("Cant de Reintegros",userViewModel.reintegros.size.toString())
             Log.d("Reintegros",userViewModel.reintegros.joinToString(","))
 
-            fun isNotificado(): Boolean {
-                return userViewModel.reintegros.any { it -> comparar(it) }
-            }
-            if (!isNotificado()) {
-                userViewModel.reintegros.add(promocion)
-                UserViewModelCache().guardarUserViewModel(userViewModel)
-                Log.d("Agrego Reintegros",userViewModel.reintegros.size.toString())
-                val intent = Intent(context, AlarmaNotificacion::class.java)
+            coroutineScope.launch {
+                val intent = Intent(context, AlarmaNotificacion::class.java).apply{
+                    putExtra("comercio", Funciones().traerInfoComercio(promocion.comercio,"nombre"))
+                    putExtra("promocion",promocion.id.toString())
+                }
+
+                fun isNotificado(): Boolean {
+                    return userViewModel.reintegros.any { it -> comparar(it) }
+                }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     AlarmaNotificacion.NOTIFICATION_ID,
                     intent,
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
+                if (!isNotificado()) {
+                    userViewModel.reintegros.add(promocion)
+                    UserViewModelCache().guardarUserViewModel(userViewModel)
+                    Log.d("Agrego Reintegros",userViewModel.reintegros.size.toString())
 
-                val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (30*1000), pendingIntent) //a los 30 segundos
-                coroutineScope.launch {
+                    // Cambiar la imagen según el estado
+
+                    Log.d("entre","entre")
+                    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (1000), pendingIntent) //a los 30 segundos
+
                     instancia.agregarPromocionAReintegro(
                         userViewModel.id.toString(),
-                        promocion.id.toString()
+                        promocion.id.toString(),
                     )
+                } else {
+                    userViewModel.reintegros.removeIf { it->comparar(it) }
+                    UserViewModelCache().guardarUserViewModel(userViewModel)
+                    Log.d("Saco Reintegros",userViewModel.reintegros.size.toString())
+                    coroutineScope.launch {
+                        instancia.elimiarPromocionDeReintegro(
+                            userViewModel.id.toString(),
+                            promocion.id.toString()
+                        )
+                        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        alarmManager.cancel(pendingIntent)
+                    }
                 }
-            } else {
-                userViewModel.reintegros.removeIf { it->comparar(it) }
-                UserViewModelCache().guardarUserViewModel(userViewModel)
-                Log.d("Saco Reintegros",userViewModel.reintegros.size.toString())
-                coroutineScope.launch {
-                    instancia.elimiarPromocionDeReintegro(
-                        userViewModel.id.toString(),
-                        promocion.id.toString()
-                    )
-                }
-            }
-
             // Establecer la imagen en la ImageView
-            binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
+                binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
+            }
         }
 
         binding.apply {
