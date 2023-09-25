@@ -1,5 +1,6 @@
 package com.example.offerhub.funciones
 
+import UserViewModel
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,8 +14,14 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.example.offerhub.Funciones
+import com.example.offerhub.LeerId
+import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.PromoNotiDetailActivity
+import com.example.offerhub.viewmodel.UserViewModelCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AlarmaNotificacion:BroadcastReceiver(){
 
@@ -25,6 +32,22 @@ class AlarmaNotificacion:BroadcastReceiver(){
     override fun onReceive(context: Context ,p1: Intent?) {
         val mensaje = p1?.getStringExtra("comercio")
         val promo = p1?.getStringExtra("promocion")
+        val instancia = Funciones()
+        var userViewModel :UserViewModel=UserViewModel()
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        fun comparar(it: Promocion): Boolean {
+            return it.id == promo
+        }
+        userViewModel.reintegros.removeIf { it->comparar(it) }
+        UserViewModelCache().guardarUserViewModel(userViewModel)
+        coroutineScope.launch {
+            if (promo != null) {
+                instancia.elimiarPromocionDeReintegro(
+                    userViewModel.id.toString(),
+                    promo
+                )
+            }
+        }
 
         createSimpleNotification(context, mensaje,promo)
 
