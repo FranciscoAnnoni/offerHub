@@ -29,6 +29,7 @@ import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.activities.SucursalesAdapter
 import com.example.offerhub.databinding.FragmentPromoDetailBinding
 import com.example.offerhub.funciones.AlarmaNotificacion
 import com.example.offerhub.funciones.CanalNoti
@@ -49,6 +50,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
     var isFavorite = false
     var isNotificado = false
     var isTyCExpanded = false
+    var isSucursalesExpanded = false
     var userViewModel :UserViewModel=UserViewModel()
 
     override fun onCreateView(
@@ -83,6 +85,21 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             } else {
                 binding.imageToggleTyC.setImageResource(R.drawable.ic_expand_more)
                 binding.promoTyC.visibility = View.GONE
+            }
+        }
+        binding.imageToggleSucursales.setOnClickListener {
+            isSucursalesExpanded = !isSucursalesExpanded
+            Log.d("Sucursales", promocion.sucursales?.size.toString())
+            if (isSucursalesExpanded) {
+                binding.imageToggleSucursales.setImageResource(R.drawable.ic_expand_less)
+                binding.recyclerViewSucursales.visibility = View.VISIBLE
+                // Calcula la posición y anima el desplazamiento hacia abajo
+                val animator = ObjectAnimator.ofInt(binding.scrollView, "scrollY", binding.topLine.bottom)
+                animator.duration = 500 // Duración de la animación en milisegundos
+                animator.start()
+            } else {
+                binding.imageToggleSucursales.setImageResource(R.drawable.ic_expand_more)
+                binding.recyclerViewSucursales.visibility = View.GONE
             }
         }
 
@@ -237,8 +254,16 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             } else {
                 txtTope.text=promocion.topeTexto
             }
+
             promoTyC.text = promocion.tyc
             promoVigencia.text=promocion.obtenerTextoVigencia()
+            coroutineScope.launch {
+                Log.d("PROMO DETAIL sucursales",promocion.sucursales!!.size.toString())
+                val sucursales = promocion.sucursales ?: emptyList() // Asume que `sucursales` es una lista de Strings en tu objeto `promocion`
+                val sucursalAdapter = SucursalesAdapter(sucursales)
+                recyclerViewSucursales.adapter = sucursalAdapter
+            }
+
             coroutineScope.launch {
                 promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
                 val logoBitmap = Comercio(

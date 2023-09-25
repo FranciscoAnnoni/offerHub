@@ -166,7 +166,7 @@ class Promocion(
                 }
             }
         }
-
+        Log.d("DB - Obtener Sucursales", "Obteniendo sucursales de DB")
         this.sucursales = listaSucursales
     }
 

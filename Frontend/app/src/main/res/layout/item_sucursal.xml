@@ -1,0 +1,21 @@
+<!-- item_sucursal.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Nombre de la sucursal -->
+    <TextView
+        android:id="@+id/textSucursalName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#000000" />
+
+    <!-- Otras vistas para mostrar detalles de la sucursal -->
+    <!-- Puedes agregar más TextViews, ImageViews u otras vistas según tus necesidades -->
+
+</LinearLayout>
