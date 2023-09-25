@@ -103,26 +103,26 @@ class Sucursal(
 
 @Parcelize
 class Promocion(
-    var id: String?,
-    var categoria: String?,
-    var comercio: String?,
-    var cuotas: String?,
-    val dias: List<String?>?,
-    var porcentaje: String?,
-    var proveedor: String?,
-    val idSucursales: List<String?>?,
-    var sucursales: List<Sucursal?>?,
-    val tarjetas: List<String?>?,
-    val tipoPromocion: String?,
-    val titulo: String?,
-    val topeNro: String?,
-    val topeTexto: String?,
-    val tyc: String?,
-    val descripcion: String?,
-    val url: String?,
-    val vigenciaDesde: LocalDate?,
-    val vigenciaHasta: LocalDate?,
-    val estado: String?
+    var id: String? = null,
+    var categoria: String? = null,
+    var comercio: String? = null,
+    var cuotas: String? = null,
+    val dias: List<String?>? = null,
+    var porcentaje: String? = null,
+    var proveedor: String? = null,
+    val idSucursales: List<String?>? = null,
+    var sucursales: List<Sucursal?>? = null,
+    val tarjetas: List<String?>? = null,
+    val tipoPromocion: String? = null,
+    val titulo: String? = null,
+    val topeNro: String? = null,
+    val topeTexto: String? = null,
+    val tyc: String? = null,
+    val descripcion: String? = null,
+    val url: String? = null,
+    val vigenciaDesde: LocalDate? = null,
+    val vigenciaHasta: LocalDate? = null,
+    val estado: String? = null
 ) : Parcelable {
     fun obtenerTextoVigencia(): String? {
         val vigenciaDesde = this.vigenciaDesde
