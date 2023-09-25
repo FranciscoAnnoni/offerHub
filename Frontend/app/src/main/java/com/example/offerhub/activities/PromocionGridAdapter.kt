@@ -47,11 +47,13 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
 
-        if (promocion.porcentaje == null) {
-            tvDescuento.text = promocion.tipoPromocion
-        } else {
-            tvDescuento.text = promocion.porcentaje + "%"
+        var textoPromo=promocion.obtenerDesc()
+        if(promocion.tipoPromocion=="Reintegro" || promocion.tipoPromocion=="Descuento"){
+            textoPromo=textoPromo+"%"
+        }  else if (promocion.tipoPromocion=="Cuotas") {
+            textoPromo = textoPromo + " cuotas"
         }
+        tvDescuento.text = textoPromo
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         val userViewModel = UserViewModelSingleton.getUserViewModel()

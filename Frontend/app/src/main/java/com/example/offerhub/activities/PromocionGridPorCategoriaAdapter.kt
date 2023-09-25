@@ -61,8 +61,14 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
 
                 coroutineScope.launch {
                     promocionViewHolder.textViewCategory.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
-
                     val userViewModel = UserViewModelSingleton.getUserViewModel()
+                    var textoPromo=promocion.obtenerDesc()
+                    if(promocion.tipoPromocion=="Reintegro" || promocion.tipoPromocion=="Descuento"){
+                        textoPromo=textoPromo+"%"
+                    }  else if (promocion.tipoPromocion=="Cuotas") {
+                        textoPromo = textoPromo + " cuotas"
+                    }
+                    promocionViewHolder.textViewDto.text = textoPromo
                     var logo: Bitmap?=null
 
                     /*
@@ -120,6 +126,7 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
 
     inner class PromocionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewCategory = itemView.findViewById<TextView>(R.id.tvPromocionComercio)
+        val textViewDto = itemView.findViewById<TextView>(R.id.tvPromocionDescuento)
         val favIcon = itemView.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = itemView.findViewById<ImageView>(R.id.imgComercio)
         val layoutTarjetaPromo = itemView.findViewById<ConstraintLayout>(R.id.layoutTarjetaPromo)
