@@ -283,6 +283,4 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             //tvProductDescription.text = promocion.description
 
         }
-
-
     }

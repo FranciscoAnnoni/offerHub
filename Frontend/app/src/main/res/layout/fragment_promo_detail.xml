@@ -333,7 +333,7 @@
                     android:gravity="left"
                     app:layout_constraintTop_toBottomOf="@id/tituloTope"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="Se le enviara un mail recordandole de chequear el reintegro."/>
+                    android:text="Se le enviara una notificación recordandole de chequear el reintegro."/>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/containerTarjetas"
