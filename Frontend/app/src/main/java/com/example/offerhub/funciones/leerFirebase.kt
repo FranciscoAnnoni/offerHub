@@ -434,8 +434,16 @@ class LecturaBD {
                         val listaCampo = data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
                         if (listaCampo != null && listaCampo.contains(tarjeta)) {
                             val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            val vigenciaDesdeString: String? = data.child("vigenciaDesde").getValue(String::class.java)
-                            val vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                            val desdeFormateado: LocalDate?
+                            val hastaFormateado: LocalDate?
+                            var vigenciaDesdeString = data.child("vigenciaDesde").getValue(String::class.java)
+                            if(vigenciaDesdeString != "No posee"){
+                                desdeFormateado = LocalDate.parse(vigenciaDesdeString, formato)
+                            } else { desdeFormateado = null }
+                            var vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                            if(vigenciaHastaString != "No posee"){
+                                hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
+                            } else { hastaFormateado = null }
                             val comercio: String? = data.child("comercio").getValue(String::class.java)
                             val coroutineScope = CoroutineScope(Dispatchers.Main)
                             val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
@@ -448,9 +456,10 @@ class LecturaBD {
                                 data.child("tipoPromocion").getValue(String::class.java),
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
                                 data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
-                                data.child("url").getValue(String::class.java),vigenciaDesdeString?.let { LocalDate.parse(it, formato) },
-                                vigenciaHastaString?.let { LocalDate.parse(it, formato) },
-                                data.child("estado").getValue(String::class.java))
+                                data.child("url").getValue(String::class.java),
+                                desdeFormateado,
+                                hastaFormateado,
+                                data.child("estdeado").getValue(String::class.java))
                             lista.add(instancia)
                         }
 
