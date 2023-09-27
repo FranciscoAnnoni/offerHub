@@ -42,9 +42,6 @@ class Funciones {
             coroutineScope.async {
                 if(i == 0){
                     val promosComunes = obtenerPromocionesComunes()
-                    for(promoComun in promosComunes){
-                        promoComun.obtenerSucursales()
-                    }
                     if (promosComunes != null) {
                     listaPromos.addAll(promosComunes)
                     }
@@ -52,11 +49,6 @@ class Funciones {
 
                 val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
                 if (promos != null) {
-                    promos.forEach { promo ->
-                        coroutineScope.launch {
-                            promo.obtenerSucursales()
-                        }
-                    }
                     listaPromos.addAll(promos)
                 }
             }
