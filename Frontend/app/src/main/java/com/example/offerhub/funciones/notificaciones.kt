@@ -18,6 +18,7 @@ import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.PromoNotiDetailActivity
+import com.example.offerhub.activities.ShoppingActivity
 import com.example.offerhub.viewmodel.UserViewModelCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

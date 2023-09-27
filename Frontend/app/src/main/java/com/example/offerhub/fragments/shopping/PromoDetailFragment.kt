@@ -202,7 +202,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
                     Log.d("entre","entre")
                     val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (60*1000), pendingIntent) //a los 30 segundos
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (5*1000), pendingIntent) //a los 30 segundos
 
                     instancia.agregarPromocionAReintegro(
                         userViewModel.id.toString(),
