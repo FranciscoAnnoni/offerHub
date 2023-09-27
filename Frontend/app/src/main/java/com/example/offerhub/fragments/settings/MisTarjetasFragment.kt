@@ -20,6 +20,8 @@ import com.example.offerhub.Tarjeta
 import com.example.offerhub.Usuario
 import com.example.offerhub.activities.MisTarjetasAdapter
 import com.example.offerhub.databinding.FragmentMisTarjetasBinding
+import com.example.offerhub.viewmodel.UserViewModelCache
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +30,7 @@ class MisTarjetasFragment: Fragment() {
     private lateinit var binding: FragmentMisTarjetasBinding
     private lateinit var tarjetasGridView: GridView
     private lateinit var usuario: Usuario
+    private var uvm = UserViewModelSingleton.getUserViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +56,7 @@ class MisTarjetasFragment: Fragment() {
         tarjetasGridView = view.findViewById<GridView>(R.id.gvMisTarjetas)
         registerForContextMenu(tarjetasGridView)
         val job = coroutineScope.launch {
-            usuario = funciones.traerUsuarioActual()!!
+            usuario = UserViewModelSingleton.getUserViewModel().usuario!!
             var tarjetas: MutableList<Tarjeta> = mutableListOf()
             for (tarjetaId in usuario.tarjetas!!) {
                 if (tarjetaId != null) {
@@ -90,6 +93,8 @@ class MisTarjetasFragment: Fragment() {
         if(item.itemId == R.id.opcionEliminarTarjeta) {
             coroutineScope.launch {
                 funciones.elimiarTarjetaDeUsuario(usuario.id, tarjeta.id!!)
+                uvm.usuario!!.tarjetas!!.remove(tarjeta.id)
+                UserViewModelCache().guardarUserViewModel(uvm)
             }
             Toast.makeText(requireContext(), "Tarjeta Eliminada", Toast.LENGTH_LONG).show()
             return true

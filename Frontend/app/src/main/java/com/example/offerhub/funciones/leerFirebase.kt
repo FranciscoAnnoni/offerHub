@@ -295,11 +295,11 @@ class LecturaBD {
                                         Usuario(
                                             it1,
                                             data.child("nombre").getValue(String::class.java)!!,  data.child("correo").getValue(String::class.java),
-                                            data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("tarjetas").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("favoritos").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("wishlistComercio").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("wishlistRubro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
                                                     data.child("homeModoFull").getValue(String::class.java)
                                         )
                                     }

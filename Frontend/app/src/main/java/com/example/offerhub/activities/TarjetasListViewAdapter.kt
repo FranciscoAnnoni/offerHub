@@ -9,7 +9,7 @@ import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
 
 
-class TarjetasListViewAdapter(private val context: Context, private val tarjetas: List<Tarjeta>, tarjetasUsuario: List<String?>) : BaseAdapter() {
+class TarjetasListViewAdapter(private val context: Context, private val tarjetas: List<Tarjeta>, tarjetasUsuario: MutableList<String?>) : BaseAdapter() {
     var tarjetasUsuario = tarjetasUsuario
 
     override fun getCount(): Int {

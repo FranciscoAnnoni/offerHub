@@ -82,11 +82,11 @@ class RegisterViewModel @Inject constructor(
            userUid,
            user.nameAndLastName,
            user.email,
-           listOf(),
-           listOf(),
-           listOf(),
-           listOf(),
-           listOf(),
+           mutableListOf(),
+           mutableListOf(),
+           mutableListOf(),
+           mutableListOf(),
+           mutableListOf(),
            "0"
        )
 

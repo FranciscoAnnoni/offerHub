@@ -12,12 +12,12 @@
         android:background="@drawable/border_promocion"
         >
      <ImageView
+         android:id="@+id/ivLogoBanco"
          android:layout_width="50dp"
          android:layout_height="50dp"
          android:src="@drawable/logo_santander"
          android:layout_marginLeft="10dp"
          android:background="@drawable/icon_background"
-         android:backgroundTint="@color/g_orange_yellow"
          android:layout_marginTop="10dp"
 
          />

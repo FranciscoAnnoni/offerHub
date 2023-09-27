@@ -33,6 +33,8 @@ import com.example.offerhub.Tarjeta
 //import com.example.offerhub.activities.EntidadTarjetasAdapter
 //import com.example.offerhub.databinding.FragmentEntidadTarjetasBinding
 import com.example.offerhub.databinding.FragmentTarjetasBinding
+import com.example.offerhub.viewmodel.UserViewModelCache
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 //import com.example.offerhub.viewmodel.CargadoTarjetasViewModel
 import dagger.hilt.internal.aggregatedroot.codegen._com_example_offerhub_KelineApplication
 import kotlinx.coroutines.CoroutineScope
@@ -70,20 +72,18 @@ class CargadoTarjetasFragment : Fragment() {
 
         var datos: MutableList<String> = mutableListOf()
         val job = coroutineScope.launch {
-            var usuario = funciones.traerUsuarioActual()!!
-            var tarjetasUsuario = usuario.tarjetas!!
+        var uvm = UserViewModelSingleton.getUserViewModel()
+        var usuario = uvm.usuario!!
+        var tarjetasUsuario = usuario.tarjetas!!
 
-            binding.botonGuardar.setOnClickListener {
-                Log.d("Tarjetas a Guardar",tarjetasSeleccionadas.joinToString(","))
-                /*for(tarjetaId in tarjetasSeleccionadas) {
-                    Log.d("Tarjeta a Guardar",tarjetaId)
-                    //funciones.agregarTarjetaAUsuario(usuario.id, tarjetaId)
-                    funciones.agregarTarjetasAUsuario()
-                }*/
-                funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)
-                tarjetasSeleccionadas = mutableListOf()
-                Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
-            }
+        binding.botonGuardar.setOnClickListener {
+            Log.d("Tarjetas a Guardar",tarjetasSeleccionadas.joinToString(","))
+            uvm.usuario!!.tarjetas!!.addAll(tarjetasSeleccionadas)
+            UserViewModelCache().guardarUserViewModel(uvm)
+            funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)
+            tarjetasSeleccionadas = mutableListOf()
+            Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
+        }
 
             scrollView.visibility = View.VISIBLE
             entidadesContainer.visibility = View.GONE
@@ -126,7 +126,7 @@ class CargadoTarjetasFragment : Fragment() {
 
                     val listView = ListView(requireContext())
 
-                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaTarjetas, tarjetasUsuario) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
+                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaTarjetas, uvm.usuario!!.tarjetas!!) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
                     listView.adapter = arrayAdapter
                     listView.setOnItemClickListener { parent, view, position, id ->
 
