@@ -16,7 +16,9 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.EscribirBD
@@ -33,7 +35,7 @@ import kotlinx.coroutines.launch
 import java.lang.Math.ceil
 
 
-class HomeFragment : Fragment(R.layout.activity_shopping) {
+class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
     private var scrollPosition: Int = 0
     var isFavorite = false
@@ -165,13 +167,25 @@ class HomeFragment : Fragment(R.layout.activity_shopping) {
                                         }
 
                                         override fun onVerMasClick() {
+                                            //findNavController().navigate(R.id.favFragment)
+                                           var navController=requireActivity().findNavController(R.id.mainAppFragment)
+                                            navController.popBackStack(R.id.homeFragment, false);
+                                            val action =
+                                                HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                                                    categoria.nombre
+                                                )
+                                            navController.navigate(action);
                                             // Maneja el clic en el elemento aquí
+                                            /*
                                             val action =
                                                 HomeFragmentDirections.actionHomeFragmentToSearchFragment(
                                                     categoria.nombre
                                                 )
                                             findNavController().navigate(action)
+
+                                             */
                                         }
+
                                     })
                                 recyclerView.adapter = adapter
 
