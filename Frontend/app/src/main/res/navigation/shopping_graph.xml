@@ -48,7 +48,35 @@
         <action
             android:id="@+id/action_profileFragment_to_legalsInfoFragment"
             app:destination="@id/legalsInfoFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_cargadoTarjetasFragment"
+            app:destination="@id/cargadoTarjetasFragment"
+            />
+        <action
+            android:id="@+id/action_profileFragment_to_misTarjetasFragment"
+            app:destination="@id/misTarjetasFragment"
+            />
     </fragment>
+
+    <fragment
+        android:id="@+id/misTarjetasFragment"
+        android:name="com.example.offerhub.fragments.settings.MisTarjetasFragment"
+        android:label="MisTarjetasFragment"
+        tools:layout="@layout/fragment_mis_tarjetas"
+        >
+
+        <action
+            android:id="@+id/action_misTarjetasFragment_to_cargadoTarjetasFragment"
+            app:destination="@id/cargadoTarjetasFragment"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/cargadoTarjetasFragment"
+        android:name="com.example.offerhub.fragments.settings.CargadoTarjetasFragment"
+        android:label="CargadoTarjetasFragment"
+        />
 
     <fragment
         android:id="@+id/searchFragment"

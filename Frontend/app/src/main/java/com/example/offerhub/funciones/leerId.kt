@@ -91,6 +91,21 @@ class LeerId {
         })
     }
 
+    suspend fun obtenerEntidadPorId(id: String): Entidad? {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Entidad").child(id).get().await()
+
+        if (dataSnapshot.exists()) {
+            val key = dataSnapshot.key
+            val nombre = dataSnapshot.child("nombre").getValue(String::class.java)
+            val tipo = dataSnapshot.child("tipo").getValue(String::class.java)
+            val entidad = Entidad(key, nombre, tipo)
+            return entidad
+        } else {
+            return null
+        }
+    }
+
     suspend fun obtenerUsuarioPorId(id: String): Usuario? = withContext(Dispatchers.IO) {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
         val dataSnapshot = database.child("Usuario").child(id).get().await()

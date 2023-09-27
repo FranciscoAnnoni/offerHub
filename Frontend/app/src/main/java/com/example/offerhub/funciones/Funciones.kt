@@ -17,6 +17,23 @@ class Funciones {
     val instanciaEscritura = EscribirBD()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
+    suspend fun traerEntidades(): List<Entidad> = coroutineScope {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Entidad").get().await()
+        var entidades: MutableList<Entidad> = mutableListOf()
+
+        for (snapshot in dataSnapshot.children) {
+            var id = snapshot.key
+            var nombre = snapshot.child("nombre").getValue(String::class.java)
+            var tipo = snapshot.child("tipo").getValue(String::class.java)
+            var entidad = Entidad(id,nombre, tipo)
+            entidades.add(entidad)
+        }
+
+        entidades
+    }
+
+
     //Obtiene las promociones de comercios que aplican a cualq usuario, sin necesidad de tarjetas.
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
@@ -109,8 +126,31 @@ class Funciones {
         }
     }
 
-    fun agregarTarjetaAUsuario(userId: String, tarjetaId: String) {
-        instanciaEscritura.agregarElementoAListas(userId, tarjetaId, "Usuario", "tarjetas")
+    fun agregarTarjetasAUsuario(userId: String, tarjetasId: MutableList<String>) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia = database.getReference("Usuario").child(userId).child("tarjetas")
+
+        referencia.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val lista = mutableListOf<String>()
+                for (snapshot in dataSnapshot.children) {
+                    val valor = snapshot.getValue(String::class.java)
+                    if (valor != null) {
+                        lista.add(valor)
+                    }
+                }
+
+                for(id in tarjetasId){
+                    val nuevoIndice = lista.size.toString()
+                    referencia.child(nuevoIndice).setValue(id)
+                        .addOnCompleteListener {}
+                    lista.add("")
+                }}
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
     }
 
     fun elimiarTarjetaDeUsuario(userId: String, tarjetaId: String){
