@@ -34,11 +34,12 @@ import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PromoNotiDetailActivity : AppCompatActivity() {
     var isTyCExpanded = false
-    var userViewModel=UserViewModelSingleton.getUserViewModel()
+    var userViewModel :UserViewModel=UserViewModel()
 
     val binding by lazy {
         ActivityPromoNotiDetailBinding.inflate(layoutInflater)
@@ -46,16 +47,17 @@ class PromoNotiDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Puedes establecer el diseño o contenido que deseas mostrar aquí
         setContentView(binding.root)
         val prefs = getSharedPreferences("NotiReintegro", Context.MODE_PRIVATE)
         val promocionId = prefs.getString("promocion", null)
+        val listaTarjetasString = prefs.getString("listaString", null)
+        val listaTarjetas: List<String> = listaTarjetasString?.split(",") ?: emptyList()
         var promocion: Promocion
         val activityContext = this
         CoroutineScope(Dispatchers.Main).launch {
+            userViewModel = UserViewModelSingleton.getUserViewModel()
             promocion = promocionId?.let { LeerId().obtenerPromocionPorId(it) }!!
-
 
             val instancia = Funciones()
 
@@ -103,9 +105,8 @@ class PromoNotiDetailActivity : AppCompatActivity() {
             fun comparar(it: Promocion): Boolean {
                 return it.id == promocion.id
             }
-
-            var tarjetasComunes = instancia.tarjetasComunes(userViewModel.usuario, promocion)
-            val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
+            Log.d("tarjetas",listaTarjetas[0])
+            val adapter = TarjetasPromocionAdapter(listaTarjetas as List<String>?)
 
             recyclerViewTarjetas.layoutManager = LinearLayoutManager(this@PromoNotiDetailActivity, LinearLayoutManager.HORIZONTAL, false)
             recyclerViewTarjetas.adapter = adapter

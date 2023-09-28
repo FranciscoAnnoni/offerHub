@@ -33,6 +33,7 @@ class AlarmaNotificacion:BroadcastReceiver(){
     override fun onReceive(context: Context ,p1: Intent?) {
         val mensaje = p1?.getStringExtra("comercio")
         val promo = p1?.getStringExtra("promocion")
+        val listaComoString = p1?.getStringExtra("listaComoString")
         val instancia = Funciones()
         var userViewModel :UserViewModel=UserViewModel()
         val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -49,12 +50,12 @@ class AlarmaNotificacion:BroadcastReceiver(){
                 )
             }
         }
+        createSimpleNotification(context, mensaje,promo,listaComoString)
 
-        createSimpleNotification(context, mensaje,promo)
 
     }
 
-    fun createSimpleNotification(contexto:Context, comercio:String?,promo:String?)
+    fun createSimpleNotification(contexto:Context, comercio:String?,promo:String?,listaString:String?)
     {
 
         val intent = Intent(contexto, PromoNotiDetailActivity::class.java).apply {
@@ -63,6 +64,7 @@ class AlarmaNotificacion:BroadcastReceiver(){
         val prefs = contexto.getSharedPreferences("NotiReintegro", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString("promocion", promo)
+        editor.putString("listaString",listaString)
         editor.apply()
 
 

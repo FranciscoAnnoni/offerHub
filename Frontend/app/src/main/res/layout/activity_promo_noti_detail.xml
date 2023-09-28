@@ -356,14 +356,12 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"> <!-- Añade android:gravity -->
-
                 <ImageView
                     android:id="@+id/imgSeccionTarjetas"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/ic_creditcard"
                     app:tint="#b5abc9"/>
-
                 <TextView
                     android:id="@+id/txtSeccionTarjetas"
                     android:layout_width="wrap_content"
@@ -385,13 +383,24 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerTyC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="35dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/containerTarjetas"
+            android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/tituloTyc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tituloSeccionTarjetas"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
@@ -449,7 +458,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
