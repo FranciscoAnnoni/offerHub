@@ -1,33 +1,27 @@
-package com.example.offerhub.fragments.loginRegister
+package com.example.offerhub.fragments.partners
 
 import UserViewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
-import com.example.offerhub.KelineApplication
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
-import com.example.offerhub.databinding.FragmentLoginBinding
+import com.example.offerhub.databinding.FragmentLoginPartnersBinding
 import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
-import com.example.offerhub.viewmodel.LoginViewModel
-import com.example.offerhub.viewmodel.ProfileViewModel
+import com.example.offerhub.viewmodel.LoginPartnersViewModel
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import com.google.android.material.snackbar.Snackbar
@@ -38,10 +32,10 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class LoginFragment : Fragment(R.layout.fragment_login) {
-    private lateinit var binding: FragmentLoginBinding
+class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
+    private lateinit var binding: FragmentLoginPartnersBinding
     private lateinit var rootViewLogin: View
-    private val viewModel by viewModels<LoginViewModel>()
+    private val viewModel by viewModels<LoginPartnersViewModel>()
 
 
     override fun onCreateView(
@@ -49,9 +43,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater)
+        binding = FragmentLoginPartnersBinding.inflate(inflater)
         return binding.root
     }
+
     // Función para ocultar el teclado
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -85,6 +80,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             false
         }
 
+        binding.atras.setOnClickListener {
+            findNavController().navigateUp()
+        }
         binding.tvUpdatePassword.setOnClickListener {
             setupBottomSheetDialog { email ->
                 viewModel.resetPassword(email)
@@ -116,12 +114,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
 
-        binding.registerNow.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-        }
-
-        binding.loginRegistrarEmpresa.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_loginPartnersFragment)
+        binding.registrarPartner.setOnClickListener {
+            findNavController().navigate(R.id.action_loginPartnersFragment_to_registerPartnersFragment)
         }
 
         binding.apply {
@@ -163,6 +157,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             binding.btnLogin.revertAnimation()
                             binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
 
+                     // Ejecuta la actividad de shopping
                             Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
