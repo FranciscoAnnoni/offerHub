@@ -38,7 +38,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/rounded_text_background">
-
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/buscadores"
                 android:layout_width="250dp"
@@ -77,6 +76,7 @@
 
         <ImageView
             android:layout_width="40dp"
+            android:id="@+id/filterSearch"
             android:layout_height="match_parent"
             android:src="@drawable/ic_filter"
             android:layout_marginStart="8dp"

@@ -7,14 +7,12 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -23,15 +21,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.offerhub.Funciones
+import com.example.offerhub.fragments.shopping.FilterFragment
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.LecturaBD
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.data.Categoria
 import com.example.offerhub.databinding.FragmentSearchBinding
-import com.example.offerhub.viewmodel.ProfileViewModel
-import com.example.offerhub.viewmodel.UserViewModelSingleton
-import com.google.android.material.textfield.TextInputEditText
+import com.example.offerhub.util.ViewUtils
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentSearchBinding
     val viewModel by viewModels<SearchViewModel>()
+    private var badgeDrawable: BadgeDrawable? = null
     private val args by navArgs<SearchFragmentArgs>()
     private var scrollPosition: Int = 0
 
@@ -202,6 +203,30 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 //return@setOnEditorActionListener true
             false
         }
+
+        binding.filterSearch.setOnClickListener {
+
+            val filterFragment = FilterFragment() // Usar el nombre FilterFragment
+            filterFragment.show(parentFragmentManager, filterFragment.tag)
+        }
+
+
+        binding.filterSearch.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            @androidx.annotation.OptIn(ExperimentalBadgeUtils::class)
+            override fun onGlobalLayout() {
+                badgeDrawable =
+                    BadgeDrawable.createFromResource(requireContext(), R.xml.filter_badge).apply {
+                        horizontalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
+                        verticalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
+                        BadgeUtils.attachBadgeDrawable(this, binding.filterSearch)
+                    }
+                //updateBadgeDrawable(viewModel.uiState.value.filterCount)
+                binding.filterSearch.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
+
+
 
 
     }

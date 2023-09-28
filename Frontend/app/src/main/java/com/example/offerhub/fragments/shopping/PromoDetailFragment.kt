@@ -87,7 +87,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 binding.promoTyC.visibility = View.GONE
             }
         }
-        binding.imageToggleSucursales.setOnClickListener {
+        binding.sucursalesHeader.setOnClickListener {
             isSucursalesExpanded = !isSucursalesExpanded
             Log.d("Sucursales", promocion.sucursales?.size.toString())
             if (isSucursalesExpanded) {

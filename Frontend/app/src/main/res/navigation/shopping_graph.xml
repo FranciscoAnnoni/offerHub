@@ -62,6 +62,9 @@
         <action
             android:id="@+id/action_searchFragment_to_promoDetailFragment"
             app:destination="@id/promoDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
         <argument
             android:name="categoria"
             android:defaultValue=""
@@ -79,6 +82,10 @@
         android:id="@+id/legalsInfoFragment"
         android:name="com.example.offerhub.fragments.settings.LegalsInfoFragment"
         android:label="LegalsInfoFragment" />
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="com.example.offerhub.fragments.shopping.FilterFragment"
+        android:label="FilterFragment" />
 </navigation>
 
 
