@@ -41,7 +41,7 @@ entidad = Entidad()
 entidad.nombre = "Banco ICBC"
 entidad.tipo = "Bancaria"
 entidad.telefono= "0810-444-4652 - Atención de lunes a viernes de 8 a 20 horas."
-idEntidad = ""#entidad.guardar()
+idEntidad = entidad.guardar()
 
 #Funcion para scrollear hasta abajo de todo de la pagina de beneficios
 last_height = driver.execute_script("return document.body.scrollHeight")
@@ -103,7 +103,7 @@ for boton in seccion_categorias:
     comercio.logo=utilidades.imagenABase64(logo)
     comercio.url=urlComercio
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
-    idComercio=""#comercio.guardar()
+    idComercio=comercio.guardar()
     try:
         descripcion=driver.find_element(By.XPATH, '//li[contains(@class,"description")]').get_attribute("innerHTML")
     except NoSuchElementException:
@@ -164,26 +164,27 @@ for boton in seccion_categorias:
     pcias=wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"detalle-beneficio")]'))).find_elements(By.XPATH, './/div[contains(@class,"filter-item")]')
     idsSucursales=[]
     for pcia in pcias:
-        nombre=pcia.find_element(By.XPATH, './/h4').text
-        print("\t\tProvincia:"+nombre)
-        pcia.click()
-        sucs=pcia.find_elements(By.XPATH,'.//li')
-        for suc in sucs:
-            direccion=suc.text
-            if len(direccion) >0:
-                print("\t\t\tDireccion: "+direccion+" - Localidad: "+nombre)
-                sucursal= Sucursal()
-                sucursal.direccion=direccion
-                sucursal.idComercio=idComercio
-                if nombre.lower() not in direccion.lower() and ("," not in direccion.lower() or "-" not in direccion.lower()):
-                        direccion=direccion+" "+nombre.lower().replace("provincia de ","")
-                sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
-                if sucursal.latitud=="Error de geolocalización":
-                    if nombre.lower() not in direccion.lower():
-                        direccion=direccion+" "+nombre.lower().replace("provincia de ","")
-                        sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
-                sucursal.direccion = sucursal.direccion[2:]
-                idsSucursales.append("")#sucursal.guardar())
+        nombreBugg = True
+        try:
+            nombre=pcia.find_element(By.XPATH, './/h4').text
+        except:
+            nombreBugg = False
+
+        if nombreBugg:    
+            print("\t\tProvincia:"+nombre)
+            pcia.click()
+            sucs=pcia.find_elements(By.XPATH,'.//li')
+            for suc in sucs:
+                direccion=suc.text
+                if len(direccion) >0:
+                    print("\t\t\tDireccion: "+direccion+" - Localidad: "+nombre)
+                    sucursal= Sucursal()
+                    sucursal.direccion=direccion
+                    sucursal.idComercio=idComercio
+                    if nombre.lower() not in direccion.lower() and ("," not in direccion.lower() or "-" not in direccion.lower()):
+                            direccion=direccion+" "+nombre.lower().replace("provincia de ","")
+                    sucursal.direccion = sucursal.direccion[2:]
+                    idsSucursales.append(sucursal.direccion)#sucursal.guardar())
     i=0
     for segmento in segmentos:
         promos=segmento.find_elements(By.XPATH, './/div[contains(@class,"ticket")]')
@@ -215,7 +216,7 @@ for boton in seccion_categorias:
                         else: 
                             tarjeta.tipoTarjeta="Crédito"
                         tarjeta.procesadora=nombreTarjeta.replace(" Debito","").replace(" Credito","")
-                        idTarjetas.append("")#tarjeta.guardar())
+                        idTarjetas.append(tarjeta.guardar())
                     
                     if 'ticket-payroll' in promo.get_attribute('class').split():
                         promocionCondiciones.append("SI DEPOSITÁS TU SUELDO EN ICBC")
@@ -228,7 +229,6 @@ for boton in seccion_categorias:
                             promocion.topeNro = tope[tope.find("$") + 1:].split()[0]
                         except:
                             promocion.topeNro = ""
-                        print("ÁAAAAAA "+promocion.topeNro)
                     else:
                         promocion.tope=""
                         promocion.topeNro=""
@@ -260,6 +260,7 @@ for boton in seccion_categorias:
                     print(promocion.tyc)
                     promocion.descripcion=descripcion
                     print(promocion.descripcion)
+                    promocion.guardar()
 
     driver.execute_script('return document.querySelector(".btn-close").click()')
     time.sleep(1)

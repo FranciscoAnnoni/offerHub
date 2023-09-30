@@ -26,7 +26,7 @@ from utilidades import obtenerCoordenadas
 from Sucursal import Sucursal
 import re
 
-config.setearEntorno()
+#config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -271,11 +271,7 @@ while True:
                     if "null" not in direccionCompleta:
                         sucursal = Sucursal()
                         sucursal.direccion = direccionCompleta
-                        latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
-                        sucursal.latitud = str(latitud_resultado)
-                        sucursal.longitud = str(longitud_resultado)
-                        sucursal.idComercio = idComercio
-                        sucursales.append(sucursal.guardar())   
+                        sucursales.append(sucursal.direccion)   
                         print("\t\t\t  " + direccionCompleta)
                 
 
