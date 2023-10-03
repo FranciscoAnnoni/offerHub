@@ -51,13 +51,20 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
         if(tipo != "No posee" && tipo != "Fidelidad") {
             tarjetaDescripcion += tipo + " "
         }
-        if(procesadora != "No posee") {
+       /* if(procesadora != "No posee") {
             tarjetaDescripcion += procesadora
-        }
+        }*/
 
         val tvNombreEntidad = gridViewItem.findViewById<TextView>(R.id.tvNombreEntidad)
         val descripcionTarjeta = gridViewItem.findViewById<TextView>(R.id.tvTarjetaDescripcion)
         val logoBanco = gridViewItem.findViewById<ImageView>(R.id.ivLogoBanco)
+        val logoEmisora = gridViewItem.findViewById<ImageView>(R.id.logoEmisora)
+        if (tarjeta.procesadora == "Visa") {
+            logoEmisora.setImageResource(R.drawable.logo_visa)
+        }
+        if (tarjeta.procesadora == "Mastercard") {
+            logoEmisora.setImageResource(R.drawable.logo_mastercard)
+        }
         val job = coroutineScope.launch {
             val entidad = leerBD.obtenerEntidadPorId(tarjeta.entidad!!)
             var entidadNombre: String = ""

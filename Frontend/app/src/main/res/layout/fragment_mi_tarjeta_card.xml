@@ -38,12 +38,22 @@
     <TextView
         android:id="@+id/tvTarjetaDescripcion"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/llTarjetaCard"
         app:layout_constraintStart_toStartOf="@id/llTarjetaCard"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="17sp"
+        />
+
+    <ImageView
+        android:id="@+id/logoEmisora"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/logo_mastercard"
+        app:layout_constraintBottom_toBottomOf="@id/llTarjetaCard"
+        app:layout_constraintEnd_toEndOf="@id/llTarjetaCard"
+        android:layout_marginRight="20dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
