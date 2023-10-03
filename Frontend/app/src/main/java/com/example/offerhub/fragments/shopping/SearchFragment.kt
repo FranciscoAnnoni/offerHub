@@ -43,19 +43,68 @@ import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.FilterListener {
     private lateinit var binding: FragmentSearchBinding
-    lateinit var viewModel:SearchViewModel
+    lateinit var viewModel: SearchViewModel
     private var badgeDrawable: BadgeDrawable? = null
     private val args by navArgs<SearchFragmentArgs>()
     private var scrollPosition: Int = 0
     private var useArg: Boolean = true
-    private lateinit var adapter:PromocionGridAdapter
+    private lateinit var adapter: PromocionGridAdapter
+
+    @androidx.annotation.OptIn(com.google.android.material.badge.ExperimentalBadgeUtils::class)
+    private fun initializeBadge() {
+        if (badgeDrawable == null) {
+            // Crea el badge y configúralo
+            badgeDrawable =
+                BadgeDrawable.createFromResource(requireContext(), R.xml.filter_badge).apply {
+                    horizontalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
+                    verticalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
+                }
+            BadgeUtils.attachBadgeDrawable(badgeDrawable!!, binding.filterSearch)
+        }
+    }
+
+    private fun calculateNumberOfFiltersApplied(): Int {
+        // Agrega aquí la lógica para contar los filtros aplicados
+        var num = 0
+        if (viewModel.filtrosActuales != null) {
+            val dias = if (viewModel.filtrosActuales!!.diasPromocion.size > 0) 1 else 0
+            val tipoPromo = if (viewModel.filtrosActuales!!.tiposPromocion.size > 0) 1 else 0
+            val vigencia =
+                if (viewModel.filtrosActuales!!.desde.isNotEmpty() || viewModel.filtrosActuales!!.hasta.isNotEmpty()) 1 else 0
+            num = dias + tipoPromo + vigencia
+        }
+        return num
+    }
+
+    private fun updateBadgeDrawable() {
+        val number = calculateNumberOfFiltersApplied()
+
+        when {
+            number > 0 -> {
+                badgeDrawable?.number = number
+                badgeDrawable?.backgroundColor =
+                    MaterialColors.getColor(
+                        requireView(),
+                        com.google.android.material.R.attr.colorError
+                    )
+            }
+
+            else -> {
+                badgeDrawable?.clearNumber()
+                badgeDrawable?.backgroundColor =
+                    ResourcesCompat.getColor(resources, android.R.color.transparent, null)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get<SearchViewModel>(SearchViewModel::class.java)
-        viewModel.filtrosActuales= FilterData("", "", mutableListOf(), mutableListOf())
-
+        viewModel =
+            ViewModelProvider(requireActivity()).get<SearchViewModel>(SearchViewModel::class.java)
+        viewModel.filtrosActuales = FilterData("", "", mutableListOf(), mutableListOf())
+        updateBadgeDrawable()
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -68,41 +117,13 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.filtrosActuales != null) {
-            onFiltersApplied(viewModel.filtrosActuales!!)
-        }
     }
 
     override fun onPause() {
-        useArg=false
+        useArg = false
         super.onPause()
     }
-    @androidx.annotation.OptIn(com.google.android.material.badge.ExperimentalBadgeUtils::class)
-    fun updateBadgeDrawable(number: Int) {
-        if (badgeDrawable==null) {
-            // Crea el badge y configúralo
-            badgeDrawable = BadgeDrawable.createFromResource(requireContext(), R.xml.filter_badge).apply {
-                horizontalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
-                verticalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
-            }
-            BadgeUtils.attachBadgeDrawable(badgeDrawable!!, binding.filterSearch)
-        }
-        when (number > 0) {
-            true -> {
-                badgeDrawable?.number = number
-                badgeDrawable?.backgroundColor =
-                    MaterialColors.getColor(
-                        requireView(),
-                        com.google.android.material.R.attr.colorError
-                    )
-            }
-            false -> {
-                badgeDrawable?.clearNumber()
-                badgeDrawable?.backgroundColor =
-                    ResourcesCompat.getColor(resources, android.R.color.transparent, null)
-            }
-        }
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,15 +132,16 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         binding = FragmentSearchBinding.inflate(inflater)
         return binding.root
     }
+
     override fun onFiltersApplied(filters: FilterData) {
         // Aplicar los filtros a las promociones en el ViewModel
-        Log.d("SearchFragment","OnFiltersApplied")
+        Log.d("SearchFragment", "OnFiltersApplied")
         // 1. Obtener las promociones actuales desde el ViewModel (suponiendo que tengas una propiedad promociones en tu ViewModel)
         val promocionesActuales = viewModel.promociones
-        Log.d("Filtros que llegan - DESDE",filters.desde)
-        Log.d("Filtros que llegan - HASTA",filters.hasta)
-        Log.d("Filtros que llegan - TIPOS",filters.tiposPromocion.joinToString(","))
-        Log.d("Filtros que llegan - DIAS",filters.diasPromocion.joinToString(","))
+        Log.d("Filtros que llegan - DESDE", filters.desde)
+        Log.d("Filtros que llegan - HASTA", filters.hasta)
+        Log.d("Filtros que llegan - TIPOS", filters.tiposPromocion.joinToString(","))
+        Log.d("Filtros que llegan - DIAS", filters.diasPromocion.joinToString(","))
         // 2. Aplicar los filtros según corresponda
         val promocionesFiltradas = viewModel.filtrarPorVigencia(filters.desde, filters.hasta)
         val promocionesFiltradasPorTipo = viewModel.filtrarPorTipoPromocion(filters.tiposPromocion)
@@ -130,14 +152,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
             .intersect(promocionesFiltradas)
             .intersect(promocionesFiltradasPorTipo)
             .intersect(promocionesFiltradasPorDias).toList()
-        var num=0
-        if(viewModel.filtrosActuales!=null){
-            val dias=if(viewModel.filtrosActuales!!.diasPromocion.size>0) 1 else 0
-            val tipoPromo=if(viewModel.filtrosActuales!!.tiposPromocion.size>0) 1 else 0
-            val vigencia=if(viewModel.filtrosActuales!!.desde.length>0 ||viewModel.filtrosActuales!!.hasta.length>0 ) 1 else 0
-            num=dias+tipoPromo+vigencia
-        }
-        updateBadgeDrawable(num)
+        viewModel.promociones=promocionesActuales
+        updateBadgeDrawable()
         // 4. Actualizar la lista de promociones en la interfaz de usuario (por ejemplo, en tu adaptador)
         adapter.actualizarDatos(promocionesResultantes)
         adapter.notifyDataSetChanged()
@@ -145,49 +161,61 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
 
     private fun hideKeyboard() {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeBadge()
         var instancia = InterfaceSinc()
         adapter = PromocionGridAdapter(view.context, listOf())
-        val promocionesGridView = view.findViewById<GridView>(R.id.promocionesGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
-        promocionesGridView.adapter=adapter
+        val promocionesGridView =
+            view.findViewById<GridView>(R.id.promocionesGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        promocionesGridView.adapter = adapter
         binding.buscadores.setText("")
-        val listView = view.findViewById<GridView>(R.id.gridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
-        val contenedorCategorias = view.findViewById<LinearLayout>(R.id.sergundaLinearLayoutBuscador) // Reemplaza "listView" con el ID de tu ListView en el XML.
-        val sinPromociones = view.findViewById<TextView>(R.id.sinPromociones) // Reemplaza "listView" con el ID de tu ListView en el XML.
-        val promoGridView = view.findViewById<LinearLayout>(R.id.promoGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        val listView =
+            view.findViewById<GridView>(R.id.gridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        val contenedorCategorias =
+            view.findViewById<LinearLayout>(R.id.sergundaLinearLayoutBuscador) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        val sinPromociones =
+            view.findViewById<TextView>(R.id.sinPromociones) // Reemplaza "listView" con el ID de tu ListView en el XML.
+        val promoGridView =
+            view.findViewById<LinearLayout>(R.id.promoGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
         val coroutineScope = CoroutineScope(Dispatchers.Main)
-        fun mostrarResultadosBusqueda(){
+        fun mostrarResultadosBusqueda() {
             contenedorCategorias.visibility = View.GONE
             promoGridView.visibility = View.VISIBLE
-            binding.filterSearch.visibility=View.VISIBLE
+            binding.filterSearch.visibility = View.VISIBLE
         }
-        fun mostrarInicioBusqueda(){
+
+        fun mostrarInicioBusqueda() {
             contenedorCategorias.visibility = View.VISIBLE
             promoGridView.visibility = View.GONE
-            sinPromociones.visibility=View.GONE
+            sinPromociones.visibility = View.GONE
             binding.buscadores.setText("")
             adapter.actualizarDatos(listOf())
-            binding.filterSearch.visibility=View.GONE
+            binding.filterSearch.visibility = View.GONE
         }
-        fun actualizarResultados(){
+
+        fun actualizarResultados(useFilters: Boolean =true) {
             try {
                 // Actualiza los datos en el adaptador existente
+                if (viewModel.filtrosActuales != null && useFilters==true) {
+                    onFiltersApplied(viewModel.filtrosActuales!!)
+                }
                 adapter.actualizarDatos(viewModel.promociones)
                 // Notifica al GridView que los datos han cambiado
                 adapter.notifyDataSetChanged()
                 promocionesGridView.adapter = adapter
                 promoGridView.visibility = View.VISIBLE
-                if(viewModel.promociones.size>0){
-                    sinPromociones.visibility=View.GONE
-                    promocionesGridView.visibility=View.VISIBLE
+                if (viewModel.textoBusqueda!=null && viewModel.textoBusqueda!!.length>0 && viewModel.promociones.size == 0) {
+                    sinPromociones.visibility = View.VISIBLE
+                    promocionesGridView.visibility = View.GONE
                 } else {
-                    sinPromociones.visibility=View.VISIBLE
-                    promocionesGridView.visibility=View.GONE
+                    sinPromociones.visibility = View.GONE
+                    promocionesGridView.visibility = View.VISIBLE
                 }
 
 
@@ -198,16 +226,26 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         coroutineScope.launch {
             if (savedInstanceState != null) {
                 viewModel.textoBusqueda = savedInstanceState.getString("searchText", "")
-                viewModel.promociones = savedInstanceState.getParcelableArrayList("searchResults",Promocion::class.java) ?: mutableListOf()
-                val currentFilters = savedInstanceState.getParcelable("currentFilters",FilterData::class.java)
+                val currentFilters =
+                    savedInstanceState.getParcelable("currentFilters", FilterData::class.java)
                 viewModel.filtrosActuales = currentFilters
-                onFiltersApplied(viewModel.filtrosActuales!!)
+                if (savedInstanceState != null) {
+                    viewModel.promociones = savedInstanceState.getParcelableArrayList(
+                        "searchResults",
+                        Promocion::class.java
+                    ) ?: mutableListOf()
+                }
+                updateBadgeDrawable()
             }
         }.invokeOnCompletion {
             // Actualiza la interfaz de usuario con los datos restaurados
             if (viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 binding.buscadores.setText(viewModel.textoBusqueda)
-                actualizarResultados()
+                actualizarResultados(false)
+            }
+
+        }.also {
+            if (viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 mostrarResultadosBusqueda()
             }
         }
@@ -235,15 +273,15 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 val adapterCat = CategoryGridAdapter(view.context, datos)
                 listView.setOnItemClickListener { parent, _, position, _ ->
                     val selectedCategoria = adapterCat.getItem(position) as Categoria
-                    if(selectedCategoria.nombre!=null){
+                    if (selectedCategoria.nombre != null) {
                         binding.buscadores.setText(selectedCategoria.nombre)
                     }
 
-                        viewModel.buscarPorCategoria(selectedCategoria.nombre).invokeOnCompletion {
+                    viewModel.buscarPorCategoria(selectedCategoria.nombre).invokeOnCompletion {
                         actualizarResultados()
-                        }.also {
-                            mostrarResultadosBusqueda()
-                        }
+                    }.also {
+                        mostrarResultadosBusqueda()
+                    }
                 }
 
 
@@ -256,44 +294,39 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 // mi codigo de buscador
 
 
-        if(args.categoria!==null && args.categoria!="" && useArg==true) {
+        if (args.categoria !== null && args.categoria != "" && useArg == true) {
             val nombreCategoria = args.categoria
-            if(nombreCategoria.toString()!=null){
+            if (nombreCategoria.toString() != null) {
                 binding.buscadores.setText(nombreCategoria.toString())
             }
 
-                viewModel.buscarPorCategoria(nombreCategoria.toString()).invokeOnCompletion {
-                    actualizarResultados()
+            viewModel.buscarPorCategoria(nombreCategoria.toString()).invokeOnCompletion {
+                actualizarResultados()
             }.also {
-                    mostrarResultadosBusqueda()
-                }
+                mostrarResultadosBusqueda()
+            }
         }
 
         val lupa = view.findViewById<ImageView>(R.id.logoLupa)
         val cerrar = view.findViewById<ImageView>(R.id.logoCerrar)
 
-        binding.logoLupa.setOnClickListener{
-            val textoBusqueda=binding.buscadores.text.toString()
-            if(textoBusqueda.length>0) {
+        binding.logoLupa.setOnClickListener {
+            val textoBusqueda = binding.buscadores.text.toString()
+            if (textoBusqueda.length > 0) {
 
-            viewModel.buscarPorTexto(textoBusqueda).invokeOnCompletion {
-                if(viewModel.filtrosActuales!=null) {
-                    onFiltersApplied(viewModel.filtrosActuales!!)
-                }
-            }.also {
-                actualizarResultados()
-            }.also {
-
+                viewModel.buscarPorTexto(textoBusqueda).invokeOnCompletion {
+                    actualizarResultados()
+                }.also {
                     mostrarResultadosBusqueda()
                 }
             }
         }
 
-        binding.logoCerrar.setOnClickListener{
+        binding.logoCerrar.setOnClickListener {
             mostrarInicioBusqueda()
-            viewModel.textoBusqueda=""
-            viewModel.promociones= mutableListOf()
-            viewModel.filtrosActuales= FilterData("", "", mutableListOf(), mutableListOf())
+            viewModel.textoBusqueda = ""
+            viewModel.promociones = mutableListOf()
+            viewModel.filtrosActuales = FilterData("", "", mutableListOf(), mutableListOf())
             onFiltersApplied(viewModel.filtrosActuales!!)
         }
         binding.buscadores.addTextChangedListener(object : TextWatcher {
@@ -315,33 +348,24 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         })
 
         binding.buscadores.setOnEditorActionListener { _, actionId, event ->
-            Log.d("Texto Ant",viewModel.textoBusqueda.toString())
-            Log.d("Texto Nuevo",binding.buscadores.text.toString())
             if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) {
-
-                val textoBusqueda=binding.buscadores.text.toString()
-                if(textoBusqueda.length>0) {
+                val textoBusqueda = binding.buscadores.text.toString()
+                if (textoBusqueda.length > 0) {
                     viewModel.buscarPorTexto(textoBusqueda).invokeOnCompletion {
-                        if(viewModel.filtrosActuales != null) {
-                            onFiltersApplied(viewModel.filtrosActuales!!)
-                        }
-
-                }.also {
                         actualizarResultados()
                     }.also {
                         mostrarResultadosBusqueda()
                     }
-
                 }
-                }
-                hideKeyboard()
-                //return@setOnEditorActionListener true
+            }
+            hideKeyboard()
             false
         }
 
         binding.filterSearch.setOnClickListener {
             // Verifica si el FilterFragment ya está agregado
-            val existingFilterFragment = parentFragmentManager.findFragmentByTag("FilterFragment") as? FilterFragment
+            val existingFilterFragment =
+                parentFragmentManager.findFragmentByTag("FilterFragment") as? FilterFragment
 
             if (existingFilterFragment == null || !existingFilterFragment.isVisible) {
                 // Si no se ha agregado o no es visible, crea uno nuevo y agrégalo
@@ -357,24 +381,5 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                     .commit()
             }
         }
-
-
-        binding.filterSearch.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            @androidx.annotation.OptIn(ExperimentalBadgeUtils::class)
-            override fun onGlobalLayout() {
-                badgeDrawable =
-                    BadgeDrawable.createFromResource(requireContext(), R.xml.filter_badge).apply {
-                        horizontalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
-                        verticalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
-                        BadgeUtils.attachBadgeDrawable(this, binding.filterSearch)
-                    }
-                binding.filterSearch.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })
-
-
-
-
     }
 }
