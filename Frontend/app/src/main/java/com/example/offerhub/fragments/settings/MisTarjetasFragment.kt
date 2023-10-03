@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.settings
 
+import TarjetasListViewAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextMenu
@@ -9,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -31,6 +33,7 @@ class MisTarjetasFragment: Fragment() {
     private lateinit var tarjetasGridView: GridView
     private lateinit var usuario: Usuario
     private var uvm = UserViewModelSingleton.getUserViewModel()
+    //private var gridViewAdapter: MisTarjetasAdapter = MisTarjetasAdapter(requireContext(), mutableListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,18 +61,26 @@ class MisTarjetasFragment: Fragment() {
         val job = coroutineScope.launch {
             usuario = UserViewModelSingleton.getUserViewModel().usuario!!
             var tarjetas: MutableList<Tarjeta> = mutableListOf()
-            for (tarjetaId in usuario.tarjetas!!) {
-                if (tarjetaId != null) {
-                    val tarjetaObjeto = leerBD.obtenerTarjetaPorId(tarjetaId)
-                    if (tarjetaObjeto != null) {
-                        tarjetas.add(tarjetaObjeto)
-                    } else {
-                        // ayuda para logear error
+
+            if (usuario.tarjetas != null ){
+                for (tarjetaId in usuario.tarjetas!!) {
+                    if (tarjetaId != null) {
+                        val tarjetaObjeto = leerBD.obtenerTarjetaPorId(tarjetaId)
+                        if (tarjetaObjeto != null) {
+                            tarjetas.add(tarjetaObjeto)
+                        } else {
+                            // ayuda para logear error
+                        }
                     }
                 }
+
+                var gridViewAdapter = MisTarjetasAdapter(view.context, tarjetas)
+                tarjetasGridView.adapter = gridViewAdapter
+            } else{
+                findNavController().navigate(MisTarjetasFragmentDirections.actionMisTarjetasFragmentToCargadoTarjetasFragment())
             }
-            val adapter = MisTarjetasAdapter(view.context, tarjetas)
-            tarjetasGridView.adapter = adapter
+
+
         }
 
     }
@@ -96,7 +107,9 @@ class MisTarjetasFragment: Fragment() {
                 uvm.usuario!!.tarjetas!!.remove(tarjeta.id)
                 UserViewModelCache().guardarUserViewModel(uvm)
             }
+
             Toast.makeText(requireContext(), "Tarjeta Eliminada", Toast.LENGTH_LONG).show()
+
             return true
         }
         return true

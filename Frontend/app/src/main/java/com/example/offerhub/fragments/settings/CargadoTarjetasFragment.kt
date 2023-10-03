@@ -74,11 +74,15 @@ class CargadoTarjetasFragment : Fragment() {
         val job = coroutineScope.launch {
         var uvm = UserViewModelSingleton.getUserViewModel()
         var usuario = uvm.usuario!!
-        var tarjetasUsuario = usuario.tarjetas!!
+        //var tarjetasUsuario = usuario.tarjetas!!
 
         binding.botonGuardar.setOnClickListener {
             Log.d("Tarjetas a Guardar",tarjetasSeleccionadas.joinToString(","))
-            uvm.usuario!!.tarjetas!!.addAll(tarjetasSeleccionadas)
+            if (uvm.usuario!!.tarjetas == null ) {
+                uvm.usuario!!.tarjetas = tarjetasSeleccionadas as MutableList<String?>
+            } else {
+                uvm.usuario!!.tarjetas!!.addAll(tarjetasSeleccionadas)
+            }
             UserViewModelCache().guardarUserViewModel(uvm)
             funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)
             tarjetasSeleccionadas = mutableListOf()
@@ -107,14 +111,20 @@ class CargadoTarjetasFragment : Fragment() {
 
                     val entidadLl = LinearLayout(view.context)
                     entidadLl.orientation = LinearLayout.HORIZONTAL
-                    entidadLl.background = requireContext().getDrawable(R.drawable.border_promocion)
-                    entidadLl.setPadding(20, 20, 20, 20)
+                    //entidadLl.background =
+                    //entidadLl.background = requireContext().getDrawable(R.drawable.border_opcion_entidad)
 
+                    val layoutParams = entidadLl.layoutParams as? LinearLayout.LayoutParams ?: LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.espacio_entre_titulos) // Ajusta este valor según tus necesidades
+                    entidadLl.layoutParams = layoutParams
 
                     val entidadTitle = TextView(requireContext())
                     entidadTitle.text = entidad.nombre
                     entidadTitle.textSize = 20f
-                    entidadTitle.width = 700
+                    entidadTitle.width = 750
                     entidadTitle.setPadding(0, 16, 20, 8)
 
                     val imagen = ImageView(requireContext())
@@ -125,12 +135,21 @@ class CargadoTarjetasFragment : Fragment() {
                     entidadLl.addView(imagen)
 
                     val listView = ListView(requireContext())
-
-                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaTarjetas, uvm.usuario!!.tarjetas!!) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
+                    //listView.setPadding(10, 10, 10, 60)
+                    val tarjetasUsuario = uvm.usuario!!.tarjetas
+                    var listaSinRepetidos = mutableListOf<Tarjeta>()
+                    if (tarjetasUsuario != null) {
+                         for(tarjeta in listaTarjetas) {
+                             if (!tarjetasUsuario.contains(tarjeta.id)) {
+                                 listaSinRepetidos.add(tarjeta)
+                             }
+                         }
+                    }
+                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaSinRepetidos/*, uvm.usuario!!.tarjetas*/) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
                     listView.adapter = arrayAdapter
                     listView.setOnItemClickListener { parent, view, position, id ->
 
-                        var tarjeta = parent.getItemAtPosition(position) as Tarjeta
+                        var tarjeta= parent.getItemAtPosition(position) as Tarjeta
 
                         val checkbox = view.findViewById<ImageView>(R.id.ivOpcionTarjeta)
                         if (tarjetasSeleccionadas.contains(tarjeta.id)) {
@@ -146,17 +165,32 @@ class CargadoTarjetasFragment : Fragment() {
                     listView.visibility = View.GONE
 
 
+
                     entidadesContainer.addView(entidadLl)
                     entidadesContainer.addView(listView)
 
                     entidadLl.setOnClickListener {
                         entidadesExpanded[index] = !entidadesExpanded[index]
                         if(entidadesExpanded[index]) {
+                            val layoutParams = entidadLl.layoutParams as? LinearLayout.LayoutParams ?: LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.espacio_entre_titulos_desplegados) // Ajusta este valor según tus necesidades
+                            entidadLl.layoutParams = layoutParams
                             listView.visibility = View.VISIBLE
                             imagen.setImageResource(R.drawable.ic_expand_less)
+
                         } else {
+                            val layoutParams = entidadLl.layoutParams as? LinearLayout.LayoutParams ?: LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.espacio_entre_titulos) // Ajusta este valor según tus necesidades
+                            entidadLl.layoutParams = layoutParams
                             listView.visibility = View.GONE
                             imagen.setImageResource(R.drawable.ic_expand_more)
+
                         }
                     }
 

@@ -9,8 +9,8 @@ import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
 
 
-class TarjetasListViewAdapter(private val context: Context, private val tarjetas: List<Tarjeta>, tarjetasUsuario: MutableList<String?>) : BaseAdapter() {
-    var tarjetasUsuario = tarjetasUsuario
+class TarjetasListViewAdapter(private val context: Context, private val tarjetas: List<Tarjeta>/*, tarjetasUsuario: MutableList<String?>?*/) : BaseAdapter() {
+    //var tarjetasUsuario = tarjetasUsuario
 
     override fun getCount(): Int {
         return tarjetas.size
@@ -50,10 +50,13 @@ class TarjetasListViewAdapter(private val context: Context, private val tarjetas
         val textViewTitulo = itemView.findViewById<TextView>(R.id.tvOpcionTarjeta)
         textViewTitulo.text = tarjetaTitulo
 
-        if (tarjetasUsuario.contains(tarjeta.id)) {
-            val imagen = itemView.findViewById<ImageView>(R.id.ivOpcionTarjeta)
-            imagen.setImageResource(R.drawable.full_checkbox)
-        }
+        /*if (tarjetasUsuario != null ){
+            if (tarjetasUsuario!!.contains(tarjeta.id)) {
+                val imagen = itemView.findViewById<ImageView>(R.id.ivOpcionTarjeta)
+                imagen.setImageResource(R.drawable.full_checkbox)
+            }
+        }*/
+
 
         // Puedes configurar otras vistas aquí según las propiedades de la Tarjeta
         return itemView

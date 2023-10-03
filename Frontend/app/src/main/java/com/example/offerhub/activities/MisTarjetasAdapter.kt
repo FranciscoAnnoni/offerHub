@@ -14,6 +14,7 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.LeerId
 import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
+import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +68,7 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
             }
 
             var nombreDrawable = "logo_" + removeAccents(entidadNombre.replace(" ", "_")?.lowercase())
+
             Log.d("nombre logo",nombreDrawable)
             val drawableId: Int = context.getResources()
                 .getIdentifier(nombreDrawable, "drawable", context.getPackageName())
@@ -75,6 +77,7 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
                 val drawable: Drawable? = context.getDrawable(drawableId)
 
                 logoBanco.setImageDrawable(drawable)
+
             } else {
                 // Si el drawableId es 0, significa que no se encontró el recurso
                 // Puedes manejar este caso según tus necesidades, por ejemplo, establecer una imagen de respaldo.
