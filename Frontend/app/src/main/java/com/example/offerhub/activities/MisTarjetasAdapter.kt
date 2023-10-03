@@ -20,7 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuario: List<Tarjeta>): BaseAdapter(){
+class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuario: MutableList<Tarjeta>): BaseAdapter(){
 
     override fun getCount(): Int {
         return tarjetasUsuario.size
@@ -93,5 +93,9 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
         }
 
         return gridViewItem
+    }
+
+    fun removeTarjeta(tarjeta: Tarjeta) {
+        tarjetasUsuario.remove(tarjeta)
     }
 }

@@ -112,6 +112,12 @@ class MisTarjetasFragment: Fragment() {
                 uvm.listadoDePromosDisp = funciones.obtenerPromociones(uvm.usuario!!)
                 UserViewModelCache().guardarUserViewModel(uvm)
             }
+
+            (tarjetasGridView.adapter as MisTarjetasAdapter).removeTarjeta(tarjeta)
+
+            // Notifica al adaptador que los datos han cambiado
+            (tarjetasGridView.adapter as MisTarjetasAdapter).notifyDataSetChanged()
+
             Toast.makeText(requireContext(), "Tarjeta Eliminada", Toast.LENGTH_LONG).show()
 
             return true
