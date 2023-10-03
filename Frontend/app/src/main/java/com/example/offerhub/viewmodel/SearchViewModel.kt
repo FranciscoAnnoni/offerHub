@@ -45,6 +45,7 @@ class SearchViewModel: ViewModel() {
     fun buscarPorCategoria(nombre:String): Deferred<Unit> {
 
         return CoroutineScope(Dispatchers.Main).async {
+            textoBusqueda=nombre
              val porCatPromociones = LecturaBD().filtrarPromos(listOf(
                  "categoria" to nombre,
              ),false)
