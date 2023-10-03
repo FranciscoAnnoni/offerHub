@@ -179,9 +179,12 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             Log.d("Reintegros",userViewModel.reintegros.joinToString(","))
 
             coroutineScope.launch {
+                var comunes = instancia.tarjetasComunes(userViewModel.usuario, promocion)
+                val listaComoString = comunes.joinToString(",")
                 val intent = Intent(context, AlarmaNotificacion::class.java).apply{
                     putExtra("comercio", Funciones().traerInfoComercio(promocion.comercio,"nombre"))
                     putExtra("promocion",promocion.id.toString())
+                    putExtra("listaComoString",listaComoString)
                 }
 
                 fun isNotificado(): Boolean {
@@ -196,13 +199,8 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 if (!isNotificado()) {
                     userViewModel.reintegros.add(promocion)
                     UserViewModelCache().guardarUserViewModel(userViewModel)
-                    Log.d("Agrego Reintegros",userViewModel.reintegros.size.toString())
-
-                    // Cambiar la imagen según el estado
-
-                    Log.d("entre","entre")
                     val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (60*1000), pendingIntent) //a los 30 segundos
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + (5*1000), pendingIntent) //a los 30 segundos
 
                     instancia.agregarPromocionAReintegro(
                         userViewModel.id.toString(),

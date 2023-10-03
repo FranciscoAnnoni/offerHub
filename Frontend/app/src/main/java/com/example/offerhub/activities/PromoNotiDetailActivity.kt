@@ -1,8 +1,8 @@
 package com.example.offerhub.activities
 
-import androidx.navigation.fragment.findNavController
 import TarjetasPromocionAdapter
 import UserViewModel
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -18,7 +18,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
@@ -35,10 +34,10 @@ import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PromoNotiDetailActivity() : AppCompatActivity() {
-    var isFavorite = false
+class PromoNotiDetailActivity : AppCompatActivity() {
     var isTyCExpanded = false
     var userViewModel :UserViewModel=UserViewModel()
 
@@ -48,23 +47,39 @@ class PromoNotiDetailActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Puedes establecer el diseño o contenido que deseas mostrar aquí
         setContentView(binding.root)
-
         val prefs = getSharedPreferences("NotiReintegro", Context.MODE_PRIVATE)
         val promocionId = prefs.getString("promocion", null)
-        var promocion: Promocion = Promocion()
+        val listaTarjetasString = prefs.getString("listaString", null)
+        val listaTarjetas: List<String> = listaTarjetasString?.split(",") ?: emptyList()
+        var promocion: Promocion
         val activityContext = this
         CoroutineScope(Dispatchers.Main).launch {
+            userViewModel = UserViewModelSingleton.getUserViewModel()
             promocion = promocionId?.let { LeerId().obtenerPromocionPorId(it) }!!
 
-
             val instancia = Funciones()
-            userViewModel = UserViewModelSingleton.getUserViewModel()
 
             binding.imageClose.setOnClickListener {
-                //LLEVAR DONDE CORRESPONDA
+                // Redirige a la pantalla de inicio
+                val intent = Intent(this@PromoNotiDetailActivity, ShoppingActivity::class.java)
+                startActivity(intent)
+                this@PromoNotiDetailActivity.finish()
+            }
+            binding.tituloTyc.setOnClickListener {
+                isTyCExpanded = !isTyCExpanded
+                if (isTyCExpanded) {
+                    binding.imageToggleTyC.setImageResource(R.drawable.ic_expand_less)
+                    binding.promoTyC.visibility = View.VISIBLE
+                    // Calcula la posición y anima el desplazamiento hacia abajo
+                    val animator = ObjectAnimator.ofInt(binding.scrollView, "scrollY", binding.topLine.bottom)
+                    animator.duration = 500 // Duración de la animación en milisegundos
+                    animator.start()
+                } else {
+                    binding.imageToggleTyC.setImageResource(R.drawable.ic_expand_more)
+                    binding.promoTyC.visibility = View.GONE
+                }
             }
             val iconoEnlace = findViewById<ImageView>(R.id.icono_enlace)
 
@@ -87,19 +102,17 @@ class PromoNotiDetailActivity() : AppCompatActivity() {
             }
             val recyclerViewTarjetas = findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 
-            val coroutineScope = CoroutineScope(Dispatchers.Main)
             fun comparar(it: Promocion): Boolean {
                 return it.id == promocion.id
             }
-            coroutineScope.launch {
-                var tarjetasComunes = instancia.tarjetasComunes(userViewModel.usuario, promocion)
-                val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
+            Log.d("tarjetas",listaTarjetas[0])
+            val adapter = TarjetasPromocionAdapter(listaTarjetas as List<String>?)
 
-                recyclerViewTarjetas.layoutManager = LinearLayoutManager(this@PromoNotiDetailActivity, LinearLayoutManager.HORIZONTAL, false)
-                recyclerViewTarjetas.adapter = adapter
-                val isFavorite = userViewModel.favoritos.any{ it -> comparar(it) }
-                binding.imageFav.setImageResource(getFavResource(isFavorite))
-            }
+            recyclerViewTarjetas.layoutManager = LinearLayoutManager(this@PromoNotiDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            recyclerViewTarjetas.adapter = adapter
+            val isFavorite = userViewModel.favoritos.any{ it -> comparar(it) }
+            binding.imageFav.setImageResource(getFavResource(isFavorite))
+
 
             binding.imageFav.setOnClickListener {
                 fun isFavorite(): Boolean {
@@ -112,29 +125,25 @@ class PromoNotiDetailActivity() : AppCompatActivity() {
                     userViewModel.favoritos.add(promocion)
                     UserViewModelCache().guardarUserViewModel(userViewModel)
                     Log.d("Agrego Favoritos",UserViewModelSingleton.getSingleUserViewModel()!!.favoritos.size.toString())
-                    coroutineScope.launch {
-                        instancia.agregarPromocionAFavoritos(
-                            userViewModel.usuario!!.id,
-                            promocion.id.toString()
-                        )
+                    instancia.agregarPromocionAFavoritos(
+                        userViewModel.usuario!!.id,
+                        promocion.id.toString()
+                    )
 
 
-                    }
                 } else {
                     userViewModel.favoritos.removeIf { it->comparar(it) }
                     UserViewModelCache().guardarUserViewModel(userViewModel)
                     Log.d("Saco Favoritos",userViewModel.favoritos.size.toString())
-                    coroutineScope.launch {
-                        instancia.elimiarPromocionDeFavoritos(
-                            userViewModel.usuario!!.id,
-                            promocion.id.toString()
-                        )
-                    }
+                    instancia.elimiarPromocionDeFavoritos(
+                        userViewModel.usuario!!.id,
+                        promocion.id.toString()
+                    )
                 }
-
-                // Establecer la imagen en la ImageView
-                binding.imageFav.setImageResource(getFavResource(isFavorite()))
             }
+                // Establecer la imagen en la ImageView
+                binding.imageFav.setImageResource(getFavResource(isFavorite))
+
             binding.apply {
                 var text =promocion.obtenerDesc()
                 promoBenef.text = text
@@ -162,27 +171,26 @@ class PromoNotiDetailActivity() : AppCompatActivity() {
                 } else {
                     txtTope.text=promocion.topeTexto
                 }
+                promoTyC.text = promocion.tyc
                 promoVigencia.text=promocion.obtenerTextoVigencia()
-                coroutineScope.launch {
-                    promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
-                    val logoBitmap = Comercio(
+                promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
+                val logoBitmap = Comercio(
                         "",
                         "",
                         "","",""
-                    ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
-                    if (logoBitmap != null) {
-                        viewPagerProductImages.setImageBitmap(logoBitmap)
-                        val color= obtenerColorMayoritario(logoBitmap)
+                ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
+                if (logoBitmap != null) {
+                    viewPagerProductImages.setImageBitmap(logoBitmap)
+                    val color= obtenerColorMayoritario(logoBitmap)
                         // Suponiendo que ya tienes el color mayoritario en la variable colorMayoritario
-                        val cardProductImages = findViewById<CardView>(R.id.cardProductImages)
+                    val cardProductImages = findViewById<CardView>(R.id.cardProductImages)
 
 // Establece el color de fondo del CardView
-                        cardProductImages.setBackgroundColor(color)
-                        val textColor = getContrastColor(color)
-                        imageClose.setColorFilter(textColor, PorterDuff.Mode.SRC_IN)
-                        imageFav.setColorFilter(textColor, PorterDuff.Mode.SRC_IN)
+                    cardProductImages.setBackgroundColor(color)
+                    val textColor = getContrastColor(color)
+                    imageClose.setColorFilter(textColor, PorterDuff.Mode.SRC_IN)
+                    imageFav.setColorFilter(textColor, PorterDuff.Mode.SRC_IN)
 
-                    }
                 }
                 var lista= listOf<String?>()
                 if(promocion.dias ==null) {

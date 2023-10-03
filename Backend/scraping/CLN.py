@@ -110,11 +110,7 @@ for boton in seccion_categorias:
         for direccionSucursal in listaSucursales:
             sucursal = Sucursal()
             sucursal.direccion = direccionSucursal.text
-            latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
-            sucursal.latitud = str(latitud_resultado)
-            sucursal.longitud = str(longitud_resultado)
-            sucursal.idComercio = idComercio
-            sucursales.append(sucursal.guardar())
+            sucursales.append(sucursal.direccion)
             print("\t\t\t  " + direccionSucursal.text) 
 
     except NoSuchElementException:

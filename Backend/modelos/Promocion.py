@@ -20,13 +20,17 @@ class Promocion:
     
     def setearFecha(self,atributo,valor):
         fecha_objeto = parse(valor)
-        fecha_objeto.strftime("%Y-%m-%d")
-        lista = fecha_objeto.split("-")
-        sdsds # DEJO ESTO ROTO COMO RECORDATORIO. LAS FECHAS CON DIA MENOR A 12 LAS ESTA PONIENDO AL REVÉS. CHEQUEAR SI CON ESTO SE ARREGLA
-        if lista[1] < lista[2]:
-            setattr(self, atributo,fecha_objeto)
+        lista = fecha_objeto.strftime("%Y-%m-%d").split("-")
+        # DEJO ESTO ROTO COMO RECORDATORIO. LAS FECHAS CON DIA MENOR A 12 LAS ESTA PONIENDO AL REVÉS. CHEQUEAR SI CON ESTO SE ARREGLA
+        print(lista[1]+" "+ lista[2])
+        if int(lista[1]) < int(lista[2]) and 13 > int(lista[2]):
+            fechaFinal = lista[0]+"-"+lista[2]+"-"+lista[1] 
+            setattr(self, atributo,fechaFinal)
+            print(fechaFinal)
         else:
-            setattr(self, atributo,lista[0]+"-"+lista[2]+"-"+lista[1])
+            fechaFinal = fecha_objeto.strftime("%Y-%m-%d").split(" ")[0]
+            setattr(self, atributo,fechaFinal)
+            print(fechaFinal)
 
     def setearCategoria(self, nombreCategoria):
         self.categoria=CategoriaPromocion.obtenerCategoria(nombreCategoria)
