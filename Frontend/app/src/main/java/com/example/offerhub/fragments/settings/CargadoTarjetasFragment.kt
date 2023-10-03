@@ -86,6 +86,12 @@ class CargadoTarjetasFragment : Fragment() {
             UserViewModelCache().guardarUserViewModel(uvm)
             funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)
             tarjetasSeleccionadas = mutableListOf()
+
+            CoroutineScope(Dispatchers.Main).launch{
+                uvm.listadoDePromosDisp = funciones.obtenerPromociones(uvm.usuario!!)
+                UserViewModelCache().guardarUserViewModel(uvm)
+            }
+
             Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
         }
 
@@ -144,6 +150,8 @@ class CargadoTarjetasFragment : Fragment() {
                                  listaSinRepetidos.add(tarjeta)
                              }
                          }
+                    } else {
+                        listaSinRepetidos = listaTarjetas
                     }
                     val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaSinRepetidos/*, uvm.usuario!!.tarjetas*/) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
                     listView.adapter = arrayAdapter

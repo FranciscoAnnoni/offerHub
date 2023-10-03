@@ -108,6 +108,10 @@ class MisTarjetasFragment: Fragment() {
                 UserViewModelCache().guardarUserViewModel(uvm)
             }
 
+            CoroutineScope(Dispatchers.Main).launch{
+                uvm.listadoDePromosDisp = funciones.obtenerPromociones(uvm.usuario!!)
+                UserViewModelCache().guardarUserViewModel(uvm)
+            }
             Toast.makeText(requireContext(), "Tarjeta Eliminada", Toast.LENGTH_LONG).show()
 
             return true
