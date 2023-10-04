@@ -115,7 +115,7 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
         }
 
         binding.registrarPartner.setOnClickListener {
-            findNavController().navigate(R.id.action_loginPartnersFragment_to_registerPartnersFragment)
+            findNavController().navigate(R.id.action_loginPartnersFragment_to_introductionFragmentPartners)
         }
 
         binding.apply {

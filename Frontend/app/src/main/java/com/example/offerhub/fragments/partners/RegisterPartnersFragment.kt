@@ -59,7 +59,7 @@ class RegisterPartnersFragment: Fragment() {
 
         // VOLVER A LA PANTALLA DE ATRAS
         binding.atras.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_registerPartnersFragment_to_loginPartnersFragment)
         }
 
         // ACA ES DONDE EL VIEW MODEL DEVUELVE EL USUARIO CREADO Y CONFIRMA QUE SE CREO CORRECTAMENTE
