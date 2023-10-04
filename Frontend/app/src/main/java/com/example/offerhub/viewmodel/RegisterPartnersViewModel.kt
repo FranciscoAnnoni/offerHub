@@ -44,6 +44,8 @@ class RegisterPartnersViewModel @Inject constructor(
     private val _registrationSuccess = MutableLiveData<Boolean>()
     val registrationSuccess: LiveData<Boolean> = _registrationSuccess
 
+
+    // ESTA FUNCUION HAY QUE CAMBIARLA PARA QUE TENGA AL USUARIO CORRECTO
     fun createAccountWithEmailAndPassword(user: User, password:String) {
         val emailValidation = validateEmail(user.email)
         val passwordValidation = validatePassword(password)

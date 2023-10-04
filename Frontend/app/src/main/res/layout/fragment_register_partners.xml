@@ -53,7 +53,7 @@
         <!-- Datos a rellenar -->
 
         <TextView
-            android:id="@+id/nombreyApellido"
+            android:id="@+id/nombreDeEmpresa"
             style="@style/textoChicoVioleta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,14 +66,14 @@
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edNamerRegister"
+            android:id="@+id/edNombreRegisterDeEmpresa"
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
             android:hint="Nombre de la Empresa"
             app:layout_constraintEnd_toEndOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/nombreyApellido"
+            app:layout_constraintTop_toBottomOf="@id/nombreDeEmpresa"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -86,11 +86,11 @@
             android:text="CUIL"
             android:layout_marginStart="-15dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edNamerRegister"
+            app:layout_constraintTop_toBottomOf="@id/edNombreRegisterDeEmpresa"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edCuilRegister"
+            android:id="@+id/edCuilRegisterDeEmpresa"
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
@@ -101,7 +101,7 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/email"
+            android:id="@+id/emailDeEmpresa"
             style="@style/textoChicoVioleta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,18 +110,18 @@
             android:text="Email de Empresa"
             android:layout_marginStart="-15dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edCuilRegister"
+            app:layout_constraintTop_toBottomOf="@id/edCuilRegisterDeEmpresa"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edEmailRegister"
+            android:id="@+id/edEmailRegisterDeEmpresa"
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
             android:hint="Email de Empresa"
             app:layout_constraintEnd_toEndOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/email"
+            app:layout_constraintTop_toBottomOf="@id/emailDeEmpresa"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -134,11 +134,11 @@
             android:text="Contraseña"
             android:layout_marginStart="-15dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edEmailRegister"
+            app:layout_constraintTop_toBottomOf="@id/edEmailRegisterDeEmpresa"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edPassowrdRegister"
+            android:id="@+id/edPassowrdRegisterEmpresa"
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
@@ -150,7 +150,7 @@
             tools:ignore="MissingConstraints" />
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-            android:id="@+id/btnRegister"
+            android:id="@+id/btnRegisterEmpresa"
             style="@style/RoundedButtonBackground"
             android:layout_width="112dp"
             android:layout_height="42dp"
@@ -159,7 +159,7 @@
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edPassowrdRegister"
+            app:layout_constraintTop_toBottomOf="@id/edPassowrdRegisterEmpresa"
             tools:ignore="MissingConstraints"
             app:spinning_bar_color="@color/white"/>
 

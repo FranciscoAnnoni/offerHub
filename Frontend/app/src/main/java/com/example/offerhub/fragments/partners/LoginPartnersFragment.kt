@@ -59,18 +59,18 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
         rootViewLogin = view
 
         // Configura el campo de correo electrónico
-        binding.edEmailLogin.setOnEditorActionListener { _, actionId, event ->
+        binding.edEmailLoginEmpresa.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)
             ) {
-                binding.edPasswordLogin.requestFocus()
+                binding.edPasswordLoginEmpresa.requestFocus()
                 return@setOnEditorActionListener true
             }
             false
         }
 
         // Configura el campo de contraseña
-        binding.edPasswordLogin.setOnEditorActionListener { _, actionId, event ->
+        binding.edPasswordLoginEmpresa.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)
             ) {
@@ -119,9 +119,9 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
         }
 
         binding.apply {
-            btnLogin.setOnClickListener {
-                val email = edEmailLogin.text.toString().trim()
-                val password = edPasswordLogin.text.toString()
+            btnLoginEmpresa.setOnClickListener {
+                val email = edEmailLoginEmpresa.text.toString().trim()
+                val password = edPasswordLoginEmpresa.text.toString()
 
                 viewModel.login(email, password)
             }
@@ -131,8 +131,9 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
             viewModel.login.collect {
                 when (it) {
                     is Resource.Loading -> {
-                        binding.btnLogin.startAnimation()
+                        binding.btnLoginEmpresa.startAnimation()
                     }
+                    // esto lo tengo que ver con axel porque no tengo ni puta idea que esta haciendo aca con el usuario
                     is Resource.Success -> {
                         CoroutineScope(Dispatchers.Main).launch {
                             val userViewModel: UserViewModel by viewModels()
@@ -154,8 +155,8 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                                 "Login exitoso",
                                 Snackbar.LENGTH_SHORT
                             ).show()
-                            binding.btnLogin.revertAnimation()
-                            binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
+                            binding.btnLoginEmpresa.revertAnimation()
+                            binding.btnLoginEmpresa.setBackgroundResource(R.drawable.rounded_button_background)
 
                      // Ejecuta la actividad de shopping
                             Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
@@ -170,8 +171,8 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                             "Error de Login, la contraseña o el correo son incorrectos",
                             Snackbar.LENGTH_SHORT
                         ).show()
-                        binding.btnLogin.revertAnimation()
-                        binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
+                        binding.btnLoginEmpresa.revertAnimation()
+                        binding.btnLoginEmpresa.setBackgroundResource(R.drawable.rounded_button_background)
                     }
                     else -> Unit
                 }

@@ -43,50 +43,55 @@ class RegisterPartnersFragment: Fragment() {
 
         rootView = view // Asignar la vista raíz del fragmento
 
+        // ACA ES DONDE TENGO QUE VERLO CON FACU PARA QUE ESTOS VALORES SE LOS ASIGNE A UN USER= USER-PARTHENRS
         binding.apply {
-            btnRegister.setOnClickListener {
+            btnRegisterEmpresa.setOnClickListener {
                 val user = User(
-                    edNamerRegister.text.toString().trim(),
-                    edEmailRegister.text.toString().trim()
+                    edNombreRegisterDeEmpresa.text.toString().trim(),
+                    edCuilRegisterDeEmpresa.text.toString().trim(),
+                    edEmailRegisterDeEmpresa.text.toString().trim()
 
                 )
-                val password = edPassowrdRegister.text.toString()
+                val password = edPassowrdRegisterEmpresa.text.toString()
                 viewModel.createAccountWithEmailAndPassword(user,password)
             }
         }
 
+        // VOLVER A LA PANTALLA DE ATRAS
         binding.atras.setOnClickListener {
             findNavController().navigateUp()
         }
 
+        // ACA ES DONDE EL VIEW MODEL DEVUELVE EL USUARIO CREADO Y CONFIRMA QUE SE CREO CORRECTAMENTE
         lifecycleScope.launchWhenStarted {
             viewModel.register.collect{
                 when(it){
                     is Resource.Loading -> {
-                        binding.btnRegister.startAnimation()
+                        binding.btnRegisterEmpresa.startAnimation()
                     }
                     is Resource.Success -> {
                         Log.d("test", it.data.toString())
-                        binding.btnRegister.revertAnimation()
+                        binding.btnRegisterEmpresa.revertAnimation()
                         Snackbar.make(rootView, "Registro exitoso", Snackbar.LENGTH_SHORT).show()
                         // Puedes agregar lógica adicional aquí, como redirigir al usuario a la pantalla de inicio de sesión
-                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                        findNavController().navigate(R.id.action_registerPartnersFragment_to_loginPartnersFragment)
                     }
                     is Resource.Error -> {
-                        binding.btnRegister.revertAnimation()
-                        binding.btnRegister.setBackgroundResource(R.drawable.rounded_button_background)
+                        binding.btnRegisterEmpresa.revertAnimation()
+                        binding.btnRegisterEmpresa.setBackgroundResource(R.drawable.rounded_button_background)
                     }
                     else -> Unit
                 }
             }
         }
 
+        // ACA VALIDO QUE LA CONTRRASENIA Y EL MAIL SEAN CORRECTOS
         lifecycleScope.launchWhenStarted {
             viewModel.validation.collect {
                 validation ->
                 if (validation.email is RegisterValidation.Failed){
                     withContext(Dispatchers.Main) {
-                        binding.edEmailRegister.apply {
+                        binding.edEmailRegisterDeEmpresa.apply {
                             requestFocus()
                             error = validation.email.message
                         }
@@ -95,7 +100,7 @@ class RegisterPartnersFragment: Fragment() {
 
                 if (validation.password is RegisterValidation.Failed){
                     withContext(Dispatchers.Main) {
-                        binding.edPassowrdRegister.apply {
+                        binding.edPassowrdRegisterEmpresa.apply {
                             requestFocus()
                             error = validation.password.message
                         }

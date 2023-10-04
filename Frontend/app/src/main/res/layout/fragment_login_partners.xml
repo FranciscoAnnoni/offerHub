@@ -67,7 +67,7 @@
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edEmailLogin"
+            android:id="@+id/edEmailLoginEmpresa"
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
@@ -87,11 +87,11 @@
             android:layout_marginStart="-15dp"
             android:text="@string/password"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edEmailLogin"
+            app:layout_constraintTop_toBottomOf="@id/edEmailLoginEmpresa"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edPasswordLogin"
+            android:id="@+id/edPasswordLoginEmpresa"
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
@@ -112,12 +112,12 @@
             android:layout_marginTop="12dp"
             android:text=" Olvidé mi contraseña/Cambiar contraseña"
             app:layout_constraintStart_toStartOf="@id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edPasswordLogin"
+            app:layout_constraintTop_toBottomOf="@id/edPasswordLoginEmpresa"
             app:spinning_bar_color="@color/white"
             tools:ignore="MissingConstraints" />
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnLoginEmpresa"
             style="@style/RoundedButtonBackground"
             android:layout_width="112dp"
             android:layout_height="42dp"
@@ -126,7 +126,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edPasswordLogin"
+            app:layout_constraintTop_toBottomOf="@id/edPasswordLoginEmpresa"
             app:spinning_bar_color="@color/white"
             tools:ignore="MissingConstraints" />
 
