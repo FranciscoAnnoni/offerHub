@@ -7,6 +7,7 @@
     <color name="voletaNegro">#1F1B33</color>
     <color name="violeta">#4B2A7F</color>
     <color name="violetaClaro">#7D3DD0</color>
+    <color name="colorPrimary">#7D3DD0</color>
     <color name="violetaMasClaro">#9747FF</color>
     <color name="gris">#B7AACC</color>
     <color name="fondo">#F2F0F3</color>
@@ -25,6 +26,7 @@
     <color name="g_red">#FF0000</color>
     <color name="g_gray500">#969899</color>
     <color name="g_orange_yellow">#F8BA00</color>
+    <color name="colorAccent">#ac86f4</color>
     <color name="g_light_purple">#ac86f4</color>
 
 </resources>

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.R
 import com.example.offerhub.Sucursal
 
-class SucursalesAdapter(private val sucursales: List<Sucursal?>) : RecyclerView.Adapter<SucursalesAdapter.ViewHolder>() {
+class SucursalesAdapter(private val sucursales: List<String?>) : RecyclerView.Adapter<SucursalesAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sucursalTextView: TextView = itemView.findViewById(R.id.textSucursalName)
@@ -22,7 +22,7 @@ class SucursalesAdapter(private val sucursales: List<Sucursal?>) : RecyclerView.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sucursal = sucursales[position]
         if (sucursal != null) {
-            holder.sucursalTextView.text = sucursal.direccion
+            holder.sucursalTextView.text = sucursal.toString()
         }
     }
 
