@@ -3,4 +3,12 @@
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="nombre_y_apellido">Nombre y Apellido</string>
+    <!-- Opciones para el Spinner "Tipo de Promoción" -->
+    <string-array name="tipos_promocion">
+        <item>Descuento</item>
+        <item>Reintegro</item>
+        <item>2x1</item>
+        <item>Cuotas</item>
+    </string-array>
+
 </resources>

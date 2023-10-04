@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_filter.xml -->
+<!-- activity_filter.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/search_category_background">
+
+    <!-- ... (otros elementos) -->
+
+    <!-- Sección de Vigencia -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vigencia"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary" />
+
+    <!-- Desde y Hasta -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editTextDesde"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Desde"
+            android:clickable="true"
+            android:focusable="false"
+            android:layout_gravity="center"
+            android:textColor="?attr/colorPrimary"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/g_gray700" />
+
+
+        <EditText
+            android:id="@+id/editTextHasta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Hasta"
+            android:clickable="true"
+            android:focusable="false"
+            android:layout_gravity="center"
+            android:textColor="@color/g_gray700"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- ... (otros elementos) -->
+
+    <!-- Sección de Tipo de Promoción -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Tipo de Promoción"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary" />
+
+    <!-- Dropdown para seleccionar el Tipo de Promoción -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupTipoPromocion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <!-- Los chips se generarán dinámicamente aquí -->
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Sección de Días de Promoción -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Días de Promoción"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary" />
+
+    <!-- Chips para seleccionar los días de la semana -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupDias"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLunes"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lunes"
+            android:textColor="@color/g_gray700" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMartes"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Martes"
+            android:textColor="@color/g_gray700" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMiercoles"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Miercoles"
+            android:textColor="@color/g_gray700" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipJueves"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jueves"
+            android:textColor="@color/g_gray700" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipViernes"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Viernes"
+            android:textColor="@color/g_gray700" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSabado"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sabado"
+            android:textColor="@color/g_gray700" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipDomingo"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Domingo"
+            android:textColor="@color/g_gray700" />
+
+        <!-- Agrega más Chips para los otros días de la semana -->
+    </com.google.android.material.chip.ChipGroup>
+    <View
+        android:id="@+id/linea2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="10dp"
+        android:background="#37969899"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+    <!-- Botón "Aplicar Filtros" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/edPasswordLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/btnReset"
+            style="@style/RoundedButtonBackground"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Borrar"
+            android:backgroundTint="#E8E7E7"
+            app:spinning_bar_color="@color/white"
+            android:textColor="#582C8F"
+            tools:ignore="MissingConstraints" />
+
+        <!-- Margen en el medio -->
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/btnAplicar"
+            style="@style/RoundedButtonBackground"
+            android:layout_width="0dp"
+            android:backgroundTint="#582C8F"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Aplicar"
+            android:onClick="aplicarFiltros"
+            app:spinning_bar_color="@color/white"
+            tools:ignore="MissingConstraints" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

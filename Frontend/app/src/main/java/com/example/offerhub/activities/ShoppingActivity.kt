@@ -3,6 +3,7 @@ import CategoryGridAdapter
 import UserViewModel
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.GridView
 import android.widget.ListView
@@ -21,6 +22,7 @@ import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.data.Categoria
 import com.example.offerhub.databinding.ActivityShoppingBinding
+import com.example.offerhub.fragments.shopping.FilterFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -47,5 +49,12 @@ class ShoppingActivity : AppCompatActivity() {
         // Establecer el adaptador en el ListView.
 
 
+    }
+
+    fun aplicarFiltros(view: View) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.filterFragment)
+        if (fragment is FilterFragment) {
+            fragment.aplicarFiltros()
+        }
     }
 }
