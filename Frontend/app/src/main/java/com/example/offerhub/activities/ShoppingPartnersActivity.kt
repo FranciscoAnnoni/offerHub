@@ -25,7 +25,7 @@ import com.example.offerhub.databinding.ActivityShoppingBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
-@AndroidEntryPoint
+
 class ShoppingPartnersActivity : AppCompatActivity() {
     private lateinit var navControllerPartrners: NavController
     val binding by lazy {

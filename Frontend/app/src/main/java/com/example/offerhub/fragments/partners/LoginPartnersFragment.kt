@@ -18,6 +18,7 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
+import com.example.offerhub.activities.ShoppingPartnersActivity
 import com.example.offerhub.databinding.FragmentLoginPartnersBinding
 import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
@@ -156,7 +157,7 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                             binding.btnLoginEmpresa.setBackgroundResource(R.drawable.rounded_button_background)
 
                      // Ejecuta la actividad de shopping
-                            Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
+                            Intent(requireActivity(), ShoppingPartnersActivity::class.java).also { intent ->
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
                             }
