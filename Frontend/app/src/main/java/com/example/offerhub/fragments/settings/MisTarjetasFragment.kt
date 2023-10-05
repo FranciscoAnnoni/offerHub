@@ -50,7 +50,7 @@ class MisTarjetasFragment: Fragment() {
         binding.ivClose.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.ivAgregarTarjetas.setOnClickListener {
+        binding.llAgregarTarjeta.setOnClickListener {
             findNavController().navigate(R.id.action_misTarjetasFragment_to_cargadoTarjetasFragment)
         }
 
