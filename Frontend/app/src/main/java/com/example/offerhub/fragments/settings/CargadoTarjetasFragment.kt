@@ -82,6 +82,7 @@ class CargadoTarjetasFragment : Fragment() {
                 uvm.usuario!!.tarjetas = tarjetasSeleccionadas as MutableList<String?>
             } else {
                 uvm.usuario!!.tarjetas!!.addAll(tarjetasSeleccionadas)
+                Log.d("Despues de agregar tarjetas, tarjetas uvm: ", uvm.usuario!!.tarjetas!!.joinToString(","))
             }
             UserViewModelCache().guardarUserViewModel(uvm)
             funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)

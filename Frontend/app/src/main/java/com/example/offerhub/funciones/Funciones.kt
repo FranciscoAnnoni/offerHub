@@ -10,6 +10,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class Funciones {
     val instancialeerId = LeerId()
@@ -156,6 +159,20 @@ class Funciones {
     fun elimiarTarjetaDeUsuario(userId: String, tarjetaId: String){
         instanciaEscritura.eliminarElementoDeListas(userId, tarjetaId, "Usuario", "tarjetas")
     }
+
+    fun eliminarTodasLasTarjetasDeUsuario(userId: String) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia = database.getReference("Usuario").child(userId).child("tarjetas")
+
+        referencia.removeValue()
+            .addOnSuccessListener {
+                println("Todas las tarjetas han sido eliminadas con éxito.")
+            }
+            .addOnFailureListener { error ->
+                println("Error al eliminar todas las tarjetas: $error")
+            }
+    }
+
 
     fun editarPerfil(userId: String, atributo: String, valorNuevo: String){
         instanciaEscritura.editarAtributoDeClase("Usuario",userId, atributo,valorNuevo)

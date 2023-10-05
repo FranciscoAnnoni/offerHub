@@ -95,6 +95,7 @@ class MisTarjetasFragment: Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
+        uvm = UserViewModelSingleton.getUserViewModel()
         val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
         val position = info.position
         val tarjeta = tarjetasGridView.adapter.getItem(position) as Tarjeta
@@ -103,12 +104,17 @@ class MisTarjetasFragment: Fragment() {
 
         if(item.itemId == R.id.opcionEliminarTarjeta) {
             coroutineScope.launch {
-                funciones.elimiarTarjetaDeUsuario(usuario.id, tarjeta.id!!)
+                funciones.eliminarTodasLasTarjetasDeUsuario(usuario.id)
                 uvm.usuario!!.tarjetas!!.remove(tarjeta.id)
+                if (uvm.usuario!!.tarjetas != null) {
+                      if(uvm.usuario!!.tarjetas!!.isNotEmpty()) {
+                          funciones.agregarTarjetasAUsuario(
+                              usuario.id,
+                              uvm.usuario!!.tarjetas!! as MutableList<String>
+                          )
+                      }
+                    }
                 UserViewModelCache().guardarUserViewModel(uvm)
-            }
-
-            CoroutineScope(Dispatchers.Main).launch{
                 uvm.listadoDePromosDisp = funciones.obtenerPromociones(uvm.usuario!!)
                 UserViewModelCache().guardarUserViewModel(uvm)
             }
