@@ -46,6 +46,7 @@ class MisTarjetasFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        uvm = UserViewModelSingleton.getUserViewModel()
         binding.ivClose.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -59,6 +60,7 @@ class MisTarjetasFragment: Fragment() {
         tarjetasGridView = view.findViewById<GridView>(R.id.gvMisTarjetas)
         registerForContextMenu(tarjetasGridView)
         val job = coroutineScope.launch {
+
             usuario = UserViewModelSingleton.getUserViewModel().usuario!!
             var tarjetas: MutableList<Tarjeta> = mutableListOf()
 

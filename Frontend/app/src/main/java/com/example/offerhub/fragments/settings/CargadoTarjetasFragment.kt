@@ -94,6 +94,8 @@ class CargadoTarjetasFragment : Fragment() {
             }
 
             Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
+            findNavController().navigateUp()
+
         }
 
             scrollView.visibility = View.VISIBLE
@@ -104,8 +106,10 @@ class CargadoTarjetasFragment : Fragment() {
 
                 var listaTarjetas: MutableList<Tarjeta> = mutableListOf()
                 try {
-                    listaTarjetas=
-                        instancia.leerBdClaseSinc("Tarjeta", "entidad", entidad.id!!)
+                    Log.d("UVM TARJETAS DISP: ", uvm.tarjetasDisponibles.joinToString(","))
+                    //listaTarjetas = uvm.tarjetasDisponibles.filter { tarjeta -> tarjeta.entidad  == entidad.id } as MutableList<Tarjeta>
+                    Log.d("UVM TARJETAS DISP: ", uvm.tarjetasDisponibles.joinToString(","))
+                    listaTarjetas = instancia.leerBdClaseSinc("Tarjeta", "entidad", entidad.id!!)
                     for (data in listaTarjetas){
                         Log.d("Promocion", "titulo: $data")
                     }
@@ -118,8 +122,7 @@ class CargadoTarjetasFragment : Fragment() {
 
                     val entidadLl = LinearLayout(view.context)
                     entidadLl.orientation = LinearLayout.HORIZONTAL
-                    //entidadLl.background =
-                    //entidadLl.background = requireContext().getDrawable(R.drawable.border_opcion_entidad)
+
 
                     val layoutParams = entidadLl.layoutParams as? LinearLayout.LayoutParams ?: LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -154,7 +157,7 @@ class CargadoTarjetasFragment : Fragment() {
                     } else {
                         listaSinRepetidos = listaTarjetas
                     }
-                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaSinRepetidos/*, uvm.usuario!!.tarjetas*/) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
+                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaSinRepetidos)
                     listView.adapter = arrayAdapter
                     listView.setOnItemClickListener { parent, view, position, id ->
 

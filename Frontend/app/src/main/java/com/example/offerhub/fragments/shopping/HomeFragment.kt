@@ -126,6 +126,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         val promociones: List<Promocion> =
                             userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
                         if (promociones.size > 0) {
+                            val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
+                            promosDispo.visibility = View.VISIBLE
+                            val switch = view.findViewById<Switch>(R.id.switchHomeMode)
+                            switch.visibility = View.VISIBLE
+                            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+                            cargarTarjetas.visibility = View.GONE
+
                             if (requireContext() != null) {
                                 val categoriaTitle = TextView(requireContext())
                                 categoriaTitle.text = categoria.nombre
@@ -193,6 +200,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 categoriasContainer.addView(categoriaTitle)
                                 categoriasContainer.addView(recyclerView)
 
+                            }
+                        } else {
+                            val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
+                            promosDispo.visibility = View.GONE
+                            val switch = view.findViewById<Switch>(R.id.switchHomeMode)
+                            switch.visibility = View.GONE
+                            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+                            cargarTarjetas.visibility = View.VISIBLE
+
+                            cargarTarjetas.setOnClickListener {
+                                Log.d("Estoy adentro del click de agregar tarjetas", "click click click")
+                                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCargarTarjetasFragment())
                             }
                         }
                     }

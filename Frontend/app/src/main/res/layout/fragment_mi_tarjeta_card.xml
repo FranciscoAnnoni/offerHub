@@ -50,7 +50,6 @@
         android:id="@+id/logoEmisora"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/logo_mastercard"
         app:layout_constraintBottom_toBottomOf="@id/llTarjetaCard"
         app:layout_constraintEnd_toEndOf="@id/llTarjetaCard"
         android:layout_marginRight="20dp"

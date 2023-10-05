@@ -1,6 +1,7 @@
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import com.example.offerhub.Promocion
+import com.example.offerhub.Tarjeta
 import com.example.offerhub.Usuario
 import javax.inject.Singleton
 
@@ -12,6 +13,7 @@ class UserViewModel : ViewModel() {
     var logoComercios: MutableMap<String,Bitmap> = mutableMapOf()
     var usuario: Usuario? = null
     var homeModoFull: String? = null
+    var tarjetasDisponibles: MutableList<Tarjeta> = mutableListOf()
 
 
 }
