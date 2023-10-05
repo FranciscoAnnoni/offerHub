@@ -25,7 +25,7 @@ import re
 
 
 
-#config.setearEntorno()
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -237,11 +237,7 @@ for categoria in categorias:
                 ciudad = direccion.find_element(By.XPATH, './/p[@class="ng-binding"]').text.split(", ")
                 if len(ciudad) == 2: sucursal.direccion = direccion.find_element(By.XPATH, './/p[contains(@class,"ng-binding")]').text+", "+ciudad[1]
                 else: sucursal.direccion = direccion.find_element(By.XPATH, './/p[contains(@class,"ng-binding")]').text+", "+ciudad[0]   
-                latitud_resultado, longitud_resultado = obtenerCoordenadas(sucursal.direccion)
-                sucursal.latitud = str(latitud_resultado)
-                sucursal.longitud = str(longitud_resultado)
-                sucursal.idComercio = idComercio
-                sucursales.append(sucursal.guardar())
+                sucursales.append(sucursal.direccion)
                 print("\t\t"+sucursal.direccion)
 
             #TRAIGO TYC

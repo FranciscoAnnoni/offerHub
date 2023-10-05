@@ -95,15 +95,15 @@ class Usuario{
     var id: String
     var nombre: String
     var correo: String?
-    var tarjetas: List<String?>?
-    var favoritos: List<String?>?
-    var wishlistComercio: List<String?>?
-    var wishlistRubro: List<String?>?
-    var promocionesReintegro: List<String?>?
+    var tarjetas: MutableList<String?>?
+    var favoritos: MutableList<String?>?
+    var wishlistComercio: MutableList<String?>?
+    var wishlistRubro: MutableList<String?>?
+    var promocionesReintegro: MutableList<String?>?
     var homeModoFull: String?
 
     // Constructor primario
-    constructor(id: String, nombre: String, correo: String?, tarjetas: List<String?>?, favoritos: List<String?>?, wishlistComercio: List<String?>?,  wishlistRubro: List<String?>?, promocionesReintegro: List<String?>?,homeModoFull: String?){
+    constructor(id: String, nombre: String, correo: String?, tarjetas: MutableList<String?>?, favoritos: MutableList<String?>?, wishlistComercio: MutableList<String?>?,  wishlistRubro: MutableList<String?>?, promocionesReintegro: MutableList<String?>?,homeModoFull: String?){
         this.id = id
         this.nombre = nombre
         this.correo = correo

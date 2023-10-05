@@ -69,7 +69,7 @@ def setearTarjeta(texto):
     elif texto == "Tarjetas Santander Recargables":
         tarjetasNecesarias = (filtrarPorSegmento(tarjetas, "Recargable"))
 
-    elif texto == "Tarjetas Santander Mastercard" or texto == "Tarjetas MasterCard"or texto == "Tarjetas Santander MasterCard":
+    elif texto == "Tarjetas Santander Mastercard" or texto == "Tarjetas MasterCard"or texto == "Tarjetas Santander MasterCard" or texto == "Tarjetas Santander Mastercard sin contacto":
         tarjetasNecesarias = (filtrarPorProcesadora(tarjetas, "Mastercard"))
 
     elif texto == "Tarjeta Women Visa" or texto == "Tarjeta Santander Women Visa":
@@ -84,11 +84,11 @@ def setearTarjeta(texto):
         tarjetasNecesarias = (filtrarPorProcesadora(tarjetas, "American Express"))
         tarjetasNecesarias = (filtrarPorSegmento(tarjetasNecesarias, "Black"))
 
-    elif texto == "Tarjeta Santander de Crédito Visa" or texto == "Tarjeta Santander de crédito Visa" or texto == "Tarjetas Santander de Crédito Visa" or texto == "Tarjetas Santander de crédito Visa":
+    elif texto == "Tarjeta Santander de Crédito Visa" or texto == "Tarjetas Santander Visa Crédito" or texto == "Tarjeta Santander de crédito Visa" or texto == "Tarjetas Santander de Crédito Visa" or texto == "Tarjetas Santander de crédito Visa":
         tarjetasNecesarias = (filtrarPorProcesadora(tarjetas, "Visa"))
         tarjetasNecesarias = (filtrarPorTipoTarjeta(tarjetasNecesarias, "Crédito"))
 
-    elif texto == "Tarjeta Santander de Crédito":
+    elif texto == "Tarjeta Santander de Crédito" or texto == "Tarjetas Santander de Crédito":
         tarjetasNecesarias = (filtrarPorTipoTarjeta(tarjetas, "Crédito"))
 
     elif texto == "Débito y Recargables Visa":
@@ -173,6 +173,7 @@ def asignadorCategoria(comercio):
     elif comercio in [""]:                  return "mascotas"
     elif comercio in ["Pedidos Ya Market", "PedidosYa", "PedidosYa Plus", "ShopGallery", "Style Store"]:                  return "servicios"
     else: return "varios"
+
 
 
 

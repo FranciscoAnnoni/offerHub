@@ -91,6 +91,21 @@ class LeerId {
         })
     }
 
+    suspend fun obtenerEntidadPorId(id: String): Entidad? {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Entidad").child(id).get().await()
+
+        if (dataSnapshot.exists()) {
+            val key = dataSnapshot.key
+            val nombre = dataSnapshot.child("nombre").getValue(String::class.java)
+            val tipo = dataSnapshot.child("tipo").getValue(String::class.java)
+            val entidad = Entidad(key, nombre, tipo)
+            return entidad
+        } else {
+            return null
+        }
+    }
+
     suspend fun obtenerUsuarioPorId(id: String): Usuario? = withContext(Dispatchers.IO) {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
         val dataSnapshot = database.child("Usuario").child(id).get().await()
@@ -99,11 +114,11 @@ class LeerId {
             val correo = dataSnapshot.child("correo").getValue(String::class.java)
             val homeModoFull = dataSnapshot.child("homeModoFull").getValue(String::class.java)?:"0"
             val nombre = dataSnapshot.child("nombre").getValue(String::class.java) ?: ""
-            val tarjetas = dataSnapshot.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
-            val favoritos = dataSnapshot.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {})
-            val wishlistComercio = dataSnapshot.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {})
-            val wishlistRubro = dataSnapshot.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {})
-            val promocionesReintegro = dataSnapshot.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val tarjetas = dataSnapshot.child("tarjetas").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
+            val favoritos = dataSnapshot.child("favoritos").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
+            val wishlistComercio = dataSnapshot.child("wishlistComercio").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
+            val wishlistRubro = dataSnapshot.child("wishlistRubro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
+            val promocionesReintegro = dataSnapshot.child("promocionesReintegro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
 
             Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro,homeModoFull)
         } else {

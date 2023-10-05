@@ -36,7 +36,6 @@ print("-----Inicio Scraping (Clarin 365)-----")
 entidad = Entidad()
 entidad.nombre = "Clarin 365"
 entidad.tipo = "Fidelidad"
-entidad.telefono= "0810-333-0365 - Lunes a Viernes - 8 a 20hs"
 idEntidad = entidad.guardar()
 
 driver.get('https://365.clarin.com/buscar')
@@ -91,21 +90,27 @@ for boton in seccion_categorias:
         print("\t\tPorcentaje: "+porcentaje)
         descripcion=containerPromo.find_element(By.XPATH, './/div[contains(@class,"description")]').get_attribute("textContent")
         print("\t\tDescripcion: "+descripcion)
-        diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
-        dias=[]
+        diasSemana = []
         i=0
+
         print("\tDias: ")
         diasContainer=containerPromo.find_element(By.XPATH, './/div[contains(@class,"apply-days-wrapper")]')
         dias=diasContainer.find_elements(By.XPATH, './/li[contains(@class,"active")]')
-        if len(dias)>0:
-            dias=list(sorted(map(lambda el:el.text,dias),key=diasSemana.index()))
+
+        if len(dias) > 0:
+            for dia in dias:
+                diasSemana.append(dia.text)
+                print("\t\t"+dia.text)
         else:
-            dias=list(diasSemana)
-        for dia in dias:
-            print("\t\t"+dia)
+            diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
+            print(diasSemana)
+        
+
+
+        print("\t\tTarjetas: ")
         tarjetas=containerPromo.find_elements(By.XPATH, './/div[contains(@class,"card-365")]')
         idTarjetas=[]
-        print("\t\tTarjetas: ")
+        
         for tarjeta in tarjetas:
             nombreTajeta=tarjeta.find_element(By.XPATH, './/p').get_attribute("innerHTML")
             print("\t\t\t"+nombreTajeta) 
@@ -115,6 +120,7 @@ for boton in seccion_categorias:
             tarjetaNueva.segmento = nombreTajeta
             tarjetaNueva.tipoTarjeta = "Fidelidad"
             idTarjetas.append(tarjetaNueva.guardar())
+
         tycContainer=containerPromo.find_element(By.XPATH, './/div[contains(@class,"terms-and-conditions-wrapper")]')  
         vigencia=tycContainer.find_element(By.XPATH, './/p').text.replace("Válido hasta el ","")
         print("\t\tVigencia: "+vigencia)
@@ -122,10 +128,15 @@ for boton in seccion_categorias:
         driver.implicitly_wait(2)
         ActionChains(driver).move_to_element(tycBtn).click(tycBtn).perform()
         time.sleep(1)
-        tyc=driver.find_element(By.XPATH, '//div[contains(@class,"terminos-modal")]').find_element(By.XPATH, './/p').text
+
+        try:
+            tyc=driver.find_element(By.XPATH, '//div[contains(@class,"terminos-modal")]').find_element(By.XPATH, './/p').text
+        except:
+            time.sleep(2)
+            tyc=driver.find_element(By.XPATH, '//div[contains(@class,"terminos-modal")]').find_element(By.XPATH, './/p').text
         print("\t\tT y C: "+tyc)
         driver.execute_script('document.querySelector(".scrollable").remove()')
-        idSucursales=[]
+        sucursales=[]
         try:
             print("\t\tSucursales: ")
             sucBtn=tycContainer.find_element(By.XPATH, './/button[contains(@class,"sucursales-adheridas")]')
@@ -134,7 +145,7 @@ for boton in seccion_categorias:
             btns=driver.find_elements(By.XPATH, '//div[contains(@class,"benefit-offices-icon")]')
             for btn in btns:
                 btn.click()
-##            driver.execute_script('document.querySelectorAll(".benefit-offices-icon").forEach(function(a){a.click();})')
+#            driver.execute_script('document.querySelectorAll(".benefit-offices-icon").forEach(function(a){a.click();})')
             pcias=driver.find_elements(By.XPATH, '//ul[contains(@class,"benefitOffices")]')
             for pcia in pcias:
                 nombrePcia=pcia.find_element(By.XPATH, './/h1').text
@@ -144,41 +155,58 @@ for boton in seccion_categorias:
                     direccion=suc.find_element(By.XPATH, './/h2').text
                     localidad=suc.find_element(By.XPATH, './/h3').text
                     sucursal = Sucursal()
-                    sucursal.direccion = direccion+" "+localidad
-                    sucursal.latitud, sucursal.longitud = utilidades.obtenerCoordenadas(sucursal.direccion)
-                    if sucursal.latitud=="Error de geolocalización":
-                        if nombrePcia.lower() not in direccion.lower():
-                            direccion=sucursal.direccion+" "+nombrePcia.lower().replace("provincia de ","")
-                            sucursal.latitud,sucursal.longitud=utilidades.obtenerCoordenadas(direccion)
-                    sucursal.idComercio = idComercio
-                    idSucursales.append(sucursal.guardar())
+                    sucursal.direccion = direccion+", "+localidad
+                    sucursales.append(sucursal.direccion)
                     print("\t\t\tDireccion: "+direccion+" - Localidad: "+localidad)
-            driver.execute_script('document.querySelector(".scrollable").remove()')
+            try:
+                driver.execute_script('document.querySelector(".scrollable").remove()')
+                promocion.titulo=titulo+": "+porcentaje
+                promocion.sucursales=sucursales
+                promocion.setearTipoPromocion(porcentaje)
+                numeros=promocion.obtenerPorcentajeYCantCuotas(porcentaje)
+                promocion.porcentaje=numeros["porcentaje"]
+                promocion.tarjetas=idTarjetas
+                promocion.proveedor=idEntidad
+                promocion.comercio=idComercio
+                promocion.topeTexto = ""
+                promocion.topeNro = ""
+                promocion.url=url
+                if vigencia:
+                    promocion.vigenciaDesde=" - "
+                    promocion.setearFecha("vigenciaHasta",vigencia)
+                else:
+                    promocion.vigenciaDesde=" - "
+                    promocion.vigenciaHasta=" - "
+                promocion.setearCategoria(categoria)
+                promocion.dias=diasSemana  
+                promocion.tyc=tyc
+                promocion.descripcion=descripcion
+                promocion.guardar()
+            except:
+                print("ROMPI")
         except NoSuchElementException:
-            sucursales=None 
-        promocion.titulo=titulo+": "+porcentaje
-        if len(idSucursales) > 0:
-            promocion.sucursales=idSucursales
-        promocion.setearTipoPromocion(porcentaje)
-        numeros=promocion.obtenerPorcentajeYCantCuotas(porcentaje)
-        promocion.porcentaje=numeros["porcentaje"]
-        promocion.tarjetas=idTarjetas
-        promocion.proveedor=idEntidad
-        promocion.comercio=idComercio
-        promocion.topeTexto = ""
-        promocion.topeNro = ""
-        promocion.url=url
-        if vigencia:
-            promocion.vigenciaDesde=" - "
-            promocion.setearFecha("vigenciaHasta",vigencia)
-        else:
-            promocion.vigenciaDesde=" - "
-            promocion.vigenciaHasta=" - "
-        promocion.setearCategoria(categoria)
-        promocion.dias=dias
-        promocion.tyc=tyc
-        promocion.descripcion=descripcion
-        promocion.guardar()
+            promocion.titulo=titulo+": "+porcentaje
+            promocion.sucursales=None
+            promocion.setearTipoPromocion(porcentaje)
+            numeros=promocion.obtenerPorcentajeYCantCuotas(porcentaje)
+            promocion.porcentaje=numeros["porcentaje"]
+            promocion.tarjetas=idTarjetas
+            promocion.proveedor=idEntidad
+            promocion.comercio=idComercio
+            promocion.topeTexto = ""
+            promocion.topeNro = ""
+            promocion.url=url
+            if vigencia:
+                promocion.vigenciaDesde=" - "
+                promocion.setearFecha("vigenciaHasta",vigencia)
+            else:
+                promocion.vigenciaDesde=" - "
+                promocion.vigenciaHasta=" - "
+            promocion.setearCategoria(categoria)
+            promocion.dias=diasSemana  
+            promocion.tyc=tyc
+            promocion.descripcion=descripcion
+            promocion.guardar()
 
         #driver.find_element(By.XPATH,"//html").click()
 

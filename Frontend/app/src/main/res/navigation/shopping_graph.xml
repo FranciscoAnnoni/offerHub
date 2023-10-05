@@ -12,8 +12,6 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_promoDetailFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"
             app:destination="@id/promoDetailFragment" />
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
@@ -52,7 +50,35 @@
         <action
             android:id="@+id/action_profileFragment_to_legalsInfoFragment"
             app:destination="@id/legalsInfoFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_cargadoTarjetasFragment"
+            app:destination="@id/cargadoTarjetasFragment"
+            />
+        <action
+            android:id="@+id/action_profileFragment_to_misTarjetasFragment"
+            app:destination="@id/misTarjetasFragment"
+            />
     </fragment>
+
+    <fragment
+        android:id="@+id/misTarjetasFragment"
+        android:name="com.example.offerhub.fragments.settings.MisTarjetasFragment"
+        android:label="MisTarjetasFragment"
+        tools:layout="@layout/fragment_mis_tarjetas"
+        >
+
+        <action
+            android:id="@+id/action_misTarjetasFragment_to_cargadoTarjetasFragment"
+            app:destination="@id/cargadoTarjetasFragment"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/cargadoTarjetasFragment"
+        android:name="com.example.offerhub.fragments.settings.CargadoTarjetasFragment"
+        android:label="CargadoTarjetasFragment"
+        />
 
     <fragment
         android:id="@+id/searchFragment"
@@ -62,6 +88,9 @@
         <action
             android:id="@+id/action_searchFragment_to_promoDetailFragment"
             app:destination="@id/promoDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
         <argument
             android:name="categoria"
             android:defaultValue=""
@@ -79,6 +108,10 @@
         android:id="@+id/legalsInfoFragment"
         android:name="com.example.offerhub.fragments.settings.LegalsInfoFragment"
         android:label="LegalsInfoFragment" />
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="com.example.offerhub.fragments.shopping.FilterFragment"
+        android:label="FilterFragment" />
 </navigation>
 
 

@@ -51,6 +51,9 @@ class ProfileFragment : Fragment() {
         binding.linearLegals.setOnClickListener{
             findNavController().navigate(R.id.action_profileFragment_to_legalsInfoFragment)
         }
+        binding.llTarjetas.setOnClickListener{
+            findNavController().navigate(R.id.action_profileFragment_to_misTarjetasFragment)
+        }
 
         binding.linearLogOut.setOnClickListener{
             val builder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)

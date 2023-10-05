@@ -295,11 +295,11 @@ class LecturaBD {
                                         Usuario(
                                             it1,
                                             data.child("nombre").getValue(String::class.java)!!,  data.child("correo").getValue(String::class.java),
-                                            data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("favoritos").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("wishlistComercio").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("wishlistRubro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                            data.child("tarjetas").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("favoritos").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("wishlistComercio").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("wishlistRubro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
+                                            data.child("promocionesReintegro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {}),
                                                     data.child("homeModoFull").getValue(String::class.java)
                                         )
                                     }
@@ -437,11 +437,11 @@ class LecturaBD {
                             val desdeFormateado: LocalDate?
                             val hastaFormateado: LocalDate?
                             var vigenciaDesdeString = data.child("vigenciaDesde").getValue(String::class.java)
-                            if(vigenciaDesdeString != "No posee"){
+                            if(vigenciaDesdeString != "No posee" && vigenciaDesdeString != " - "){
                                 desdeFormateado = LocalDate.parse(vigenciaDesdeString, formato)
                             } else { desdeFormateado = null }
                             var vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
-                            if(vigenciaHastaString != "No posee"){
+                            if(vigenciaHastaString != "No posee" && vigenciaHastaString != " - "){
                                 hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
                             } else { hastaFormateado = null }
                             val comercio: String? = data.child("comercio").getValue(String::class.java)
