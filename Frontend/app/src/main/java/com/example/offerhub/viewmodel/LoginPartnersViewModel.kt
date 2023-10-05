@@ -22,9 +22,9 @@ import javax.inject.Inject
 class LoginPartnersViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ): ViewModel() {
+
     private val _login = MutableSharedFlow<Resource<FirebaseUser>>()
     val login = _login.asSharedFlow()
-
 
     private val _resetPassword = MutableSharedFlow<Resource<String>>()
     val resetPassword = _resetPassword.asSharedFlow()
@@ -32,6 +32,7 @@ class LoginPartnersViewModel @Inject constructor(
     fun login(email: String, password: String){
         val emailValidation = validateEmail(email)
         val passwordValidation = validatePassword(password)
+
         val shouldLogin =
             emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
         if (shouldLogin) {

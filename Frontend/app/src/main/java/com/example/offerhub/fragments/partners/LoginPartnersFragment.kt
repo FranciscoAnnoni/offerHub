@@ -37,7 +37,6 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
     private lateinit var rootViewLogin: View
     private val viewModel by viewModels<LoginPartnersViewModel>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -142,10 +141,8 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                                 if (userViewModelCacheado != null) {
                                     UserViewModelSingleton.initialize(userViewModelCacheado)
                                 } else {
-                                    userViewModel.usuario =Funciones().traerUsuarioActual()
-                                    userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuario!!)
-                                    userViewModel.favoritos = Funciones().obtenerPromocionesFavoritas(userViewModel.usuario!!,userViewModel.listadoDePromosDisp as MutableList<Promocion>)
-                                    userViewModel.reintegros = Funciones().obtenerPromocionesReintegro(userViewModel.usuario!!,userViewModel.listadoDePromosDisp as MutableList<Promocion>)
+                                    userViewModel.usuarioPartner =Funciones().traerUsuarioPartnerActual()
+                                    //userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuarioPartner!!))
                                     userViewModelCache.guardarUserViewModel(userViewModel)
                                     UserViewModelSingleton.initialize(userViewModel)
                                 }

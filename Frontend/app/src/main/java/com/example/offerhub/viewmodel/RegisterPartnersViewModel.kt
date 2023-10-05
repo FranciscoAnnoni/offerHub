@@ -1,11 +1,13 @@
 package com.example.offerhub.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.offerhub.EscribirBD
 import com.example.offerhub.Usuario
 import com.example.offerhub.data.User
+import com.example.offerhub.data.UserPartner
 import com.example.offerhub.util.Constants.USER_COLLECTION
 import com.example.offerhub.util.RegisterFieldsState
 import com.example.offerhub.util.RegisterValidation
@@ -34,8 +36,8 @@ class RegisterPartnersViewModel @Inject constructor(
 
 ): ViewModel(){
 
-    private val _register = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
-          val register:Flow<Resource<Usuario>> = _register
+    private val _register = MutableStateFlow<Resource<UserPartner>>(Resource.Unspecified())
+          val register:Flow<Resource<UserPartner>> = _register
 
     private val _validation = Channel<RegisterFieldsState>()
         val validation = _validation.receiveAsFlow()
@@ -46,21 +48,25 @@ class RegisterPartnersViewModel @Inject constructor(
 
 
     // ESTA FUNCUION HAY QUE CAMBIARLA PARA QUE TENGA AL USUARIO CORRECTO
-    fun createAccountWithEmailAndPassword(user: User, password:String) {
-        val emailValidation = validateEmail(user.email)
+    fun createAccountWithEmailAndPassword(usuario: UserPartner, password:String) {
+        Log.d("EMAIL vm", "${ usuario.email }")
+        val emailValidation = validateEmail(usuario.email)
         val passwordValidation = validatePassword(password)
         val shouldRegister =
             emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
 
 
         if (shouldRegister) {
+            Log.d("me puedo registrar", "ENTRE")
             runBlocking {
                 _register.emit(Resource.Loading())
             }
-            firebaseAuth.createUserWithEmailAndPassword(user.email, password)
+
+            firebaseAuth.createUserWithEmailAndPassword(usuario.email, password)
                 .addOnSuccessListener {
                     it.user?.let {
-                        saveUserInfo(it.uid,user)
+                        Log.d("ID", "${ it.uid }")
+                        saveUserInfo(it.uid,usuario)
                         //_register.value = Resource.Success(it)
                     }
                 }.addOnFailureListener {
@@ -68,8 +74,9 @@ class RegisterPartnersViewModel @Inject constructor(
                 }
 
         }else {
+            Log.d("algo salio malE", "ENTRE")
             val registerFieldsState = RegisterFieldsState(
-                validateEmail(user.email), validatePassword(password)
+                validateEmail(usuario.email), validatePassword(password)
             )
             runBlocking {
                 _validation.send(registerFieldsState)
@@ -79,25 +86,24 @@ class RegisterPartnersViewModel @Inject constructor(
 
     }
 
-    private fun saveUserInfo(userUid: String, user: User){
-       val usuario = Usuario(
+    private fun saveUserInfo(userUid: String, user:UserPartner ){
+       val usuario = UserPartner(
            userUid,
-           user.nameAndLastName,
+           user.nombreDeEmpresa,
+           user.cuil,
            user.email,
-           listOf(),
-           listOf(),
-           listOf(),
-           listOf(),
-           listOf(),
-           "0"
+           listOf()
        )
-
+        Log.d("cantifnlas", "ENTRE")
         val database: FirebaseDatabase =
                 FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val referencia: DatabaseReference = database.getReference("/Usuario")
+        val referencia: DatabaseReference = database.getReference("/UsuarioPartner")
 
+        referencia.child(userUid).child("nombre").setValue(user.nombreDeEmpresa)
+        referencia.child(userUid).child("cuil").setValue(user.cuil)
         referencia.child(userUid).child("correo").setValue(user.email)
-        referencia.child(userUid).child("nombre").setValue(user.nameAndLastName)
+
+
            .addOnSuccessListener {
                 _registrationSuccess.value = true // Registro exitoso
                 _register.value = Resource.Success(usuario)

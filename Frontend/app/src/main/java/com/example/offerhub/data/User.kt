@@ -1,7 +1,6 @@
 package com.example.offerhub.data
 
 
-
 class User (
     val nameAndLastName: String,
     val email: String,
@@ -16,3 +15,13 @@ class User (
     constructor(): this("","","",null,null,null,null,null)
 }
 
+class UserPartner (
+    val nombreDeEmpresa: String,
+    val cuil: String,
+    val email: String,
+    var id: String = "",
+    var listaPromociones: List<String?>? = null
+
+){
+    constructor() : this("","","","",null)
+}

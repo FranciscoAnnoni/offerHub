@@ -3,6 +3,7 @@ package com.example.offerhub
 import android.content.Context
 import android.util.Log
 import com.example.offerhub.data.Categoria
+import com.example.offerhub.data.UserPartner
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -49,8 +50,6 @@ class Funciones {
 
         listaPromos
     }
-
-
 
     suspend fun obtenerPromociones(usuario: Usuario?): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
@@ -236,6 +235,29 @@ class Funciones {
             usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
             if (usuario != null) {
                 Log.d("DB - ID", "${usuario.nombre}")
+            }
+        } else {
+            usuario =  null
+            Log.d("DB - ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
+        }
+
+        usuario
+    }
+
+    suspend fun traerUsuarioPartnerActual(): UserPartner? = coroutineScope {
+
+        val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
+        val currentUser = auth.currentUser
+        var usuario : UserPartner?
+
+        if (currentUser != null) {
+            Log.d("DB - IDCurrentUser", "${currentUser.uid}")
+        }
+
+        if (currentUser != null) {
+            usuario =  instancialeerId.obtenerUsuarioPartnerPorId(currentUser.uid)
+            if (usuario != null) {
+                Log.d("DB - CUIL", "${usuario.cuil}")
             }
         } else {
             usuario =  null

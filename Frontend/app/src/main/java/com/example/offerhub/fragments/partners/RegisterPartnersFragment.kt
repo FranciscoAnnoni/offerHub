@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.R
-import com.example.offerhub.data.User
+import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentRegisterPartnersBinding
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.math.log
 
 @AndroidEntryPoint
 class RegisterPartnersFragment: Fragment() {
@@ -46,12 +47,12 @@ class RegisterPartnersFragment: Fragment() {
         // ACA ES DONDE TENGO QUE VERLO CON FACU PARA QUE ESTOS VALORES SE LOS ASIGNE A UN USER= USER-PARTHENRS
         binding.apply {
             btnRegisterEmpresa.setOnClickListener {
-                val user = User(
+                val user = UserPartner(
                     edNombreRegisterDeEmpresa.text.toString().trim(),
                     edCuilRegisterDeEmpresa.text.toString().trim(),
                     edEmailRegisterDeEmpresa.text.toString().trim()
-
                 )
+                Log.d("EMAIL", "${ user.email }")
                 val password = edPassowrdRegisterEmpresa.text.toString()
                 viewModel.createAccountWithEmailAndPassword(user,password)
             }
@@ -70,9 +71,8 @@ class RegisterPartnersFragment: Fragment() {
                         binding.btnRegisterEmpresa.startAnimation()
                     }
                     is Resource.Success -> {
-                        Log.d("test", it.data.toString())
                         binding.btnRegisterEmpresa.revertAnimation()
-                        Snackbar.make(rootView, "Registro exitoso", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(rootView, "Registro de Empresa exitoso", Snackbar.LENGTH_SHORT).show()
                         // Puedes agregar lógica adicional aquí, como redirigir al usuario a la pantalla de inicio de sesión
                         findNavController().navigate(R.id.action_registerPartnersFragment_to_loginPartnersFragment)
                     }

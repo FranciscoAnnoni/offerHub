@@ -3,6 +3,7 @@ package com.example.offerhub
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.offerhub.data.UserPartner
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
@@ -121,6 +122,23 @@ class LeerId {
             val promocionesReintegro = dataSnapshot.child("promocionesReintegro").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
 
             Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro,homeModoFull)
+        } else {
+            Log.d("DB - ID", "El usuario es NULO")
+            null // El usuario no existe
+        }
+    }
+
+    suspend fun obtenerUsuarioPartnerPorId(id: String): UserPartner? = withContext(Dispatchers.IO) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("UsuarioPartner").child(id).get().await()
+
+        if (dataSnapshot.exists()) {
+            val correo = dataSnapshot.child("correo").getValue(String::class.java)?:""
+            val cuil = dataSnapshot.child("cuil").getValue(String::class.java)?:""
+            val nombre = dataSnapshot.child("nombre").getValue(String::class.java) ?: ""
+            val listaPromociones = dataSnapshot.child("listaPromociones").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
+
+            UserPartner(nombre, cuil, correo, id, listaPromociones)
         } else {
             Log.d("DB - ID", "El usuario es NULO")
             null // El usuario no existe
