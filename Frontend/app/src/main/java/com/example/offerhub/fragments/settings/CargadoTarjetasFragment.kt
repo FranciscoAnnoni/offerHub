@@ -64,7 +64,7 @@ class CargadoTarjetasFragment : Fragment() {
         var funciones = Funciones()
         val entidadesContainer = view.findViewById<LinearLayout>(R.id.llEntidadesContainer)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
-        val scrollView = view.findViewById<ScrollView>(R.id.svOpcionesTarjetas)
+        //val scrollView = view.findViewById<ScrollView>(R.id.svOpcionesTarjetas)
 
         binding.imageClose.setOnClickListener{
             findNavController().navigateUp()
@@ -74,9 +74,13 @@ class CargadoTarjetasFragment : Fragment() {
         val job = coroutineScope.launch {
         var uvm = UserViewModelSingleton.getUserViewModel()
         var usuario = uvm.usuario!!
-        //var tarjetasUsuario = usuario.tarjetas!!
+        if (uvm.tarjetasDisponibles.isEmpty()) {
+            Log.d("TARJETAS - UVM", "las tarjetas disponibles son nulas")
+            uvm.tarjetasDisponibles = funciones.obtenerTarjetasDisponibles()
+            UserViewModelCache().guardarUserViewModel(uvm)
+        }
 
-        binding.botonGuardar.setOnClickListener {
+        binding.llGuardarTarjetas.setOnClickListener {
             Log.d("Tarjetas a Guardar",tarjetasSeleccionadas.joinToString(","))
             if (uvm.usuario!!.tarjetas == null ) {
                 uvm.usuario!!.tarjetas = tarjetasSeleccionadas as MutableList<String?>
@@ -98,7 +102,7 @@ class CargadoTarjetasFragment : Fragment() {
 
         }
 
-            scrollView.visibility = View.VISIBLE
+            //scrollView.visibility = View.VISIBLE
             entidadesContainer.visibility = View.GONE
             val entidades = funciones.traerEntidades()
 
@@ -107,9 +111,9 @@ class CargadoTarjetasFragment : Fragment() {
                 var listaTarjetas: MutableList<Tarjeta> = mutableListOf()
                 try {
                     Log.d("UVM TARJETAS DISP: ", uvm.tarjetasDisponibles.joinToString(","))
-                    //listaTarjetas = uvm.tarjetasDisponibles.filter { tarjeta -> tarjeta.entidad  == entidad.id } as MutableList<Tarjeta>
+                    listaTarjetas = uvm.tarjetasDisponibles.filter { tarjeta -> tarjeta.entidad  == entidad.id } as MutableList<Tarjeta>
                     Log.d("UVM TARJETAS DISP: ", uvm.tarjetasDisponibles.joinToString(","))
-                    listaTarjetas = instancia.leerBdClaseSinc("Tarjeta", "entidad", entidad.id!!)
+                    //listaTarjetas = instancia.leerBdClaseSinc("Tarjeta", "entidad", entidad.id!!)
                     for (data in listaTarjetas){
                         Log.d("Promocion", "titulo: $data")
                     }
