@@ -20,6 +20,8 @@ import kotlinx.coroutines.launch
 
 class PromocionGridAdapter(private val context: Context, private var promociones: List<Promocion>) : BaseAdapter() {
 
+    private var currentPage = 1 // Página actual
+    private val promocionesPorPagina = 25
     override fun getCount(): Int {
         return promociones.size
     }
@@ -47,10 +49,10 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
 
-        var textoPromo=promocion.obtenerDesc()
-        if(promocion.tipoPromocion=="Reintegro" || promocion.tipoPromocion=="Descuento"){
-            textoPromo=textoPromo+"%"
-        }  else if (promocion.tipoPromocion=="Cuotas") {
+        var textoPromo = promocion.obtenerDesc()
+        if (promocion.tipoPromocion == "Reintegro" || promocion.tipoPromocion == "Descuento") {
+            textoPromo = textoPromo + "%"
+        } else if (promocion.tipoPromocion == "Cuotas") {
             textoPromo = textoPromo + " cuotas"
         }
         tvDescuento.text = textoPromo
@@ -59,34 +61,73 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         val userViewModel = UserViewModelSingleton.getUserViewModel()
         coroutineScope.launch {
             tvComercio.text = instancia.traerInfoComercio(promocion.comercio, "nombre")
-           /* var logo:Bitmap?=null
-            if(userViewModel.logoComercios.containsKey(promocion.comercio)){
+            var logo: Bitmap? = null
+            if (userViewModel.logoComercios.containsKey(promocion.comercio)) {
                 logo = userViewModel.logoComercios[promocion.comercio]
-
-            } else{
-                val imgEnBase64=Funciones().traerLogoComercio(promocion.comercio)
-                val imageByteArray = Base64.decode(imgEnBase64, Base64.DEFAULT)
-                 logo = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-                userViewModel.logoComercios[promocion.comercio!!]=logo!!
+            } else {
+                val imgEnBase64 = Funciones().traerLogoComercio(promocion.comercio)
+                if (imgEnBase64 != null) {
+                    val imageByteArray = Base64.decode(imgEnBase64, Base64.DEFAULT)
+                    val width = 100 // Ancho deseado en píxeles
+                    val height = 100 // Alto deseado en píxeles
+                    var resizedBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+                    resizedBitmap = Bitmap.createScaledBitmap(resizedBitmap, width, height, false)
+                    logo = resizedBitmap
+                    userViewModel.logoComercios[promocion.comercio!!] = logo
+                } else {
+                    // Tratar el caso en el que imgEnBase64 sea nulo
+                }
             }
-            // Carga la imagen con Glide
+
+            // Carga la imagen con Glide después de obtener o redimensionarla
             Glide.with(context)
                 .load(logo)
-                .placeholder(R.drawable.offerhub_logo_color) // Drawable de carga mientras se descarga la imagen
-                .error(android.R.drawable.ic_dialog_alert) // Drawable de error si no se puede cargar la imagen
+                .placeholder(R.drawable.offerhub_logo_color)
+                .error(android.R.drawable.ic_dialog_alert)
                 .thumbnail(0.25f)
-                .into(imgViewCategory)*/
-
-
-
+                .into(imgViewCategory)
         }
-
 
         val isFavorite = userViewModel.favoritos.any { it.id == promocion.id }
         favIcon.setImageResource(getFavResource(isFavorite))
 
+        if (position == promociones.size - 1) {
+            cargarMasPromociones()
+        }
 
         return gridViewItem
+    }
+
+
+    private fun obtenerPromociones(page: Int, pageSize: Int): List<Promocion> {
+        // Implementa la lógica para obtener más promociones desde tu fuente de datos
+        // Utiliza 'page' y 'pageSize' para determinar qué conjunto de promociones cargar
+
+        // Por ejemplo, si tus promociones están en una lista llamada "listaDePromociones":
+        val startIndex = (page - 1) * pageSize
+        val endIndex = startIndex + pageSize
+
+        val promocionesCargadas = mutableListOf<Promocion>()
+
+        if (startIndex < promociones.size) {
+            for (i in startIndex until endIndex) {
+                if (i < promociones.size) {
+                    promocionesCargadas.add(promociones[i])
+                }
+            }
+        }
+
+        return promocionesCargadas
+    }
+
+    private fun cargarMasPromociones() {
+        // Incrementa la página actual
+        currentPage++
+
+        // Obtén más promociones y agrégalas a la lista existente
+        val nuevasPromociones = obtenerPromociones(currentPage, promocionesPorPagina)
+        promociones += nuevasPromociones
+        notifyDataSetChanged()
     }
 }
 
