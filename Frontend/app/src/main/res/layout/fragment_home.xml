@@ -8,6 +8,15 @@
     app:layout_constraintBottom_toBottomOf="parent"
     android:background="@color/fondo">
 
+    <Button
+        android:id="@+id/btnComparar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comparar"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+
     <TextView
         android:id="@+id/inicioHome"
         style="@style/titulos"
@@ -67,12 +76,20 @@
 
         <ImageView
             android:layout_width="40dp"
-            android:layout_height="match_parent"
+            android:layout_height="30dp"
             android:src="@drawable/ic_filter"
             android:layout_marginStart="8dp"
             android:background="@drawable/icon_background"
            android:padding="10dp"
             />
+
+        <ImageView
+            android:id="@+id/botonGuardar"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/check_violeta"
+             />
 
     </LinearLayout>
 
@@ -163,6 +180,7 @@
             android:stretchMode="columnWidth"
             android:gravity="center"
             />
+
     </GridLayout>
     </LinearLayout>
 
