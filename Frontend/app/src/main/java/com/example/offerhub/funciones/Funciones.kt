@@ -379,6 +379,20 @@ class Funciones {
         })
     }
 
+    suspend fun traerIdsPartners(): List<String> = coroutineScope {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("UsuarioPartner").get().await()
+        var ids: MutableList<String> = mutableListOf()
+
+        for (snapshot in dataSnapshot.children) {
+            if(snapshot.key != null) {
+                ids.add(snapshot.key!!)
+            }
+        }
+
+        ids
+    }
+
 }
 
 //ejemplos llamados
