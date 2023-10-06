@@ -25,11 +25,13 @@ class IntroductionViewModel @Inject constructor (
     companion object{
         const val SHOPPING_ACTIVITY = 23
         const val ACCOUNT_OPTIONS_FRAGMENT = 1000053
+        const val SHOPPING_ACTIVITY_PARTNERS = 25
     }
 
     init {
         val isButtonChecked = sharedPreferences.getBoolean(INTRODUCTION_KEY,false)
         val user = firebaseAuth.currentUser
+        
 
         if (user != null){
             viewModelScope.launch{

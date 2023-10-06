@@ -81,7 +81,7 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
         }
 
         binding.atras.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_loginPartnersFragment_to_loginFragment2)
         }
         binding.tvUpdatePassword.setOnClickListener {
             setupBottomSheetDialog { email ->
@@ -160,7 +160,9 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                             Intent(requireActivity(), ShoppingPartnersActivity::class.java).also { intent ->
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
+
                             }
+                            requireActivity().finish() // Cierra la actividad de usuario normal
                         }
                     }
                     is Resource.Error -> {
