@@ -25,6 +25,17 @@ import kotlinx.coroutines.launch
 class CompararFragment : BottomSheetDialogFragment() {
     private val args by navArgs<CompararFragmentArgs>()
     var userViewModel :UserViewModel=UserViewModel()
+
+    companion object {
+        fun newInstance(promocion1: Promocion, promocion2: Promocion): CompararFragment {
+            val fragment = CompararFragment()
+            val args = Bundle()
+            args.putParcelable("promocion1", promocion1)
+            args.putParcelable("promocion2", promocion2)
+            fragment.arguments = args
+            return fragment
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,16 +48,14 @@ class CompararFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         userViewModel = UserViewModelSingleton.getUserViewModel()
         setStyle(STYLE_NORMAL, R.style.BottomSheetDialogStyle)
-        val promocion1 = args.promocion1
-        val promocion2 = args.promocion2
+        val promocion1 = arguments?.getParcelable<Promocion>("promocion1")
+        val promocion2 = arguments?.getParcelable<Promocion>("promocion2")
 
-        promocion1.titulo?.let { Log.d("promo", it) }
-
-        promocion2.titulo?.let { Log.d("promo", it) }
         val imageClose =  view.findViewById<ImageView>(R.id.imageClose)
         imageClose.setOnClickListener {
-            findNavController().navigateUp()
+            dismiss()
         }
+        if (promocion1 != null && promocion2!=null){
         view.apply {
             view.findViewById<TextView>(R.id.titulo1).text= promocion1.titulo
             view.findViewById<TextView>(R.id.titulo2).text= promocion2.titulo
@@ -130,6 +139,7 @@ class CompararFragment : BottomSheetDialogFragment() {
 
             }
 
+        }
         }
 
     }

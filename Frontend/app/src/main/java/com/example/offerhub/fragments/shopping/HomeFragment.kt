@@ -97,17 +97,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         val adapter = PromocionGridAdapter(view.context, userViewModel.listadoDePromosDisp)
                         adapter.setHomeFragment(this@HomeFragment)
                         listView.adapter = adapter
-
-                        listView.setOnItemClickListener { parent, _, position, _ ->
-                            val selectedPromo =
-                                adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(
-                                    selectedPromo
-                                )
-                            findNavController().navigate(action)
-                        }
-                        listView.visibility = View.VISIBLE
                         binding.botonGuardar.setOnClickListener{
                             checkPrendido = !checkPrendido
 
@@ -121,12 +110,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             var promos =adapter.getSeleccion()
                             var promo1 = promos[0] as Promocion
                             var promo2 = promos[1] as Promocion
+                            val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
+                            bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
+                        }
+                        listView.setOnItemClickListener { parent, _, position, _ ->
+                            val selectedPromo =
+                                adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
                             val action =
-                                HomeFragmentDirections.actionHomeFragmentToCompararFragment(
-                                    promo1,promo2
+                                HomeFragmentDirections.actionHomeFragmentToPromoDetailFragment(
+                                    selectedPromo
                                 )
                             findNavController().navigate(action)
                         }
+                        listView.visibility = View.VISIBLE
 
                     } catch (e: Exception) {
                         println("Error al obtener promociones: ${e.message}")
