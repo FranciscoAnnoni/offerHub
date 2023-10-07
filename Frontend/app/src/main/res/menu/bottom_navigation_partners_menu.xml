@@ -4,4 +4,8 @@
         android:icon="@drawable/ic_home"
         android:id="@+id/homePartnersFragment"/>
 
+    <item android:title="Perfil de Partner"
+        android:icon="@drawable/ic_profile"
+        android:id="@+id/partnersProfileFragment"/>
+
 </menu>

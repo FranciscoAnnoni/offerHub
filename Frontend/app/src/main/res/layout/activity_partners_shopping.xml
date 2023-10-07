@@ -16,10 +16,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/shopping_partners_graph"
-            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationPartners"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigation"
+            android:id="@+id/bottomNavigationPartners"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             app:menu="@menu/bottom_navigation_partners_menu"

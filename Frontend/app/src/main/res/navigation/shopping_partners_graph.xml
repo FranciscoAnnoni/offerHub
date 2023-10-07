@@ -8,7 +8,37 @@
     <fragment
         android:id="@+id/homePartnersFragment"
         android:name="com.example.offerhub.fragments.partners.HomePartnersFragment"
-        android:label="HomePartnersFragment" />
+        android:label="HomePartnersFragment"
+        tools:layout="@layout/fragment_home_partners"
+        />
+    <fragment
+        android:id="@+id/partnersProfileFragment"
+        android:name="com.example.offerhub.fragments.partners.PartnersProfileFragment"
+        android:label="PartnersProfileFragment"
+        tools:layout="@layout/fragment_profile_partners"
+        >
+        <action
+            android:id="@+id/action_partnersProfileFragment_to_legalsInfoFragment2"
+            app:destination="@id/legalsInfoFragment2" />
+        <action
+            android:id="@+id/action_partnersProfileFragment_to_partnersUserAccountFragment"
+            app:destination="@id/partnersUserAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/partnersUserAccountFragment"
+        android:name="com.example.offerhub.fragments.partners.PartnersUserAccountFragment"
+        android:label="PartnersUserAccountFragment"
+        tools:layout="@layout/fragment_partner_user_account"
+        >
+        <action
+            android:id="@+id/action_partnersUserAccountFragment_to_partnersProfileFragment"
+            app:destination="@id/partnersProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/legalsInfoFragment2"
+        android:name="com.example.offerhub.fragments.settings.LegalsInfoFragment"
+        android:label="LegalsInfoFragment"
+        tools:layout="@layout/fragment_legals"/>
 </navigation>
 
 

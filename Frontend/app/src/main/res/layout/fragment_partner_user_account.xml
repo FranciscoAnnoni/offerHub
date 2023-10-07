@@ -24,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <ImageView
                     android:id="@+id/imageCloseUserAccount"
                     android:layout_width="30dp"
@@ -43,7 +42,7 @@
                     android:layout_width="362dp"
                     android:layout_height="60dp"
                     android:contentDescription="@null"
-                    android:text="Mi Perfil"
+                    android:text="Empresa"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -84,7 +83,7 @@
             android:layout_marginStart="5dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="@string/nombre_y_apellido"
+            android:text="Nombre de Empresa"
             android:textColor="@color/violetaMasClaro"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -102,12 +101,45 @@
             android:layout_height="45dp"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:hint="Nombre y Apellido"
+            android:hint="Nombre de Empresa"
             android:singleLine="true"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Cuil"
+            android:textColor="@color/violetaMasClaro"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edFirstName"
+            app:layout_constraintHorizontal_bias="0.127"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            style="@style/EditTextRounded"
+            android:id="@+id/edCuil"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:editable="false"
+            android:gravity="center"
+            android:hint="Cuil"
+            android:singleLine="true"
+            app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+            app:layout_constraintStart_toStartOf="@id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@id/textView3" />
 
         <TextView
             android:id="@+id/textView2"
@@ -122,7 +154,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edFirstName"
+            app:layout_constraintTop_toBottomOf="@id/edCuil"
             app:layout_constraintHorizontal_bias="0.127"
             tools:ignore="MissingConstraints" />
 

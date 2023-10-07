@@ -25,7 +25,7 @@ import com.example.offerhub.databinding.ActivityShoppingBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
-
+@AndroidEntryPoint
 class ShoppingPartnersActivity : AppCompatActivity() {
     private lateinit var navControllerPartrners: NavController
     val binding by lazy {
@@ -36,7 +36,7 @@ class ShoppingPartnersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) // Asegúrate de que este sea el nombre de tu archivo de diseño de actividad.
         navControllerPartrners = findNavController(R.id.mainAppPartnersFragment)
-        binding.bottomNavigation.setupWithNavController(navControllerPartrners)
+        binding.bottomNavigationPartners.setupWithNavController(navControllerPartrners)
         //setContentView(R.layout.fragment_search) // Asegúrate de que este sea el nombre de tu archivo de diseño de actividad.
 
         // Crear un adaptador para el ListView.
