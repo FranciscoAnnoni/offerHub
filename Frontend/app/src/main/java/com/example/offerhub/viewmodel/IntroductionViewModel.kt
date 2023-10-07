@@ -1,10 +1,13 @@
 package com.example.offerhub.viewmodel
 
 import android.content.SharedPreferences
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.offerhub.Funciones
 import com.example.offerhub.R
 import com.example.offerhub.util.Constants.INTRODUCTION_KEY
+import com.example.offerhub.util.Constants.PARTNER_USER
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,24 +32,38 @@ class IntroductionViewModel @Inject constructor (
     }
 
     init {
-        val isButtonChecked = sharedPreferences.getBoolean(INTRODUCTION_KEY,false)
+        val isButtonChecked = sharedPreferences.getBoolean(INTRODUCTION_KEY, false)
+        val isPartner = sharedPreferences.getBoolean(PARTNER_USER, false)
         val user = firebaseAuth.currentUser
-        
 
-        if (user != null){
-            viewModelScope.launch{
-                _navigate.emit(SHOPPING_ACTIVITY)
+        val userId = user?.uid // Obtiene el ID del usuario actual
+
+        if (user != null) {
+            if (isPartner) {
+                viewModelScope.launch {
+                    // El ID del usuario está en la lista de partners
+                    _navigate.emit(SHOPPING_ACTIVITY_PARTNERS)
+                }
+            } else {
+                viewModelScope.launch {
+                    // El ID del usuario no está en la lista de partners
+                    _navigate.emit(SHOPPING_ACTIVITY)
+                }
             }
-        }else if (isButtonChecked){
-            viewModelScope.launch{
+
+        } else if (isButtonChecked) {
+            viewModelScope.launch {
                 _navigate.emit(ACCOUNT_OPTIONS_FRAGMENT)
             }
-        }else {
+        } else {
             Unit
         }
     }
 
+
     fun startButtonClick(){
         sharedPreferences.edit().putBoolean(INTRODUCTION_KEY,true).apply()
     }
+
 }
+

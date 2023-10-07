@@ -12,6 +12,8 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
+var esPartner = false;
+
 class Funciones {
     val instancialeerId = LeerId()
     val instanciaLectura = LecturaBD()

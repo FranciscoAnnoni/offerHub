@@ -4,6 +4,7 @@ import UserViewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.example.offerhub.activities.ShoppingActivity
 import com.example.offerhub.activities.ShoppingPartnersActivity
 import com.example.offerhub.databinding.FragmentLoginPartnersBinding
 import com.example.offerhub.dialog.setupBottomSheetDialog
+import com.example.offerhub.util.Constants
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginPartnersViewModel
 import com.example.offerhub.viewmodel.UserViewModelCache
@@ -32,11 +34,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
+
+
 @AndroidEntryPoint
 class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
     private lateinit var binding: FragmentLoginPartnersBinding
     private lateinit var rootViewLogin: View
     private val viewModel by viewModels<LoginPartnersViewModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -146,6 +151,8 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                                     //userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuarioPartner!!))
                                     userViewModelCache.guardarUserViewModel(userViewModel)
                                     UserViewModelSingleton.initialize(userViewModel)
+
+                                    val listaDePartners = Funciones().traerIdsPartners() //traigo la lista de partners que exista y la guardo en una variable global
                                 }
                         }.invokeOnCompletion {
                             Snackbar.make(
@@ -156,13 +163,14 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                             binding.btnLoginEmpresa.revertAnimation()
                             binding.btnLoginEmpresa.setBackgroundResource(R.drawable.rounded_button_background)
 
+
                      // Ejecuta la actividad de shopping
                             Intent(requireActivity(), ShoppingPartnersActivity::class.java).also { intent ->
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
 
+
                             }
-                            requireActivity().finish() // Cierra la actividad de usuario normal
                         }
                     }
                     is Resource.Error -> {

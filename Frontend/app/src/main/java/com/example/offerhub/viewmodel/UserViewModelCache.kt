@@ -50,5 +50,7 @@ class UserViewModelCache() {
         return null
     }
 
+
+
     // Implementa métodos similares para favoritos y reintegros
 }

@@ -1,7 +1,9 @@
 package com.example.offerhub.viewmodel
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.offerhub.util.Constants
 import com.example.offerhub.util.RegisterFieldsState
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
@@ -20,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
     private val firebaseAuth: FirebaseAuth
 ): ViewModel() {
     private val _login = MutableSharedFlow<Resource<FirebaseUser>>()
@@ -41,6 +44,7 @@ class LoginViewModel @Inject constructor(
             ).addOnSuccessListener {
                 viewModelScope.launch {
                     it.user?.let {
+                        sharedPreferences.edit().putBoolean(Constants.PARTNER_USER,false).apply()
                         _login.emit(Resource.Success(it))
                     }
                 }

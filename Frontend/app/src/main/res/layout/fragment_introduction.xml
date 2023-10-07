@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_degradado">
+    android:background="@drawable/fondo_degradado"
+   >
 
     <!--
 <ImageView
@@ -44,6 +45,7 @@
         app:layout_constraintTop_toBottomOf="@id/logoIntro">
 
         <TextView
+            android:id="@+id/con"
             style="@style/titulos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,6 +75,7 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
+            android:id="@+id/centraliza"
             style="@style/titulos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -131,6 +134,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/carga"
+        android:layout_width="593dp"
+        android:layout_height="303dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/download"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
