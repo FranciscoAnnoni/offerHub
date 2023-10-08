@@ -28,6 +28,10 @@ class PromocionGridAdapter(private val context: Context, private var promociones
 
 
     private lateinit var homeFragment: HomeFragment
+    fun eliminarLista(){
+        lista.clear()
+        numCheckBoxesSeleccionados = 0
+    }
     fun setHomeFragment(fragment: HomeFragment) {
         homeFragment = fragment
     }
@@ -141,4 +145,5 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         return gridViewItem
     }
 }
+
 

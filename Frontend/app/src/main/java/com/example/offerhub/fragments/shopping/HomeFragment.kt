@@ -41,7 +41,7 @@ import java.lang.Math.ceil
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
-    private var checkPrendido: Boolean = false
+
     private var scrollPosition: Int = 0
     var isFavorite = false
     var listenerHabilitado = false
@@ -91,10 +91,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 var datos: MutableList<String> = mutableListOf()
+                binding.botonGuardar.visibility = View.VISIBLE
+                binding.btnComparar.visibility=View.GONE
+                var checkPrendido: Boolean = false
                 // Llamar a la función que obtiene los datos.
                 val job = coroutineScope.launch {
                     try {
                         val adapter = PromocionGridAdapter(view.context, userViewModel.listadoDePromosDisp)
+                        adapter.eliminarLista()
                         adapter.setHomeFragment(this@HomeFragment)
                         listView.adapter = adapter
                         binding.botonGuardar.setOnClickListener{
@@ -103,6 +107,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             adapter.setCheckBoxesVisibility(checkPrendido)
                             if (checkPrendido){
                                 showToast("Para poder comparar debe seleccionar 2 promociones.", 10000)
+                            }else{
+                                binding.btnComparar.visibility=View.GONE
+                                adapter.eliminarLista()
                             }
                         }
 
@@ -131,7 +138,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } else {
                 //val listView = view.findViewById<GridView>(R.id.promocionesGridView)
                 //  val promoFav = view.findViewById<ImageView>(R.id.promoFav)
-
+                binding.btnComparar.visibility=View.GONE
                 // listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 var datos: MutableList<String> = mutableListOf()
@@ -212,6 +219,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                                     })
                                 recyclerView.adapter = adapter
+
+                                binding.botonGuardar.visibility = View.GONE
+
 
                                 // Agrega el título y el RecyclerView al contenedor
                                 categoriasContainer.addView(categoriaTitle)

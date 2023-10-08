@@ -110,9 +110,13 @@ class CompararFragment : BottomSheetDialogFragment() {
                 try {
                     for (tarjeta1 in tarjetasComunes1){
                         var tarj1 = lectura.obtenerTarjetaPorId(tarjeta1)
+                        var ent1 = tarj1?.entidad?.let { lectura.obtenerEntidadPorId(it) }
+                        if (ent1 != null) {
+                            textoTarjetas1 = textoTarjetas1 + ent1.nombre +" "
+                        }
                         if (tarj1 != null) {
                             textoTarjetas1 = if(tarj1.segmento=="No posee"){
-                                textoTarjetas1+tarj1.procesadora+" " +tarj1.tipoTarjeta
+                                textoTarjetas1 + tarj1.procesadora+" " +tarj1.tipoTarjeta
                             }else{
                                 textoTarjetas1+tarj1.procesadora+" " +tarj1.segmento+" "+tarj1.tipoTarjeta
                             }
@@ -121,6 +125,10 @@ class CompararFragment : BottomSheetDialogFragment() {
                     }
                     for (tarjeta2 in tarjetasComunes2){
                         var tarj2 = lectura.obtenerTarjetaPorId(tarjeta2)
+                        var ent2 = tarj2?.entidad?.let { lectura.obtenerEntidadPorId(it) }
+                        if (ent2 != null) {
+                            textoTarjetas2 = textoTarjetas2 + ent2.nombre+" "
+                        }
                         if (tarj2 != null) {
                             textoTarjetas2 = if(tarj2.segmento=="No posee"){
                                 textoTarjetas2+tarj2.procesadora+" " +tarj2.tipoTarjeta

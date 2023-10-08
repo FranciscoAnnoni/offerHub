@@ -1,9 +1,11 @@
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.fragments.shopping.HomeFragment
 import com.example.offerhub.fragments.shopping.HomeFragmentDirections
 import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.viewmodel.UserViewModelSingleton
@@ -25,10 +28,46 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
     // Tipos de elementos en el RecyclerView
     private val TIPO_PROMOCION = 1
     private val TIPO_VER_MAS = 2
+    private var areCheckBoxesVisible = false
+    private var numCheckBoxesSeleccionados = 0
 
     // Variable para controlar si se muestra el botón "Ver Más"
     private var mostrarMas = false
+    private lateinit var homeFragment: HomeFragment
+    public var lista:MutableList<Promocion> = mutableListOf()
+    fun setHomeFragment(fragment: HomeFragment) {
+        homeFragment = fragment
+    }
 
+    fun getSeleccion():MutableList<Promocion>{
+        return lista
+    }
+
+    fun setOnCheckedChangeListener(checkBox: CheckBox, position: Int) {
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                numCheckBoxesSeleccionados++
+                lista.add(promociones[position])
+                // Desmarcar los demás CheckBoxes
+                if(numCheckBoxesSeleccionados==3){
+                    homeFragment.updateButtonVisibility(false)
+                }
+            } else {
+                lista.remove(promociones[position])
+                numCheckBoxesSeleccionados--
+                if (numCheckBoxesSeleccionados==1){
+                    homeFragment.updateButtonVisibility(false)
+                }
+            }
+
+            // Actualizar visibilidad del botón
+            // asumiendo que 'btnActivar' es el botón que quieres mostrar
+            if (numCheckBoxesSeleccionados==2){
+                homeFragment.updateButtonVisibility(true)
+            }
+
+        }
+    }
     interface OnItemClickListener {
         fun onItemClick(promocion: Promocion)
         fun onVerMasClick()
@@ -38,6 +77,7 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
             TIPO_PROMOCION -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.fragment_promocion_card, parent, false)
                 PromocionViewHolder(view)
+
             }
             else -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.fragment_ver_mas_card, parent, false)
@@ -52,6 +92,8 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
                 val promocion = promociones[position]
                 val instancia = Funciones()
                 val promocionViewHolder = holder as PromocionViewHolder
+                promocionViewHolder.checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
+                setOnCheckedChangeListener(promocionViewHolder.checkBox, position)
                 if(position==0){
                     val params = holder.layoutTarjetaPromo.layoutParams as ViewGroup.MarginLayoutParams
                     params.marginStart = 0
@@ -125,6 +167,7 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
     }
 
     inner class PromocionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
         val textViewCategory = itemView.findViewById<TextView>(R.id.tvPromocionComercio)
         val textViewDto = itemView.findViewById<TextView>(R.id.tvPromocionDescuento)
         val favIcon = itemView.findViewById<ImageView>(R.id.promoFav)
