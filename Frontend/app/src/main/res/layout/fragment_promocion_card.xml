@@ -9,7 +9,6 @@
     android:layout_marginBottom="20dp"
     android:layout_marginLeft="20dp"
     >
-
     <LinearLayout
         android:orientation="vertical"
         android:padding="5dp"
@@ -18,25 +17,25 @@
         android:layout_height="170dp"
         android:layout_rowWeight="1"
         android:layout_columnWeight="1"
-        android:background="@drawable/border_promocion"
-        >
+        android:background="@drawable/border_promocion">
+
+        <!-- CheckBox -->
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <!-- Agrega tu imagen aquí -->
+
+        <!-- ShapeableImageView -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgComercio"
             android:layout_width="match_parent"
-            android:layout_height="95dp"
-            android:layout_gravity="center"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:layout_margin="3dp"
             android:src="@drawable/cat_default"
             app:shapeAppearanceOverlay="@style/roundedCornersImageView"
             app:strokeColor="@color/black"
-            android:elevation="10dp"
-            />
+            android:elevation="10dp" />
 
         <!-- Agrega tu texto aquí -->
         <TextView
