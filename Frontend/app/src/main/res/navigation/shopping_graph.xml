@@ -22,6 +22,9 @@
             android:id="@+id/action_homeFragment_to_CargarTarjetasFragment"
             app:destination="@id/cargadoTarjetasFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_compararFragment"
+            app:destination="@id/compararFragmet" />
     </fragment>
     <fragment
         android:id="@+id/promoDetailFragment"
@@ -116,6 +119,17 @@
         android:id="@+id/filterFragment"
         android:name="com.example.offerhub.fragments.shopping.FilterFragment"
         android:label="FilterFragment" />
+    <fragment
+        android:id="@+id/compararFragmet"
+        android:name="com.example.offerhub.fragments.shopping.CompararFragment"
+        android:label="compararFragmet" >
+        <argument
+            android:name="promocion1"
+            app:argType="com.example.offerhub.Promocion" />
+        <argument
+            android:name="promocion2"
+            app:argType="com.example.offerhub.Promocion" />
+    </fragment>
 </navigation>
 
 
