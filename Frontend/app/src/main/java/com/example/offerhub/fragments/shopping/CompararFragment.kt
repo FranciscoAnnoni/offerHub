@@ -61,9 +61,9 @@ class CompararFragment : BottomSheetDialogFragment() {
             view.findViewById<TextView>(R.id.titulo1).text= promocion1.titulo
             view.findViewById<TextView>(R.id.titulo2).text= promocion2.titulo
             val fechaLocalDate1 = promocion1.vigenciaHasta
-            val fechaFormateada1 = fechaLocalDate1?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: "Sin fecha"
+            val fechaFormateada1 = fechaLocalDate1?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "Sin fecha"
             val fechaLocalDate2 = promocion2.vigenciaHasta
-            val fechaFormateada2 = fechaLocalDate2?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: "Sin fecha"
+            val fechaFormateada2 = fechaLocalDate2?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "Sin fecha"
 
             view.findViewById<TextView>(R.id.hasta1).text = fechaFormateada1
             view.findViewById<TextView>(R.id.hasta2).text = fechaFormateada2
