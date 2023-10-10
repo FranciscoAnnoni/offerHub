@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.threeten.bp.format.DateTimeFormatter
 
 class CompararFragment : BottomSheetDialogFragment() {
     private val args by navArgs<CompararFragmentArgs>()
@@ -59,8 +60,13 @@ class CompararFragment : BottomSheetDialogFragment() {
         view.apply {
             view.findViewById<TextView>(R.id.titulo1).text= promocion1.titulo
             view.findViewById<TextView>(R.id.titulo2).text= promocion2.titulo
-            view.findViewById<TextView>(R.id.hasta1).text = promocion1.vigenciaHasta.toString()
-            view.findViewById<TextView>(R.id.hasta2).text = promocion2.vigenciaHasta.toString()
+            val fechaLocalDate1 = promocion1.vigenciaHasta
+            val fechaFormateada1 = fechaLocalDate1?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: "Sin fecha"
+            val fechaLocalDate2 = promocion2.vigenciaHasta
+            val fechaFormateada2 = fechaLocalDate2?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: "Sin fecha"
+
+            view.findViewById<TextView>(R.id.hasta1).text = fechaFormateada1
+            view.findViewById<TextView>(R.id.hasta2).text = fechaFormateada2
             var diasDisp1 = promocion1.dias?.joinToString("\n")
             var diasDisp2 = promocion2.dias?.joinToString("\n")
             if (diasDisp1==null){
