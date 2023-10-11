@@ -73,7 +73,7 @@ class RegisterPartnersFragment: Fragment() {
                     is Resource.Success -> {
                         binding.btnRegisterEmpresa.revertAnimation()
                         Snackbar.make(rootView, "Registro de Empresa exitoso", Snackbar.LENGTH_SHORT).show()
-                        // Puedes agregar lógica adicional aquí, como redirigir al usuario a la pantalla de inicio de sesión
+                        viewModel.logout()
                         findNavController().navigate(R.id.action_registerPartnersFragment_to_loginPartnersFragment)
                     }
                     is Resource.Error -> {
@@ -103,6 +103,15 @@ class RegisterPartnersFragment: Fragment() {
                         binding.edPassowrdRegisterEmpresa.apply {
                             requestFocus()
                             error = validation.password.message
+                        }
+                    }
+                }
+
+                if (validation.cuil is RegisterValidation.Failed){
+                    withContext(Dispatchers.Main) {
+                        binding.edCuilRegisterDeEmpresa.apply {
+                            requestFocus()
+                            error = validation.cuil.message
                         }
                     }
                 }

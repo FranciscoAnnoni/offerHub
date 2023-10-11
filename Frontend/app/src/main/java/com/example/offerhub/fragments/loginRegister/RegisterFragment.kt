@@ -75,7 +75,8 @@ class RegisterFragment:Fragment() {
                         binding.btnRegister.revertAnimation()
                         Snackbar.make(rootView, "Registro exitoso", Snackbar.LENGTH_SHORT).show()
                         // Puedes agregar lógica adicional aquí, como redirigir al usuario a la pantalla de inicio de sesión
-                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                        viewModel.logout()
+                        findNavController().navigate(R.id.loginFragment)
                     }
                     is Resource.Error -> {
                         Log.e(TAG,it.message.toString())

@@ -10,8 +10,10 @@ import com.example.offerhub.data.User
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.util.Constants.USER_COLLECTION
 import com.example.offerhub.util.RegisterFieldsState
+import com.example.offerhub.util.RegisterFieldsStatePartner
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
+import com.example.offerhub.util.validateCuil
 import com.example.offerhub.util.validateEmail
 import com.example.offerhub.util.validatePassword
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +41,7 @@ class RegisterPartnersViewModel @Inject constructor(
     private val _register = MutableStateFlow<Resource<UserPartner>>(Resource.Unspecified())
           val register:Flow<Resource<UserPartner>> = _register
 
-    private val _validation = Channel<RegisterFieldsState>()
+    private val _validation = Channel<RegisterFieldsStatePartner>()
         val validation = _validation.receiveAsFlow()
 
 
@@ -51,13 +53,14 @@ class RegisterPartnersViewModel @Inject constructor(
     fun createAccountWithEmailAndPassword(usuario: UserPartner, password:String) {
         Log.d("EMAIL vm", "${ usuario.email }")
         val emailValidation = validateEmail(usuario.email)
+        val cuilValidation = validateCuil(usuario.cuil)
         val passwordValidation = validatePassword(password)
         val shouldRegister =
-            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
+            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success &&cuilValidation is RegisterValidation.Success
 
 
         if (shouldRegister) {
-            Log.d("me puedo registrar", "ENTRE")
+
             runBlocking {
                 _register.emit(Resource.Loading())
             }
@@ -74,9 +77,8 @@ class RegisterPartnersViewModel @Inject constructor(
                 }
 
         }else {
-            Log.d("algo salio malE", "ENTRE")
-            val registerFieldsState = RegisterFieldsState(
-                validateEmail(usuario.email), validatePassword(password)
+            val registerFieldsState = RegisterFieldsStatePartner(
+                validateEmail(usuario.email), validatePassword(password), validateCuil(usuario.cuil)
             )
             runBlocking {
                 _validation.send(registerFieldsState)
@@ -103,7 +105,6 @@ class RegisterPartnersViewModel @Inject constructor(
         referencia.child(userUid).child("cuil").setValue(user.cuil)
         referencia.child(userUid).child("correo").setValue(user.email)
 
-
            .addOnSuccessListener {
                 _registrationSuccess.value = true // Registro exitoso
                 _register.value = Resource.Success(usuario)
@@ -112,6 +113,9 @@ class RegisterPartnersViewModel @Inject constructor(
             }
     }
 
+    fun logout(){
+        firebaseAuth.signOut()
+    }
 
 
 }

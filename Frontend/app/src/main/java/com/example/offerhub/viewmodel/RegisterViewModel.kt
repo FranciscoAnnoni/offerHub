@@ -47,6 +47,7 @@ class RegisterViewModel @Inject constructor(
     fun createAccountWithEmailAndPassword(user: User, password:String) {
         val emailValidation = validateEmail(user.email)
         val passwordValidation = validatePassword(password)
+
         val shouldRegister =
             emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
 
@@ -62,6 +63,7 @@ class RegisterViewModel @Inject constructor(
                         //_register.value = Resource.Success(it)
                     }
                 }.addOnFailureListener {
+
                     _register.value = Resource.Error(it.message.toString())
                 }
 
@@ -104,6 +106,9 @@ class RegisterViewModel @Inject constructor(
             }
     }
 
+    fun logout(){
+        firebaseAuth.signOut()
 
+    }
 
 }

@@ -130,16 +130,6 @@
             app:layout_constraintTop_toBottomOf="@id/btnLogin"
             tools:ignore="MissingConstraints" />
 
-        <ImageView
-            android:id="@+id/googleLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:src="@drawable/google_login"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registerNow" />
 
         <TextView
             style="@style/textoChicoNegro"
@@ -155,18 +145,6 @@
 
 
         <!--                  Esto es la parte de Abajo                -->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/google_login"
-            android:text="Google login"
-            android:textColor="@color/g_gray500"
-            app:layout_constraintBottom_toBottomOf="@id/googleLogin"
-            app:layout_constraintEnd_toEndOf="@id/googleLogin"
-            app:layout_constraintHorizontal_bias="0.666"
-            app:layout_constraintStart_toStartOf="@id/googleLogin"
-            app:layout_constraintTop_toTopOf="@id/googleLogin" />
 
         <View
             android:id="@+id/linea1"

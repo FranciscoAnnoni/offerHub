@@ -82,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Editar datos personales"
+                    android:text="Editar datos de la Empresa"
                     android:textSize="12dp"
                     app:layout_constraintTop_toBottomOf="@id/tvUserName"
                     app:layout_constraintStart_toStartOf="@+id/tvUserName" />
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Orders"
+                android:text="Datos de Empresa"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/constraintProfile" />
 
@@ -135,10 +135,9 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_billing"
+                        android:src="@drawable/ic_calendar"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/settings_items_background"
-                        android:backgroundTint="#FF9800"
                         app:tint="@color/white" />
 
                     <TextView
@@ -147,7 +146,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Mis Tarjetas"
+                        android:text="Mis publicaciones"
                         android:textColor="@color/g_gray700"
                         android:textStyle="bold"
                         android:layout_marginStart="15dp"
@@ -208,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Notifications"
+                android:text="Manejo de Sesion"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/linearOrders" />
 
@@ -223,62 +222,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/search_box_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="3dp">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        android:backgroundTint="#4cd964"
-                        android:src="@drawable/ic_notification"
-                        app:tint="@color/white"
-                        android:layout_marginStart="7dp"/>
-
-                    <TextView
-                        style="@style/MediumTextViewThin"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:text="Notificacion"
-                        android:textColor="@color/g_gray700"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchNotification"
-                        style="@style/customSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:backgroundTint="@color/violetaMasClaro"
-                        android:buttonTint="@color/violetaMasClaro"
-                        android:checked="true"
-                        android:thumb="@drawable/thumb_layerlist"
-                        app:track="@drawable/track_backgrounds" />
-
-                </LinearLayout>
             </LinearLayout>
-
-
-
-            <TextView
-                android:id="@+id/tvRegional"
-                style="@style/MediumTextViewThin"
-                android:textColor="@color/g_gray700"
-                android:textStyle="normal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Regional"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/linearNotifications" />
 
             <LinearLayout
                 android:background="@drawable/search_box_background"
@@ -287,7 +232,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/tvRegional"
+                app:layout_constraintTop_toBottomOf="@id/tvNotifications"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
                >

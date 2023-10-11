@@ -74,6 +74,8 @@
             app:layout_constraintEnd_toEndOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/nombreDeEmpresa"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@+id/cuil"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -83,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:padding="5dp"
-            android:text="CUIL"
+            android:text="CUIT"
             android:layout_marginStart="-15dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/edNombreRegisterDeEmpresa"
@@ -94,10 +96,12 @@
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
-            android:hint="CUIL de la empresa"
+            android:hint="CUIT de la empresa"
+            android:inputType="number"
             app:layout_constraintEnd_toEndOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/cuil"
+            android:maxLength="11"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -122,6 +126,8 @@
             app:layout_constraintEnd_toEndOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/emailDeEmpresa"
+            android:imeOptions=""
+            android:nextFocusForward="@+id/password"
             tools:ignore="MissingConstraints" />
 
         <TextView
