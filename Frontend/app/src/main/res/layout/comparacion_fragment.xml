@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@drawable/search_category_background">
-
     <ImageView
         android:id="@+id/imageClose"
         android:layout_width="40dp"
@@ -15,8 +14,173 @@
         android:padding="5dp"
         android:layout_margin="10dp"
         app:tint="@color/g_red"/>
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1">
 
-    <LinearLayout
+        <!-- Primera fila (encabezado) -->
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Comercio" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/comercio1"
+                android:textStyle="bold"
+                android:textColor="@color/violeta"
+                android:text="Comercio 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textColor="@color/violeta"
+                android:textStyle="bold"
+                android:id="@+id/comercio2"
+                android:text="Comercio 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Título" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/titulo1"
+                android:textStyle="bold"
+                android:textColor="@color/violeta"
+                android:text="Título de Promoción 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textColor="@color/violeta"
+                android:textStyle="bold"
+                android:id="@+id/titulo2"
+                android:text="Título de Promoción 2" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Vigencia" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/hasta1"
+                android:padding="8dp"
+                android:text="Fecha de Vencimiento de Promoción 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/hasta2"
+                android:padding="8dp"
+                android:text="Fecha de Vencimiento de Promoción 2" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Tipo de Beneficio" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/promoBenef1"
+                android:text="Tipo de Beneficio de Promoción 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/promoBenef2"
+                android:text="Tipo de Beneficio de Promoción 2" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/compararTopes"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Tope de Reintegro" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/reintegro1"
+                android:text="Reintegro 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/reintegro2"
+                android:text="Reintegro 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Disponibilidad" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/dias1"
+                android:text="Disponibilidad 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/dias2"
+                android:text="Disponibilidad 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Tarjetas Aplicables" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/tarje1"
+                android:text="Tarjetas 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/tarje2"
+                android:text="Tarjetas 2" />
+        </TableRow>
+
+        <!-- Agrega más filas de propiedades según tus necesidades -->
+    </TableLayout>
+
+
+
+   <!-- <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -133,7 +297,7 @@
                 android:textColor="@color/g_blue"
                 android:textSize="18sp" />
         </LinearLayout>
-        <!-- Aquí puedes poner los elementos adicionales para mostrar la información de la promoción 1 -->
+        &lt;!&ndash; Aquí puedes poner los elementos adicionales para mostrar la información de la promoción 1 &ndash;&gt;
     </LinearLayout>
 
     <LinearLayout
@@ -250,7 +414,7 @@
                 android:textColor="@color/g_blue"
                 android:textSize="18sp" />
         </LinearLayout>
-        <!-- Aquí puedes poner los elementos adicionales para mostrar la información de la promoción 2 -->
+        &lt;!&ndash; Aquí puedes poner los elementos adicionales para mostrar la información de la promoción 2 &ndash;&gt;
     </LinearLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 </LinearLayout>

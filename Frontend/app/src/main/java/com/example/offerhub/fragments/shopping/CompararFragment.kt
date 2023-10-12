@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -58,16 +59,13 @@ class CompararFragment : BottomSheetDialogFragment() {
         }
         if (promocion1 != null && promocion2!=null){
         view.apply {
-            view.findViewById<TextView>(R.id.titulo1).text= promocion1.titulo
-            view.findViewById<TextView>(R.id.titulo2).text= promocion2.titulo
-            val fechaLocalDate1 = promocion1.vigenciaHasta
-            val fechaFormateada1 = fechaLocalDate1?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "Sin fecha"
-            val fechaLocalDate2 = promocion2.vigenciaHasta
-            val fechaFormateada2 = fechaLocalDate2?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "Sin fecha"
-
-            view.findViewById<TextView>(R.id.hasta1).text = fechaFormateada1
-            view.findViewById<TextView>(R.id.hasta2).text = fechaFormateada2
-            var diasDisp1 = promocion1.dias?.joinToString("\n")
+            view.findViewById<TextView>(R.id.comercio1).text= promocion1.titulo!!.split(":").first().toString()
+            view.findViewById<TextView>(R.id.comercio2).text= promocion2.titulo!!.split(":").first().toString()
+            view.findViewById<TextView>(R.id.titulo1).text= promocion1.titulo!!.split(":")[1].trim()
+            view.findViewById<TextView>(R.id.titulo2).text= promocion2.titulo!!.split(":")[1].trim()
+            view.findViewById<TextView>(R.id.hasta1).text = promocion1.obtenerTextoVigencia()
+            view.findViewById<TextView>(R.id.hasta2).text = promocion2.obtenerTextoVigencia()
+            var diasDisp1 = promocion1.dias?.joinToString(",\n")
             var diasDisp2 = promocion2.dias?.joinToString("\n")
             if (diasDisp1==null){
                 diasDisp1 = "Todos los dias"
@@ -79,17 +77,20 @@ class CompararFragment : BottomSheetDialogFragment() {
             view.findViewById<TextView>(R.id.dias2).text = diasDisp2
             var reint1 = view.findViewById<TextView>(R.id.reintegro1)
             var reint2 = view.findViewById<TextView>(R.id.reintegro2)
+            var compararTopes = view.findViewById<TableRow>(R.id.compararTopes)
             var text1 =promocion1.obtenerDesc()
             var text2 =promocion2.obtenerDesc()
             if (promocion1.tipoPromocion == "Reintegro"){
-                reint1.text = "Tope de " + promocion1.topeNro
+                reint1.text = "$" + promocion1.topeNro
+                compararTopes.visibility=View.VISIBLE
             }else{
-                reint1.visibility = View.GONE
+                reint1.text = "-"
             }
             if (promocion2.tipoPromocion == "Reintegro"){
-                reint2.text = "Tope de " + promocion2.topeNro
+                reint2.text = "$" + promocion2.topeNro
+                compararTopes.visibility=View.VISIBLE
             }else{
-                reint2.visibility = View.GONE
+                reint2.text = "-"
             }
             if(promocion1.tipoPromocion=="Reintegro" || promocion1.tipoPromocion=="Descuento"){
                 text1=text1+"%"
@@ -121,11 +122,10 @@ class CompararFragment : BottomSheetDialogFragment() {
                             textoTarjetas1 = textoTarjetas1 + ent1.nombre +" "
                         }
                         if (tarj1 != null) {
-                            textoTarjetas1 = if(tarj1.segmento=="No posee"){
-                                textoTarjetas1 + tarj1.procesadora+" " +tarj1.tipoTarjeta
-                            }else{
-                                textoTarjetas1+tarj1.procesadora+" " +tarj1.segmento+" "+tarj1.tipoTarjeta
-                            }
+                            textoTarjetas1 += if (tarj1.procesadora != "No posee") tarj1.procesadora.toString() else "" +
+                                    if (tarj1.segmento != "No posee") tarj1.segmento else "" +
+                                            if (tarj1.tipoTarjeta != "No posee") tarj1.tipoTarjeta else ""
+
                         }
                         textoTarjetas1 += "\n"
                     }
@@ -133,14 +133,13 @@ class CompararFragment : BottomSheetDialogFragment() {
                         var tarj2 = lectura.obtenerTarjetaPorId(tarjeta2)
                         var ent2 = tarj2?.entidad?.let { lectura.obtenerEntidadPorId(it) }
                         if (ent2 != null) {
-                            textoTarjetas2 = textoTarjetas2 + ent2.nombre+" "
+                            textoTarjetas2 = textoTarjetas2 + ent2.nombre +" "
                         }
                         if (tarj2 != null) {
-                            textoTarjetas2 = if(tarj2.segmento=="No posee"){
-                                textoTarjetas2+tarj2.procesadora+" " +tarj2.tipoTarjeta
-                            }else{
-                                textoTarjetas2+tarj2.procesadora+" " +tarj2.segmento+" "+tarj2.tipoTarjeta
-                            }
+                            textoTarjetas2 += if (tarj2.procesadora != "No posee") tarj2.procesadora.toString() else "" +
+                                    if (tarj2.segmento != "No posee") tarj2.segmento else "" +
+                                            if (tarj2.tipoTarjeta != "No posee") tarj2.tipoTarjeta else ""
+
                         }
                         textoTarjetas2 += "\n"
                     }
