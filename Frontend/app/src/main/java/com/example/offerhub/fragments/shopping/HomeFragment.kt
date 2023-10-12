@@ -114,7 +114,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 // Llamar a la función que obtiene los datos.
                 val job = coroutineScope.launch {
                     try {
-                        var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo }
+                        var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo!!.lowercase() }
                         val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas)
                         adapter.eliminarLista()
                         adapter.setHomeFragment(this@HomeFragment)
@@ -184,7 +184,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         // Crea un título de categoría
                         val promocionesDesordenadas: List<Promocion> =
                             userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
-                        var promociones=promocionesDesordenadas.sortedBy { it.titulo }
+                        var promociones=promocionesDesordenadas.sortedBy { it.titulo!!.lowercase() }
                         if (promociones.size > 0) {
                             val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
                             promosDispo.visibility = View.VISIBLE
