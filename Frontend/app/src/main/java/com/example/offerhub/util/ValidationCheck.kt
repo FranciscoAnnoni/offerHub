@@ -8,33 +8,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 
 fun validateEmail(email:String?): RegisterValidation{
-
     if (email != null) {
         if (email.isEmpty())
             return RegisterValidation.Failed("El campo Email no puede estar vacio")
     }
+
     if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         return RegisterValidation.Failed("Formato de Email incorrecto")
 
     return RegisterValidation.Success
 }
-
-fun isEmailUsedByAnotherUser(email: String): Boolean {
-
-        // Verificar si el correo ya está en uso en Firebase Authentication
-        val task = FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
-        val result = Tasks.await(task)
-if( result.signInMethods != null && result.signInMethods!!.isNotEmpty()){
-    Log.d("CONCHADETUMADRE", result.signInMethods.toString())
-
-    return false
-} else {
-    return true
-}
-
-
-}
-
 
 fun validatePassword(password: String): RegisterValidation{
     if (password.isEmpty())
