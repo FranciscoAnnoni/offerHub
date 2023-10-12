@@ -300,7 +300,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 binding.buscadores.setText(nombreCategoria.toString())
             }
 
-            viewModel.buscarPorCategoria(nombreCategoria.toString()).invokeOnCompletion {
+            viewModel.buscarPorTexto(nombreCategoria.toString()).invokeOnCompletion {
                 actualizarResultados()
             }.also {
                 mostrarResultadosBusqueda()

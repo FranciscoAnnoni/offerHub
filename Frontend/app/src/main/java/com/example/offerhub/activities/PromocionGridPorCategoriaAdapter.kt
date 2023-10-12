@@ -1,6 +1,8 @@
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
@@ -111,7 +114,31 @@ class PromocionGridPorCategoriaAdapter(private val context: FragmentActivity, pr
                         textoPromo = textoPromo + " cuotas"
                     }
                     promocionViewHolder.textViewDto.text = textoPromo
-                    var logo: Bitmap?=null
+                    var logo: Bitmap? = null
+                    if (userViewModel.logoComercios.containsKey(promocion.comercio)) {
+                        logo = userViewModel.logoComercios[promocion.comercio]
+                    } else {
+                        val imgEnBase64 = Funciones().traerLogoComercio(promocion.comercio)
+                        if (imgEnBase64 != null) {
+                            val imageByteArray = Base64.decode(imgEnBase64, Base64.DEFAULT)
+                            val width = 100 // Ancho deseado en píxeles
+                            val height = 100 // Alto deseado en píxeles
+                            var resizedBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+                            resizedBitmap = Bitmap.createScaledBitmap(resizedBitmap, width, height, false)
+                            logo = resizedBitmap
+                            userViewModel.logoComercios[promocion.comercio!!] = logo
+                        } else {
+                            // Tratar el caso en el que imgEnBase64 sea nulo
+                        }
+                    }
+
+                    // Carga la imagen con Glide después de obtener o redimensionarla
+                    Glide.with(context)
+                        .load(logo)
+                        .placeholder(R.drawable.offerhub_logo_color)
+                        .error(android.R.drawable.ic_dialog_alert)
+                        .thumbnail(0.25f)
+                        .into(promocionViewHolder.imgViewCategory)
 
                     /*
                     if(userViewModel.logoComercios.containsKey(promocion.comercio)){

@@ -69,9 +69,12 @@ class PromocionGridAdapter(private val context: Context, private var promociones
             if (isChecked) {
                 numCheckBoxesSeleccionados++
                 lista.add(promociones[position])
-                // Desmarcar los demás CheckBoxes
+
                 if(numCheckBoxesSeleccionados==3){
-                    homeFragment.updateButtonVisibility(false)
+                        numCheckBoxesSeleccionados--
+                        lista.remove(promociones[position])
+                        checkBox.isChecked=false
+                        homeFragment.mostrarAvisoSobreeleccion()
                 }
             } else {
                 lista.remove(promociones[position])
