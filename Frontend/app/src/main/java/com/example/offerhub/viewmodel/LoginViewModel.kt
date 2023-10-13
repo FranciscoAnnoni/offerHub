@@ -44,7 +44,7 @@ class LoginViewModel @Inject constructor(
             ).addOnSuccessListener {
                 viewModelScope.launch {
                     it.user?.let {
-                        sharedPreferences.edit().putBoolean(Constants.PARTNER_USER,false).apply()
+                        sharedPreferences.edit().putString(Constants.PARTNER_USER,"user").apply()
                         _login.emit(Resource.Success(it))
                     }
                 }

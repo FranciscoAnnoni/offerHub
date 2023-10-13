@@ -147,7 +147,7 @@ class LoginPartnersFragment : Fragment(R.layout.fragment_login_partners) {
                                 if (userViewModelCacheado != null) {
                                     UserViewModelSingleton.initialize(userViewModelCacheado)
                                 } else {
-                                    userViewModel.usuarioPartner =Funciones().traerUsuarioPartnerActual()
+                                    userViewModel.usuarioPartner = Funciones().traerUsuarioPartnerActual()
                                     //userViewModel.listadoDePromosDisp = Funciones().obtenerPromociones(userViewModel.usuarioPartner!!))
                                     userViewModelCache.guardarUserViewModel(userViewModel)
                                     UserViewModelSingleton.initialize(userViewModel)

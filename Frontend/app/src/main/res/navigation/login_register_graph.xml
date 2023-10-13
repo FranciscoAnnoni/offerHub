@@ -56,14 +56,22 @@
         <action
             android:id="@+id/action_registerPartnersFragment_to_loginPartnersFragment"
             app:destination="@id/loginPartnersFragment" />
+        <action
+            android:id="@+id/action_registerPartnersFragment_to_registerPartnersFragment2"
+            app:destination="@id/registerPartnersFragment2" />
     </fragment>
     <fragment
         android:id="@+id/introductionFragmentPartners"
         android:name="com.example.offerhub.fragments.partners.IntroductionFragmentPartners"
         android:label="IntroductionFragmentPartners"
-        tools:layout="@layout/fragment_introduction_partners">>
+        tools:layout="@layout/fragment_introduction_partners">
         <action
             android:id="@+id/action_introductionFragmentPartners_to_registerPartnersFragment"
             app:destination="@id/registerPartnersFragment" />
-    </fragment>/>
+    </fragment>
+    <fragment
+        android:id="@+id/registerPartnersFragment2"
+        android:name="com.example.offerhub.fragments.partners.RegisterPartnersFragment2"
+        android:label="RegisterPartnersFragment2"
+        tools:layout="@layout/fragment_register_partners2"/>
 </navigation>

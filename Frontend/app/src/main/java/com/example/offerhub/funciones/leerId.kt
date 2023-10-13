@@ -1,11 +1,7 @@
 package com.example.offerhub
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.example.offerhub.data.UserPartner
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

@@ -33,23 +33,30 @@ class IntroductionViewModel @Inject constructor (
 
     init {
         val isButtonChecked = sharedPreferences.getBoolean(INTRODUCTION_KEY, false)
-        val isPartner = sharedPreferences.getBoolean(PARTNER_USER, false)
+        val isPartner = sharedPreferences.getString(PARTNER_USER, "user")
         val user = firebaseAuth.currentUser
 
-        val userId = user?.uid // Obtiene el ID del usuario actual
 
         if (user != null) {
-            if (isPartner) {
+            if (isPartner == "partner") {
                 viewModelScope.launch {
                     // El ID del usuario está en la lista de partners
                     _navigate.emit(SHOPPING_ACTIVITY_PARTNERS)
                 }
-            } else {
+            }
+            if (isPartner == "user"){
                 viewModelScope.launch {
                     // El ID del usuario no está en la lista de partners
                     _navigate.emit(SHOPPING_ACTIVITY)
                 }
             }
+            if (isPartner == "parterRegister"){
+                viewModelScope.launch {
+                    // El ID del usuario no está en la lista de partners
+                    _navigate.emit(ACCOUNT_OPTIONS_FRAGMENT)
+                }
+            }
+
 
         } else if (isButtonChecked) {
             viewModelScope.launch {

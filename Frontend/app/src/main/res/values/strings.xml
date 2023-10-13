@@ -11,4 +11,11 @@
         <item>Cuotas</item>
     </string-array>
 
+    <!-- Opciones para el Spinner "Tipo de Categoria" -->
+    <string-array name="spinner_values">
+        <item>Descuento</item>
+        <item>Reintegro</item>
+        <item>2x1</item>
+        <item>Cuotas</item>
+    </string-array>
 </resources>

@@ -53,68 +53,15 @@
         <!-- Datos a rellenar -->
 
         <TextView
-            android:id="@+id/nombreDeEmpresa"
-            style="@style/textoChicoVioleta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="-15dp"
-            android:layout_marginTop="40dp"
-            android:padding="5dp"
-            android:text="Nombre de la Empresa"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
-            tools:ignore="MissingConstraints" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edNombreRegisterDeEmpresa"
-            style="@style/EditTextRounded"
-            android:layout_width="290dp"
-            android:layout_height="45dp"
-            android:hint="Nombre de la Empresa"
-            app:layout_constraintEnd_toEndOf="@+id/guideline4"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/nombreDeEmpresa"
-            android:imeOptions="actionNext"
-            android:nextFocusForward="@+id/cuil"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/cuil"
-            style="@style/textoChicoVioleta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:padding="5dp"
-            android:text="CUIT"
-            android:layout_marginStart="-15dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edNombreRegisterDeEmpresa"
-            tools:ignore="MissingConstraints" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edCuilRegisterDeEmpresa"
-            style="@style/EditTextRounded"
-            android:layout_width="290dp"
-            android:layout_height="45dp"
-            android:hint="CUIT de la empresa"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="@+id/guideline4"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/cuil"
-            android:maxLength="11"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
             android:id="@+id/emailDeEmpresa"
             style="@style/textoChicoVioleta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="40dp"
             android:padding="5dp"
             android:text="Email de Empresa"
-            android:layout_marginStart="-15dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/edCuilRegisterDeEmpresa"
+            app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText
@@ -148,10 +95,35 @@
             style="@style/EditTextRounded"
             android:layout_width="290dp"
             android:layout_height="45dp"
-            android:hint="@string/password"
+            android:hint="Ingrese su Contraseña"
             app:layout_constraintEnd_toEndOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/password"
+            android:inputType="textPassword"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/passwordRepeat"
+            style="@style/textoChicoVioleta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="5dp"
+            android:text="Repita su Contraseña"
+            android:layout_marginStart="-15dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/edPassowrdRegisterEmpresa"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edPassowrdRegisterEmpresaRepetida"
+            style="@style/EditTextRounded"
+            android:layout_width="290dp"
+            android:layout_height="45dp"
+            android:hint="Repita su Contraseña"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/passwordRepeat"
             android:inputType="textPassword"
             tools:ignore="MissingConstraints" />
 
@@ -161,11 +133,11 @@
             android:layout_width="112dp"
             android:layout_height="42dp"
             android:layout_marginTop="30dp"
-            android:text="Registrar"
+            android:text="Continuar"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edPassowrdRegisterEmpresa"
+            app:layout_constraintTop_toBottomOf="@id/edPassowrdRegisterEmpresaRepetida"
             tools:ignore="MissingConstraints"
             app:spinning_bar_color="@color/white"/>
 

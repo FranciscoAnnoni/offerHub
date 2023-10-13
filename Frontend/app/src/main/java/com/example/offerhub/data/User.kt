@@ -15,7 +15,7 @@ class User (
     constructor(): this("","","",null,null,null,null,null)
 }
 
-class UserPartner (
+class UserPartner(
     val nombreDeEmpresa: String,
     val cuil: String,
     val email: String,

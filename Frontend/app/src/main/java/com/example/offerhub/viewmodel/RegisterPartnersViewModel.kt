@@ -1,26 +1,22 @@
 package com.example.offerhub.viewmodel
 
-import android.util.Log
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.offerhub.EscribirBD
-import com.example.offerhub.Usuario
-import com.example.offerhub.data.User
+import com.example.offerhub.Funciones
 import com.example.offerhub.data.UserPartner
-import com.example.offerhub.util.Constants.USER_COLLECTION
-import com.example.offerhub.util.RegisterFieldsState
+import com.example.offerhub.util.Constants
 import com.example.offerhub.util.RegisterFieldsStatePartner
+import com.example.offerhub.util.RegisterFieldsStatePartnerCuil
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
 import com.example.offerhub.util.validateCuil
 import com.example.offerhub.util.validateEmail
 import com.example.offerhub.util.validatePassword
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -35,57 +31,89 @@ import javax.inject.Inject
 class RegisterPartnersViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     // private val db: FirebaseDatabase
-
+    private val sharedPreferences: SharedPreferences,
 ): ViewModel(){
 
-    private val _register = MutableStateFlow<Resource<UserPartner>>(Resource.Unspecified())
-          val register:Flow<Resource<UserPartner>> = _register
+    val usuario = firebaseAuth.currentUser;
+    val userUid = usuario?.uid
+    val instancia = Funciones()
+
+    var onRegistrationFailure: (() -> Unit)? = null
+
+    private val _register = MutableStateFlow<Resource<Boolean>>(Resource.Unspecified())
+          val register:Flow<Resource<Boolean>> = _register
+
+
+    private val _registerUser = MutableStateFlow<Resource<UserPartner>>(Resource.Unspecified())
+    val registerUser:Flow<Resource<UserPartner>> = _registerUser
 
     private val _validation = Channel<RegisterFieldsStatePartner>()
         val validation = _validation.receiveAsFlow()
 
+    private val _validationUser = Channel<RegisterFieldsStatePartnerCuil>()
+    val validationUser = _validationUser.receiveAsFlow()
 
     private val _registrationSuccess = MutableLiveData<Boolean>()
     val registrationSuccess: LiveData<Boolean> = _registrationSuccess
 
 
     // ESTA FUNCUION HAY QUE CAMBIARLA PARA QUE TENGA AL USUARIO CORRECTO
-    fun createAccountWithEmailAndPassword(usuario: UserPartner, password:String) {
-        Log.d("EMAIL vm", "${ usuario.email }")
-        val emailValidation = validateEmail(usuario.email)
-        val cuilValidation = validateCuil(usuario.cuil)
+    fun createAccountWithEmailAndPassword(email:String, password:String) {
+
+        val emailValidation = validateEmail(email)
         val passwordValidation = validatePassword(password)
         val shouldRegister =
-            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success &&cuilValidation is RegisterValidation.Success
-
+            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
 
         if (shouldRegister) {
-
             runBlocking {
                 _register.emit(Resource.Loading())
             }
 
-            firebaseAuth.createUserWithEmailAndPassword(usuario.email, password)
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     it.user?.let {
-                        Log.d("ID", "${ it.uid }")
-                        saveUserInfo(it.uid,usuario)
-                        //_register.value = Resource.Success(it)
+                        sharedPreferences.edit().putString(Constants.PARTNER_USER,"parterRegister").apply()
+                        _register.value = Resource.Success(true)
                     }
                 }.addOnFailureListener {
+                    onRegistrationFailure?.invoke()
                     _register.value = Resource.Error(it.message.toString())
                 }
 
         }else {
             val registerFieldsState = RegisterFieldsStatePartner(
-                validateEmail(usuario.email), validatePassword(password), validateCuil(usuario.cuil)
+                validateEmail(email), validatePassword(password)
             )
             runBlocking {
                 _validation.send(registerFieldsState)
             }
-
         }
+    }
 
+    fun createAccountUserPartner(user:UserPartner) {
+        val cutValidation = validateCuil(user.cuil)
+        val shouldRegister = cutValidation is RegisterValidation.Success
+
+        if (shouldRegister) {
+            runBlocking {
+                _registerUser.emit(Resource.Loading())
+            }
+
+
+            if (userUid != null) {
+                saveUserInfo(userUid,user)
+            }
+
+
+        }else {
+            val registerFieldsState = RegisterFieldsStatePartnerCuil(
+                 validateCuil(user.cuil)
+            )
+            runBlocking {
+                _validationUser.send(registerFieldsState)
+            }
+        }
     }
 
     private fun saveUserInfo(userUid: String, user:UserPartner ){
@@ -96,7 +124,7 @@ class RegisterPartnersViewModel @Inject constructor(
            user.email,
            listOf()
        )
-        Log.d("cantifnlas", "ENTRE")
+
         val database: FirebaseDatabase =
                 FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referencia: DatabaseReference = database.getReference("/UsuarioPartner")
@@ -107,15 +135,26 @@ class RegisterPartnersViewModel @Inject constructor(
 
            .addOnSuccessListener {
                 _registrationSuccess.value = true // Registro exitoso
-                _register.value = Resource.Success(usuario)
+                _registerUser.value = Resource.Success(usuario)
             }.addOnFailureListener{
-                _register.value = Resource.Error(it.message.toString())
+                _registerUser.value = Resource.Error(it.message.toString())
             }
     }
+
 
     fun logout(){
         firebaseAuth.signOut()
     }
 
+    fun deleteUser() {
+        // Current signed-in user to delete
+        firebaseAuth.signOut()
+        usuario?.delete()
+        if (userUid != null) {
+            instancia.elimiarUsuario(userUid)
+        }
+
+
+    }
 
 }
