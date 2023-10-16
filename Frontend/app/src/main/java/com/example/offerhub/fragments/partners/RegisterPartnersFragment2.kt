@@ -1,6 +1,7 @@
 package com.example.offerhub.fragments.partners
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,23 +49,27 @@ class RegisterPartnersFragment2: Fragment() {
         val spinner = binding.spinner
 
         // Define las opciones como una lista de cadenas de texto
-        val options = listOf("Opción 1", "Opción 2", "Opción 3")
+        val options = listOf("Seleccione una Opcion", "Gastronomía", "Salud y Bienestar", "Viajes y Turismo", "Entretenimiento", "Indumentaria", "Supermercados", "Electrónica", "Librerías", "Mascotas", "Niños", "Otros" )
 
         // Crea un ArrayAdapter para el Spinner
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, options)
         spinner.adapter = adapter
 
+
+
         // ACA ES DONDE TENGO QUE VERLO CON FACU PARA QUE ESTOS VALORES SE LOS ASIGNE A UN USER= USER-PARTHENRS
         binding.apply {
             btnRegisterEmpresa.setOnClickListener {
                 val userLogeado = FirebaseAuth.getInstance().currentUser
+                val selectedOption = spinner.selectedItem as String
+
 
                 val user = UserPartner(
                     edNombreRegisterDeEmpresa.text.toString().trim(),
                     edCuilRegisterDeEmpresa.text.toString().trim(),
                     userLogeado?.email.toString().trim()
                 )
-                viewModel.createAccountUserPartner(user)
+                viewModel.createAccountUserPartner(user, selectedOption)
             }
         }
 
@@ -106,6 +111,15 @@ class RegisterPartnersFragment2: Fragment() {
                         binding.edCuilRegisterDeEmpresa.apply {
                             requestFocus()
                             error = validation.cuil.message
+                        }
+                    }
+                }
+
+                if (validation.categoria is RegisterValidation.Failed){
+                    withContext(Dispatchers.Main) {
+                        binding.spinnerErrorText.apply {
+                            requestFocus()
+                            error = validation.categoria.message
                         }
                     }
                 }

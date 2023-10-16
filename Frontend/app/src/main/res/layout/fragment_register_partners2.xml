@@ -151,6 +151,18 @@
             app:layout_constraintTop_toBottomOf="@id/desplegableHeader"
             tools:ignore="MissingConstraints" />
 
+        <TextView
+            android:id="@+id/spinnerErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FF0000"
+            android:layout_below="@+id/spinner"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/btnRegisterEmpresa"

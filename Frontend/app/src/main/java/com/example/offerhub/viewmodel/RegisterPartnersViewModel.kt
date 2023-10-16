@@ -11,9 +11,11 @@ import com.example.offerhub.util.RegisterFieldsStatePartner
 import com.example.offerhub.util.RegisterFieldsStatePartnerCuil
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
+import com.example.offerhub.util.validateCategoria
 import com.example.offerhub.util.validateCuil
 import com.example.offerhub.util.validateEmail
 import com.example.offerhub.util.validatePassword
+import com.example.offerhub.util.validatePasswords
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -58,12 +60,16 @@ class RegisterPartnersViewModel @Inject constructor(
 
 
     // ESTA FUNCUION HAY QUE CAMBIARLA PARA QUE TENGA AL USUARIO CORRECTO
-    fun createAccountWithEmailAndPassword(email:String, password:String) {
+    fun createAccountWithEmailAndPassword(email:String, password:String, password2:String) {
+
 
         val emailValidation = validateEmail(email)
         val passwordValidation = validatePassword(password)
+        val passwordValidation2 = validatePasswords(password,password2)
+
         val shouldRegister =
-            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
+            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success && passwordValidation2 is RegisterValidation.Success
+
 
         if (shouldRegister) {
             runBlocking {
@@ -83,7 +89,7 @@ class RegisterPartnersViewModel @Inject constructor(
 
         }else {
             val registerFieldsState = RegisterFieldsStatePartner(
-                validateEmail(email), validatePassword(password)
+                validateEmail(email), validatePassword(password), validatePasswords(password,password2)
             )
             runBlocking {
                 _validation.send(registerFieldsState)
@@ -91,9 +97,12 @@ class RegisterPartnersViewModel @Inject constructor(
         }
     }
 
-    fun createAccountUserPartner(user:UserPartner) {
+    fun createAccountUserPartner(user:UserPartner, categoria: String) {
         val cutValidation = validateCuil(user.cuil)
-        val shouldRegister = cutValidation is RegisterValidation.Success
+        val categoriaValidacion = validateCategoria(categoria)
+
+        val shouldRegister = cutValidation is RegisterValidation.Success && categoriaValidacion is RegisterValidation.Success
+
 
         if (shouldRegister) {
             runBlocking {
@@ -108,13 +117,15 @@ class RegisterPartnersViewModel @Inject constructor(
 
         }else {
             val registerFieldsState = RegisterFieldsStatePartnerCuil(
-                 validateCuil(user.cuil)
+                 validateCuil(user.cuil) ,  validateCategoria(categoria)
             )
             runBlocking {
                 _validationUser.send(registerFieldsState)
             }
         }
     }
+
+
 
     private fun saveUserInfo(userUid: String, user:UserPartner ){
        val usuario = UserPartner(

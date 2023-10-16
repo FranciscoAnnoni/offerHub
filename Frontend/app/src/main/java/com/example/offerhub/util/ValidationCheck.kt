@@ -27,6 +27,14 @@ fun validatePassword(password: String): RegisterValidation{
     return RegisterValidation.Success
 }
 
+fun validatePasswords(password1: String,password2: String): RegisterValidation{
+    if (password1 != password2)
+        return RegisterValidation.Failed("La Contraseñas deben coincidir")
+
+    return RegisterValidation.Success
+}
+
+
 fun validateCuil(cuil: String): RegisterValidation {
     if (cuil.isEmpty())
         return RegisterValidation.Failed("El campo CUIL no puede estar vacio")
@@ -37,3 +45,9 @@ fun validateCuil(cuil: String): RegisterValidation {
     }
 }
 
+fun validateCategoria (categoria: String): RegisterValidation {
+    if (categoria == "Seleccione una Opcion")
+        return RegisterValidation.Failed("Porfavor seleccione una opcion valida")
+
+    return RegisterValidation.Success
+}

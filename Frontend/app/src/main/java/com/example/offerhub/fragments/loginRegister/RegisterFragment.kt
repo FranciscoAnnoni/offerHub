@@ -56,7 +56,8 @@ class RegisterFragment:Fragment() {
 
                 )
                 val password = edPassowrdRegister.text.toString()
-                viewModel.createAccountWithEmailAndPassword(user,password)
+                val password2 = edPassowrdRegister2.text.toString()
+                viewModel.createAccountWithEmailAndPassword(user,password, password2)
             }
         }
 
@@ -105,6 +106,15 @@ class RegisterFragment:Fragment() {
                         binding.edPassowrdRegister.apply {
                             requestFocus()
                             error = validation.password.message
+                        }
+                    }
+                }
+
+                if (validation.password2 is RegisterValidation.Failed){
+                    withContext(Dispatchers.Main){
+                        binding.edPassowrdRegister2.apply {
+                            requestFocus()
+                            error = validation.password2.message
                         }
                     }
                 }

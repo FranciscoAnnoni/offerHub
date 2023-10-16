@@ -49,8 +49,9 @@ class RegisterPartnersFragment: Fragment() {
             btnRegisterEmpresa.setOnClickListener {
                 val email =  edEmailRegisterDeEmpresa.text.toString().trim()
                 val password = edPassowrdRegisterEmpresa.text.toString()
+                val password2 = edPassowrdRegisterEmpresaRepetida.text.toString()
 
-                viewModel.createAccountWithEmailAndPassword(email,password)
+                viewModel.createAccountWithEmailAndPassword(email,password, password2)
 
                 viewModel.onRegistrationFailure = {
                     Snackbar.make(rootView, "Error con la base de datos", Snackbar.LENGTH_SHORT).show()
@@ -86,7 +87,6 @@ class RegisterPartnersFragment: Fragment() {
             }
         }
 
-
         // ACA VALIDO QUE LA CONTRRASENIA Y EL MAIL SEAN CORRECTOS
         lifecycleScope.launchWhenStarted {
             viewModel.validation.collect {
@@ -108,6 +108,16 @@ class RegisterPartnersFragment: Fragment() {
                         }
                     }
                 }
+
+                if (validation.password2 is RegisterValidation.Failed){
+                    withContext(Dispatchers.Main){
+                        binding.edPassowrdRegisterEmpresaRepetida.apply {
+                            requestFocus()
+                            error = validation.password2.message
+                        }
+                    }
+                }
+
 
             }
         }

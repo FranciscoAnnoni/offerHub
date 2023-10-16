@@ -9,10 +9,12 @@ import com.example.offerhub.Usuario
 import com.example.offerhub.data.User
 import com.example.offerhub.util.Constants.USER_COLLECTION
 import com.example.offerhub.util.RegisterFieldsState
+import com.example.offerhub.util.RegisterFieldsStateUser
 import com.example.offerhub.util.RegisterValidation
 import com.example.offerhub.util.Resource
 import com.example.offerhub.util.validateEmail
 import com.example.offerhub.util.validatePassword
+import com.example.offerhub.util.validatePasswords
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -39,19 +41,23 @@ class RegisterViewModel @Inject constructor(
     private val _register = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
           val register:Flow<Resource<Usuario>> = _register
 
-    private val _validation = Channel<RegisterFieldsState>()
+    private val _validation = Channel<RegisterFieldsStateUser>()
         val validation = _validation.receiveAsFlow()
 
 
     private val _registrationSuccess = MutableLiveData<Boolean>()
     val registrationSuccess: LiveData<Boolean> = _registrationSuccess
 
-    fun createAccountWithEmailAndPassword(user: User, password:String) {
+
+
+
+    fun createAccountWithEmailAndPassword(user: User, password:String, password2: String) {
         val emailValidation = validateEmail(user.email)
         val passwordValidation = validatePassword(password)
+        val passwordValidation2 = validatePasswords(password,password2)
 
         val shouldRegister =
-            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success
+            emailValidation is RegisterValidation.Success && passwordValidation is RegisterValidation.Success && passwordValidation2 is RegisterValidation.Success
 
 
         if (shouldRegister) {
@@ -70,8 +76,8 @@ class RegisterViewModel @Inject constructor(
                 }
 
         }else {
-            val registerFieldsState = RegisterFieldsState(
-                validateEmail(user.email), validatePassword(password)
+            val registerFieldsState = RegisterFieldsStateUser(
+                validateEmail(user.email), validatePassword(password), validatePasswords(password,password2)
             )
             runBlocking {
                 _validation.send(registerFieldsState)
