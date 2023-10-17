@@ -8,6 +8,9 @@
     app:layout_constraintBottom_toBottomOf="parent"
     android:background="@color/fondo">
 
+
+
+
     <TextView
         android:id="@+id/inicioHome"
         style="@style/titulos"
@@ -32,43 +35,57 @@
         app:layout_constraintTop_toBottomOf="@id/inicioHome">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/searchBar"
+            android:id="@+id/buscar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/rounded_text_background">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="0dp"
+                android:id="@+id/buscadores"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
                 android:fontFamily="sans-serif"
+                android:hint="Buscar Promocion"
                 android:paddingStart="15dp"
                 android:singleLine="true"
-                android:hint="Buscar Promocion"
                 android:textSize="15sp"
-                android:backgroundTint="@android:color/transparent"
-                app:layout_constraintEnd_toStartOf="@id/logoLupa"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/logoCerrar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_close"
+                android:visibility="gone"
+                app:tint="#B7AACC"
+                android:layout_marginRight="15dp"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/logoLupa"
                 />
 
             <ImageView
                 android:id="@+id/logoLupa"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_search"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginRight="15dp"
                 app:layout_constraintEnd_toEndOf="parent"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         <ImageView
+            android:id="@+id/switchHomeMode"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_filter"
+            android:src="@drawable/ic_gridview"
             android:layout_marginStart="8dp"
             android:background="@drawable/icon_background"
            android:padding="10dp"
@@ -79,21 +96,54 @@
     <TextView
         android:id="@+id/tvPromocionesDisponibles"
         style="@style/textoMedianoNegro"
-        android:text="Promociones Disponibles"
+        android:text="Promociones"
         android:layout_marginTop="25dp"
         android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="@id/homeHeader"
         app:layout_constraintTop_toBottomOf="@id/homeHeader"
-        app:layout_constraintEnd_toStartOf="@id/switchHomeMode"
         android:textSize="25sp"
         />
-    <Switch
-        android:id="@+id/switchHomeMode"
-        android:layout_width="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/homeHeader"
+
+ <!--   <Switch
+        android:id="@+id/switchHomeModes"
+        android:layout_width="36dp"
+        android:layout_height="25dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toEndOf="@id/tvPromocionesDisponibles"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toBottomOf="@id/homeHeader" />-->
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_marginEnd="25dp"
+    app:layout_constraintTop_toBottomOf="@id/homeHeader"
+    android:layout_marginStart="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="25dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/botonGuardar"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_checklist"
+        app:layout_constraintEnd_toStartOf="@id/btnComparar"
+        android:background="@drawable/icon_background"
+        android:padding="10dp"
+        />
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+        android:id="@+id/btnComparar"
+        style="@style/RoundedButtonBackground"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        app:spinning_bar_color="@color/white"
+        android:textColor="#582C8F"
+        tools:ignore="MissingConstraints"
+        android:layout_marginStart="8dp"
+        android:text="Comparar"
+        android:textSize="16dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+</LinearLayout>
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -105,6 +155,63 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_gravity="center_vertical|center_horizontal"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/llCargarTarjetas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/cargar_tarjetas_background"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/tvPromocionesDisponibles"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:visibility="gone"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:maxWidth="170dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="Cargá tus tarjetas para comenzar"
+            />
+
+
+        <ImageView
+            android:src="@drawable/ic_cart_hand"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NUEVA TARJETA"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            />
+
+
+
+
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -148,7 +255,7 @@
         android:columnCount="2"
         android:rowCount="3"
         android:layout_gravity="center"
-        android:paddingTop="10dp"
+        android:paddingTop="20dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -163,6 +270,7 @@
             android:stretchMode="columnWidth"
             android:gravity="center"
             />
+
     </GridLayout>
     </LinearLayout>
 

@@ -11,6 +11,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 var esPartner = false;
 
@@ -34,6 +37,25 @@ class Funciones {
         }
 
         entidades
+    }
+
+    suspend fun obtenerTarjetasDisponibles(): MutableList<Tarjeta> = coroutineScope {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Tarjeta").get().await()
+        var tarjetas: MutableList<Tarjeta> = mutableListOf()
+
+        for(snapshot in dataSnapshot.children) {
+            var id = snapshot.key
+            var entidad = snapshot.child("entidad").getValue(String::class.java)
+            var procesadora = snapshot.child("procesadora").getValue(String::class.java)
+            var segmento = snapshot.child("segmento").getValue(String::class.java)
+            var tipoTarjeta = snapshot.child("tipoTarjeta").getValue(String::class.java)
+            var tarjeta = Tarjeta(id, procesadora, segmento, tipoTarjeta, entidad)
+            tarjetas.add(tarjeta)
+
+        }
+
+        tarjetas
     }
 
 
@@ -157,6 +179,20 @@ class Funciones {
     fun elimiarTarjetaDeUsuario(userId: String, tarjetaId: String){
         instanciaEscritura.eliminarElementoDeListas(userId, tarjetaId, "Usuario", "tarjetas")
     }
+
+    fun eliminarTodasLasTarjetasDeUsuario(userId: String) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia = database.getReference("Usuario").child(userId).child("tarjetas")
+
+        referencia.removeValue()
+            .addOnSuccessListener {
+                println("Todas las tarjetas han sido eliminadas con éxito.")
+            }
+            .addOnFailureListener { error ->
+                println("Error al eliminar todas las tarjetas: $error")
+            }
+    }
+
 
     fun editarPerfil(userId: String, atributo: String, valorNuevo: String){
         instanciaEscritura.editarAtributoDeClase("Usuario",userId, atributo,valorNuevo)
@@ -394,6 +430,7 @@ class Funciones {
 
         ids
     }
+
 
 }
 

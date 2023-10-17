@@ -1,0 +1,420 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/search_category_background">
+    <ImageView
+        android:id="@+id/imageClose"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_close"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        app:tint="@color/g_red"/>
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1">
+
+        <!-- Primera fila (encabezado) -->
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Comercio" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/comercio1"
+                android:textStyle="bold"
+                android:textColor="@color/violeta"
+                android:text="Comercio 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textColor="@color/violeta"
+                android:textStyle="bold"
+                android:id="@+id/comercio2"
+                android:text="Comercio 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Título" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/titulo1"
+                android:textStyle="bold"
+                android:textColor="@color/violeta"
+                android:text="Título de Promoción 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textColor="@color/violeta"
+                android:textStyle="bold"
+                android:id="@+id/titulo2"
+                android:text="Título de Promoción 2" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Vigencia" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/hasta1"
+                android:padding="8dp"
+                android:text="Fecha de Vencimiento de Promoción 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/hasta2"
+                android:padding="8dp"
+                android:text="Fecha de Vencimiento de Promoción 2" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Tipo de Beneficio" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/promoBenef1"
+                android:text="Tipo de Beneficio de Promoción 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/promoBenef2"
+                android:text="Tipo de Beneficio de Promoción 2" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/compararTopes"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Tope de Reintegro" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/reintegro1"
+                android:text="Reintegro 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/reintegro2"
+                android:text="Reintegro 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Disponibilidad" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/dias1"
+                android:text="Disponibilidad 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/dias2"
+                android:text="Disponibilidad 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:text="Tarjetas Aplicables" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/tarje1"
+                android:text="Tarjetas 1" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:id="@+id/tarje2"
+                android:text="Tarjetas 2" />
+        </TableRow>
+
+        <!-- Agrega más filas de propiedades según tus necesidades -->
+    </TableLayout>
+
+
+
+   <!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/promocion1Container"
+        android:layout_width="190dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/titulo1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Título Promoción 1"
+            android:textColor="@color/g_dark_blue"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha de vencimiento"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/hasta1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Fecha vencimiento promoción 1"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de beneficio"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/promoBenef1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Tope promoción 1"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/reintegro1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="reintegro 1"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disponibilidad"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/dias1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Dias disponibles prmomo1"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tarjetas"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tarje1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="tarjetas disponibles prmomo1"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+        &lt;!&ndash; Aquí puedes poner los elementos adicionales para mostrar la información de la promoción 1 &ndash;&gt;
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/promocion2Container"
+        android:layout_width="190dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/titulo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Título Promoción 2"
+            android:textColor="@color/g_dark_blue"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:tint="@color/g_light_purple" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha de vencimiento"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/hasta2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Fecha vencimiento promoción 2"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de beneficio"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/promoBenef2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Tope promoción 2"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/reintegro2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="reintegro 2"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disponibilidad"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/dias2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Dias disponibles prmomo2"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tarjetas"
+                android:textColor="@color/g_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tarje2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="tarjetas disponibles prmomo2"
+                android:textColor="@color/g_blue"
+                android:textSize="18sp" />
+        </LinearLayout>
+        &lt;!&ndash; Aquí puedes poner los elementos adicionales para mostrar la información de la promoción 2 &ndash;&gt;
+    </LinearLayout>
+    </LinearLayout>-->
+</LinearLayout>

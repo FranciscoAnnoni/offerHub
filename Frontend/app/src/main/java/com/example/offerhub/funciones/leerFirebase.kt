@@ -122,7 +122,7 @@ class Promocion(
     val url: String? = null,
     val vigenciaDesde: LocalDate? = null,
     val vigenciaHasta: LocalDate? = null,
-    val estado: String? = null
+    val estado: String? = null,
 ) : Parcelable {
     fun obtenerTextoVigencia(): String? {
         val vigenciaDesde = this.vigenciaDesde

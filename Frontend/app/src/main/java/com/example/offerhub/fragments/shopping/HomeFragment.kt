@@ -1,12 +1,19 @@
 package com.example.offerhub.fragments.shopping
 
 import PromocionGridAdapter
+import android.os.Handler
+import android.os.Looper
 import PromocionGridPorCategoriaAdapter
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -14,6 +21,8 @@ import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
@@ -27,8 +36,10 @@ import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentHomeBinding
+import com.example.offerhub.interfaces.FilterData
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,20 +48,20 @@ import java.lang.Math.ceil
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
+
     private var scrollPosition: Int = 0
     var isFavorite = false
     var listenerHabilitado = false
+    private fun showToast(message: String, duration: Long) {
+        val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+        toast.show()
 
-    /*override fun onPause() {
-        super.onPause()
-        scrollPosition = binding.promocionesGridView.scrollY
+        // Oculta el mensaje después del tiempo especificado
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({ toast.cancel() }, duration)
     }
-    override fun onResume() {
-        super.onResume()
-        binding.promocionesGridView.post {
-            binding.promocionesGridView.scrollTo(0, scrollPosition)
-        }
-    }*/
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,20 +73,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return binding.root
     }
 
+    fun mostrarAvisoSobreeleccion() {
+        showToast("El limite de seleccion son 2 promociones.", 10000)
+    }
+    fun updateButtonVisibility(shouldBeVisible: Boolean) {
+        binding.btnComparar.visibility = if (shouldBeVisible) View.VISIBLE else View.GONE
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var instancia = InterfaceSinc()
         var funciones = Funciones()
+
         val categoriasContainer = view.findViewById<LinearLayout>(R.id.categoriasContainer)
         val promosContainer = view.findViewById<LinearLayout>(R.id.containerPromos)
         val homeScrollView = view.findViewById<ScrollView>(R.id.homeScrollView)
         val listView = view.findViewById<GridView>(R.id.promocionesGridView)
-        val mySwitch = view.findViewById<Switch>(R.id.switchHomeMode)
+        val mySwitch = view.findViewById<ImageView>(R.id.switchHomeMode)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         val userViewModel = UserViewModelSingleton.getUserViewModel()
+        fun setearIconoHome(homeModeFull: Boolean) {
 
-
-
+            if(homeModeFull){
+                mySwitch.setImageResource(R.drawable.ic_tablerow)
+            } else {
+                mySwitch.setImageResource(R.drawable.ic_gridview)
+            }
+        }
         fun cargarVista() {
             if (userViewModel.usuario!!.homeModoFull=="1") {
                 val promoFav = view.findViewById<ImageView>(R.id.promoFav)
@@ -84,11 +108,46 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 var datos: MutableList<String> = mutableListOf()
+                binding.botonGuardar.visibility = View.VISIBLE
+                binding.btnComparar.visibility=View.GONE
+                var checkPrendido: Boolean = false
                 // Llamar a la función que obtiene los datos.
                 val job = coroutineScope.launch {
                     try {
-                        val adapter = PromocionGridAdapter(view.context, userViewModel.listadoDePromosDisp)
+                        var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo!!.lowercase() }
+                        val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas)
+                        adapter.eliminarLista()
+                        adapter.setHomeFragment(this@HomeFragment)
                         listView.adapter = adapter
+                        binding.botonGuardar.setOnClickListener{
+                            checkPrendido = !checkPrendido
+
+                            adapter.setCheckBoxesVisibility(checkPrendido)
+                            if (checkPrendido){
+
+                                val colorFondo = ContextCompat.getColor(requireContext(), R.color.g_gray500)
+                                val colorStateList = ColorStateList.valueOf(colorFondo)
+
+// Establece el color de fondo en la vista.
+                                binding.botonGuardar.backgroundTintList = colorStateList
+                            }else{
+                                binding.btnComparar.visibility=View.GONE
+                                val colorFondo = ContextCompat.getColor(requireContext(), R.color.white)
+                                val colorStateList = ColorStateList.valueOf(colorFondo)
+
+// Establece el color de fondo en la vista.
+                                binding.botonGuardar.backgroundTintList = colorStateList
+                                adapter.eliminarLista()
+                            }
+                        }
+
+                        binding.btnComparar.setOnClickListener {
+                            var promos =adapter.getSeleccion()
+                            var promo1 = promos[0] as Promocion
+                            var promo2 = promos[1] as Promocion
+                            val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
+                            bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
+                        }
                         listView.setOnItemClickListener { parent, _, position, _ ->
                             val selectedPromo =
                                 adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
@@ -107,7 +166,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } else {
                 //val listView = view.findViewById<GridView>(R.id.promocionesGridView)
                 //  val promoFav = view.findViewById<ImageView>(R.id.promoFav)
-
+                binding.btnComparar.visibility=View.GONE
                 // listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 var datos: MutableList<String> = mutableListOf()
@@ -123,9 +182,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val categorias = funciones.obtenerCategorias(view.context)
                     for (categoria in categorias) {
                         // Crea un título de categoría
-                        val promociones: List<Promocion> =
+                        val promocionesDesordenadas: List<Promocion> =
                             userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
+                        var promociones=promocionesDesordenadas.sortedBy { it.titulo!!.lowercase() }
                         if (promociones.size > 0) {
+                            val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
+                            promosDispo.visibility = View.VISIBLE
+                            val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
+                            switch.visibility = View.VISIBLE
+                            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+                            cargarTarjetas.visibility = View.GONE
+
                             if (requireContext() != null) {
                                 val categoriaTitle = TextView(requireContext())
                                 categoriaTitle.text = categoria.nombre
@@ -189,10 +256,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     })
                                 recyclerView.adapter = adapter
 
+                                binding.botonGuardar.visibility = View.GONE
+
+
                                 // Agrega el título y el RecyclerView al contenedor
                                 categoriasContainer.addView(categoriaTitle)
                                 categoriasContainer.addView(recyclerView)
 
+                            }
+                        } else {
+                            val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
+                            promosDispo.visibility = View.GONE
+                            val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
+                            switch.visibility = View.GONE
+                            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+                            cargarTarjetas.visibility = View.VISIBLE
+
+                            cargarTarjetas.setOnClickListener {
+                                Log.d("Estoy adentro del click de agregar tarjetas", "click click click")
+                                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCargarTarjetasFragment())
                             }
                         }
                     }
@@ -213,12 +295,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             Log.d("Logueandome",userViewModel.listadoDePromosDisp.count().toString())
             Log.d("Logueandome",userViewModel.favoritos.count().toString())
             listenerHabilitado=false
-            mySwitch.isChecked= userViewModel.usuario!!.homeModoFull=="1"
+            setearIconoHome(userViewModel.usuario!!.homeModoFull=="1")
             listenerHabilitado=true
             progressBar.visibility = View.GONE
         }.invokeOnCompletion {
             cargarVista()
         }
+
+
+
+
         mySwitch.setOnClickListener {
             if(listenerHabilitado){
 
@@ -230,9 +316,64 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 UserViewModelCache().guardarUserViewModel(userViewModel)
                 EscribirBD().editarAtributoDeClase("Usuario",
                     userViewModel.usuario!!.id.toString(),"homeModoFull",userViewModel.usuario!!.homeModoFull.toString())
+                setearIconoHome(userViewModel.usuario!!.homeModoFull=="1")
                 cargarVista()
             }
         }
+        }
+        val lupa = view.findViewById<ImageView>(R.id.logoLupa)
+        val cerrar = view.findViewById<ImageView>(R.id.logoCerrar)
+
+        binding.buscadores.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Verifica si el texto ha cambiado y muestra u oculta el logoClose
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.isNullOrEmpty()) {
+                    cerrar.visibility = View.GONE
+                } else {
+                    cerrar.visibility = View.VISIBLE
+                }
+            }
+        })
+
+        binding.logoLupa.setOnClickListener {
+            val textoBusqueda = binding.buscadores.text.toString()
+            if (textoBusqueda.length > 0) {
+                var navController=requireActivity().findNavController(R.id.mainAppFragment)
+                navController.popBackStack(R.id.homeFragment, false);
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                        textoBusqueda
+                    )
+                navController.navigate(action);
+            }
+        }
+
+        binding.logoCerrar.setOnClickListener {
+            binding.buscadores.setText("")
+            hideKeyboard(view)
+        }
+        binding.buscadores.setOnEditorActionListener { _, actionId, event ->
+            if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                val textoBusqueda = binding.buscadores.text.toString()
+                if (textoBusqueda.length > 0) {
+                    var navController=requireActivity().findNavController(R.id.mainAppFragment)
+                    navController.popBackStack(R.id.homeFragment, false);
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                            textoBusqueda
+                        )
+                    navController.navigate(action);
+                }
+            }
+            //hideKeyboard()
+            false
         }
 
     }

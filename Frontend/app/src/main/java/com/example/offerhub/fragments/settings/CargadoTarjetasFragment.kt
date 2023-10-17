@@ -64,7 +64,7 @@ class CargadoTarjetasFragment : Fragment() {
         var funciones = Funciones()
         val entidadesContainer = view.findViewById<LinearLayout>(R.id.llEntidadesContainer)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
-        val scrollView = view.findViewById<ScrollView>(R.id.svOpcionesTarjetas)
+        //val scrollView = view.findViewById<ScrollView>(R.id.svOpcionesTarjetas)
 
         binding.imageClose.setOnClickListener{
             findNavController().navigateUp()
@@ -74,14 +74,19 @@ class CargadoTarjetasFragment : Fragment() {
         val job = coroutineScope.launch {
         var uvm = UserViewModelSingleton.getUserViewModel()
         var usuario = uvm.usuario!!
-        //var tarjetasUsuario = usuario.tarjetas!!
+        if (uvm.tarjetasDisponibles.isEmpty()) {
+            Log.d("TARJETAS - UVM", "las tarjetas disponibles son nulas")
+            uvm.tarjetasDisponibles = funciones.obtenerTarjetasDisponibles()
+            UserViewModelCache().guardarUserViewModel(uvm)
+        }
 
-        binding.botonGuardar.setOnClickListener {
+        binding.llGuardarTarjetas.setOnClickListener {
             Log.d("Tarjetas a Guardar",tarjetasSeleccionadas.joinToString(","))
             if (uvm.usuario!!.tarjetas == null ) {
                 uvm.usuario!!.tarjetas = tarjetasSeleccionadas as MutableList<String?>
             } else {
                 uvm.usuario!!.tarjetas!!.addAll(tarjetasSeleccionadas)
+                Log.d("Despues de agregar tarjetas, tarjetas uvm: ", uvm.usuario!!.tarjetas!!.joinToString(","))
             }
             UserViewModelCache().guardarUserViewModel(uvm)
             funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)
@@ -93,9 +98,11 @@ class CargadoTarjetasFragment : Fragment() {
             }
 
             Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
+            findNavController().navigateUp()
+
         }
 
-            scrollView.visibility = View.VISIBLE
+            //scrollView.visibility = View.VISIBLE
             entidadesContainer.visibility = View.GONE
             val entidades = funciones.traerEntidades()
 
@@ -103,8 +110,10 @@ class CargadoTarjetasFragment : Fragment() {
 
                 var listaTarjetas: MutableList<Tarjeta> = mutableListOf()
                 try {
-                    listaTarjetas=
-                        instancia.leerBdClaseSinc("Tarjeta", "entidad", entidad.id!!)
+                    Log.d("UVM TARJETAS DISP: ", uvm.tarjetasDisponibles.joinToString(","))
+                    listaTarjetas = uvm.tarjetasDisponibles.filter { tarjeta -> tarjeta.entidad  == entidad.id } as MutableList<Tarjeta>
+                    Log.d("UVM TARJETAS DISP: ", uvm.tarjetasDisponibles.joinToString(","))
+                    //listaTarjetas = instancia.leerBdClaseSinc("Tarjeta", "entidad", entidad.id!!)
                     for (data in listaTarjetas){
                         Log.d("Promocion", "titulo: $data")
                     }
@@ -117,8 +126,7 @@ class CargadoTarjetasFragment : Fragment() {
 
                     val entidadLl = LinearLayout(view.context)
                     entidadLl.orientation = LinearLayout.HORIZONTAL
-                    //entidadLl.background =
-                    //entidadLl.background = requireContext().getDrawable(R.drawable.border_opcion_entidad)
+
 
                     val layoutParams = entidadLl.layoutParams as? LinearLayout.LayoutParams ?: LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -153,7 +161,7 @@ class CargadoTarjetasFragment : Fragment() {
                     } else {
                         listaSinRepetidos = listaTarjetas
                     }
-                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaSinRepetidos/*, uvm.usuario!!.tarjetas*/) //ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_multiple_choice, tarjetas)
+                    val arrayAdapter = TarjetasListViewAdapter(requireContext(), listaSinRepetidos)
                     listView.adapter = arrayAdapter
                     listView.setOnItemClickListener { parent, view, position, id ->
 

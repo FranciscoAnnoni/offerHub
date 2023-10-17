@@ -26,7 +26,7 @@ object UserViewModelSingleton {
     }
     fun getUserViewModel(create:Boolean=true): UserViewModel {
 
-            val userViewModelCache = UserViewModelCache()
+        val userViewModelCache = UserViewModelCache()
 
         Log.d("UVM","Buscando")
         val userViewModelCacheado = userViewModelCache.cargarUserViewModel()
@@ -41,6 +41,7 @@ object UserViewModelSingleton {
                 uvm.listadoDePromosDisp = Funciones().obtenerPromociones(uvm.usuario!!)
                 uvm.favoritos = Funciones().obtenerPromocionesFavoritas(uvm.usuario!!)
                 uvm.reintegros = Funciones().obtenerPromocionesReintegro(uvm.usuario!!)
+                uvm.tarjetasDisponibles = Funciones().obtenerTarjetasDisponibles()
                 userViewModelCache.guardarUserViewModel(uvm)
                 }
                 initialize(uvm)
