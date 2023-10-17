@@ -65,7 +65,8 @@ class RegisterPartnersFragment2: Fragment() {
                 val user = UserPartner(
                     edNombreRegisterDeEmpresa.text.toString().trim(),
                     edCuilRegisterDeEmpresa.text.toString().trim(),
-                    userLogeado?.email.toString().trim()
+                    userLogeado?.email.toString().trim(),
+
                 )
                 viewModel.createAccountUserPartner(user, selectedOption)
             }

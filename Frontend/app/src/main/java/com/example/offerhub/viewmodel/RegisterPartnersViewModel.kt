@@ -101,6 +101,7 @@ class RegisterPartnersViewModel @Inject constructor(
         val cutValidation = validateCuil(user.cuil)
         val categoriaValidacion = validateCategoria(categoria)
 
+
         val shouldRegister = cutValidation is RegisterValidation.Success && categoriaValidacion is RegisterValidation.Success
 
 
@@ -109,9 +110,9 @@ class RegisterPartnersViewModel @Inject constructor(
                 _registerUser.emit(Resource.Loading())
             }
 
-
             if (userUid != null) {
                 saveUserInfo(userUid,user)
+                // saveComercio(imagen, categoria, userUid)
             }
 
 
@@ -126,6 +127,12 @@ class RegisterPartnersViewModel @Inject constructor(
     }
 
 
+/*
+    private fun saveComercio(){
+
+    }
+
+ */
 
     private fun saveUserInfo(userUid: String, user:UserPartner ){
        val usuario = UserPartner(
