@@ -56,13 +56,11 @@ class RegisterPartnersFragment2: Fragment() {
         spinner.adapter = adapter
 
 
-
         // ACA ES DONDE TENGO QUE VERLO CON FACU PARA QUE ESTOS VALORES SE LOS ASIGNE A UN USER= USER-PARTHENRS
         binding.apply {
             btnRegisterEmpresa.setOnClickListener {
                 val userLogeado = FirebaseAuth.getInstance().currentUser
                 val selectedOption = spinner.selectedItem as String
-
 
                 val user = UserPartner(
                     edNombreRegisterDeEmpresa.text.toString().trim(),
