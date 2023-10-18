@@ -133,8 +133,8 @@ class LeerId {
             val cuil = dataSnapshot.child("cuil").getValue(String::class.java)?:""
             val nombre = dataSnapshot.child("nombre").getValue(String::class.java) ?: ""
             val listaPromociones = dataSnapshot.child("listaPromociones").getValue(object : GenericTypeIndicator<MutableList<String?>>() {})
-
-            UserPartner(nombre, cuil, correo, id, listaPromociones)
+            val idComercio = dataSnapshot.child("idComercio").getValue(String::class.java) ?: ""
+            UserPartner(nombre, cuil, correo, idComercio,id, listaPromociones)
         } else {
             Log.d("DB - ID", "El usuario es NULO")
             null // El usuario no existe

@@ -1,5 +1,7 @@
 package com.example.offerhub.data
 
+import com.example.offerhub.Comercio
+
 
 class User (
     val nameAndLastName: String,
@@ -19,9 +21,11 @@ class UserPartner(
     val nombreDeEmpresa: String,
     val cuil: String,
     val email: String,
+    var idComercio: String?,
     var id: String = "",
     var listaPromociones: List<String?>? = null
 
+
 ){
-    constructor() : this("","","","",null)
+    constructor() : this("","","","","",null)
 }

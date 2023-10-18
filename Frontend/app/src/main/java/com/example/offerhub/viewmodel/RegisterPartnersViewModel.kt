@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.util.Constants
@@ -62,7 +63,6 @@ class RegisterPartnersViewModel @Inject constructor(
     // ESTA FUNCUION HAY QUE CAMBIARLA PARA QUE TENGA AL USUARIO CORRECTO
     fun createAccountWithEmailAndPassword(email:String, password:String, password2:String) {
 
-
         val emailValidation = validateEmail(email)
         val passwordValidation = validatePassword(password)
         val passwordValidation2 = validatePasswords(password,password2)
@@ -112,7 +112,6 @@ class RegisterPartnersViewModel @Inject constructor(
 
             if (userUid != null) {
                 saveUserInfo(userUid,user)
-                // saveComercio(imagen, categoria, userUid)
             }
 
 
@@ -134,12 +133,15 @@ class RegisterPartnersViewModel @Inject constructor(
 
  */
 
+
+
     private fun saveUserInfo(userUid: String, user:UserPartner ){
        val usuario = UserPartner(
-           userUid,
            user.nombreDeEmpresa,
            user.cuil,
            user.email,
+           user.idComercio,
+           userUid,
            listOf()
        )
 
@@ -150,6 +152,7 @@ class RegisterPartnersViewModel @Inject constructor(
         referencia.child(userUid).child("nombre").setValue(user.nombreDeEmpresa)
         referencia.child(userUid).child("cuil").setValue(user.cuil)
         referencia.child(userUid).child("correo").setValue(user.email)
+        referencia.child(userUid).child("idComercio").setValue(user.idComercio)
 
            .addOnSuccessListener {
                 _registrationSuccess.value = true // Registro exitoso

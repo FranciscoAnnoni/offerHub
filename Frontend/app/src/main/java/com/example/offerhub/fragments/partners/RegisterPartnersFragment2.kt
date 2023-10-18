@@ -21,6 +21,17 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
+import android.util.Base64
+import com.example.offerhub.Comercio
+import com.example.offerhub.funciones.FuncionesPartners
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
 class RegisterPartnersFragment2: Fragment() {
@@ -38,6 +49,18 @@ class RegisterPartnersFragment2: Fragment() {
     ): View? {
         binding = FragmentRegisterPartners2Binding.inflate(inflater)
         return binding.root
+    }
+
+    fun vectorToBitmap(vectorDrawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        vectorDrawable.draw(canvas)
+        return bitmap
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,13 +85,38 @@ class RegisterPartnersFragment2: Fragment() {
                 val userLogeado = FirebaseAuth.getInstance().currentUser
                 val selectedOption = spinner.selectedItem as String
 
-                val user = UserPartner(
-                    edNombreRegisterDeEmpresa.text.toString().trim(),
-                    edCuilRegisterDeEmpresa.text.toString().trim(),
-                    userLogeado?.email.toString().trim(),
+                // Obtén el ImageView
+                val imageView = binding.imagenDeLaEmpresa
 
-                )
-                viewModel.createAccountUserPartner(user, selectedOption)
+// Obtén el Drawable del ImageView
+                val drawable = imageView.drawable
+                val bitmap: Bitmap
+// Convierte el Drawable a un Bitmap
+                if (drawable is VectorDrawable) {
+                    bitmap = vectorToBitmap(drawable)
+                }else{
+                    bitmap = (drawable as BitmapDrawable).bitmap
+                }
+
+
+// Convierte el Bitmap a una cadena base64
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                val byteArray = byteArrayOutputStream.toByteArray()
+                val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                val coroutineScope = CoroutineScope(Dispatchers.Main)
+                val instancia = FuncionesPartners()
+                var comercio = Comercio(null, edNombreRegisterDeEmpresa.text.toString().trim(),selectedOption,base64String,edCuilRegisterDeEmpresa.text.toString().trim())
+                coroutineScope.launch {
+                    val idComercio = instancia.registrarComercio(comercio,null)
+                    val user = UserPartner(
+                        edNombreRegisterDeEmpresa.text.toString().trim(),
+                        edCuilRegisterDeEmpresa.text.toString().trim(),
+                        userLogeado?.email.toString().trim(),
+                        idComercio,
+                        )
+                    viewModel.createAccountUserPartner(user, selectedOption)
+                }
             }
         }
 

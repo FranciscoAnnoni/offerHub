@@ -22,20 +22,22 @@ class FuncionesPartners{
         promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it,"nota",razon) }
     }
 
-    fun registrarComercio(comercio: Comercio, sucursales:List<SucursalEscritura>) {
+    fun registrarComercio(comercio: Comercio, sucursales:List<SucursalEscritura>?): String? {
         val database: FirebaseDatabase =
             FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referenciaCom: DatabaseReference = database.reference.child("/Comercio")
 
         val comercioReferencia = referenciaCom.push()
         comercioReferencia.setValue(comercio)
-
-        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
-        for (sucursal in sucursales){
-            sucursal.idComercio = comercioReferencia.key
-            val sucursalReferencia = referenciaSuc.push()
-            sucursalReferencia.setValue(sucursal)
+        if (sucursales != null){
+            val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
+            for (sucursal in sucursales){
+                sucursal.idComercio = comercioReferencia.key
+                val sucursalReferencia = referenciaSuc.push()
+                sucursalReferencia.setValue(sucursal)
+            }
         }
+        return comercioReferencia.key
     }
 
     suspend fun validarComercioNuevo(comercio: Comercio): Boolean {
