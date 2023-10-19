@@ -4,7 +4,10 @@ import CategoryGridAdapter
 import PromocionGridAdapter
 import SearchViewModel
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -18,6 +21,8 @@ import android.widget.GridView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +36,7 @@ import com.example.offerhub.R
 import com.example.offerhub.data.Categoria
 import com.example.offerhub.databinding.FragmentSearchBinding
 import com.example.offerhub.interfaces.FilterData
+import com.example.offerhub.interfaces.PromocionFragmentListener
 import com.example.offerhub.util.ViewUtils
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -41,7 +47,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.FilterListener {
+class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.FilterListener, PromocionFragmentListener {
     private lateinit var binding: FragmentSearchBinding
     lateinit var viewModel: SearchViewModel
     private var badgeDrawable: BadgeDrawable? = null
@@ -115,14 +121,14 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
     }
 
 
-    override fun onResume() {
+ /*   override fun onResume() {
         super.onResume()
     }
 
     override fun onPause() {
         useArg = false
         super.onPause()
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -131,6 +137,20 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater)
         return binding.root
+    }
+    private fun showToast(message: String, duration: Long) {
+        val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+        toast.show()
+
+        // Oculta el mensaje después del tiempo especificado
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({ toast.cancel() }, duration)
+    }
+    override fun mostrarAvisoSobreeleccion() {
+        showToast("El limite de seleccion son 2 promociones.", 10000)
+    }
+    override fun updateButtonVisibility(shouldBeVisible: Boolean) {
+        binding.btnCompararSearch.visibility = if (shouldBeVisible) View.VISIBLE else View.GONE
     }
 
     override fun onFiltersApplied(filters: FilterData) {
@@ -169,8 +189,11 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeBadge()
+        var checkPrendido: Boolean = false
         var instancia = InterfaceSinc()
-        adapter = PromocionGridAdapter(view.context, listOf())
+        adapter = PromocionGridAdapter(view.context, listOf(),this@SearchFragment)
+        adapter.eliminarLista()
+        adapter.setFragment(this@SearchFragment)
         val promocionesGridView =
             view.findViewById<GridView>(R.id.promocionesGridView) // Reemplaza "listView" con el ID de tu ListView en el XML.
         promocionesGridView.adapter = adapter
@@ -188,6 +211,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
             contenedorCategorias.visibility = View.GONE
             promoGridView.visibility = View.VISIBLE
             binding.filterSearch.visibility = View.VISIBLE
+            binding.comparador.visibility = View.VISIBLE
+            binding.middleLine.visibility = View.VISIBLE
         }
 
         fun mostrarInicioBusqueda() {
@@ -197,6 +222,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
             binding.buscadores.setText("")
             adapter.actualizarDatos(listOf())
             binding.filterSearch.visibility = View.GONE
+            binding.comparador.visibility = View.GONE
+            binding.middleLine.visibility = View.GONE
         }
 
         fun actualizarResultados(useFilters: Boolean =true) {
@@ -328,6 +355,35 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
             viewModel.promociones = mutableListOf()
             viewModel.filtrosActuales = FilterData("", "", mutableListOf(), mutableListOf())
             onFiltersApplied(viewModel.filtrosActuales!!)
+        }
+        binding.botonGuardar.setOnClickListener{
+            checkPrendido = !checkPrendido
+
+            adapter.setCheckBoxesVisibility(checkPrendido)
+            if (checkPrendido){
+
+                val colorFondo = ContextCompat.getColor(requireContext(), R.color.g_gray500)
+                val colorStateList = ColorStateList.valueOf(colorFondo)
+
+// Establece el color de fondo en la vista.
+                binding.botonGuardar.backgroundTintList = colorStateList
+            }else{
+                binding.btnCompararSearch.visibility=View.GONE
+                val colorFondo = ContextCompat.getColor(requireContext(), R.color.white)
+                val colorStateList = ColorStateList.valueOf(colorFondo)
+
+// Establece el color de fondo en la vista.
+                binding.botonGuardar.backgroundTintList = colorStateList
+                adapter.eliminarLista()
+            }
+        }
+
+        binding.btnCompararSearch.setOnClickListener {
+            var promos =adapter.getSeleccion()
+            var promo1 = promos[0] as Promocion
+            var promo2 = promos[1] as Promocion
+            val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
+            bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
         }
         binding.buscadores.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
