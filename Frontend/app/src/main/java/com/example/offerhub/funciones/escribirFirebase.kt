@@ -116,6 +116,8 @@ class Usuario{
     }
 }
 
+
+
 class EscribirBD {
     private val _registrationSuccess = MutableLiveData<Boolean>()
     val registrationSuccess: LiveData<Boolean> = _registrationSuccess
