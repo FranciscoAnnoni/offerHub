@@ -4,7 +4,14 @@
     android:layout_height="match_parent"
     android:background="@color/fondo"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/svCargarPromocion">
 
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/tvCargarPromocion"
         style="@style/titulos"
@@ -44,66 +51,6 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/llTipoPromocion"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        app:layout_constraintTop_toBottomOf="@id/llDescripcionPromocion"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccioná el tipo de Promoción"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/violeta"
-            />
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupTipoPromocion"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip2x1"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2x1"
-                android:textColor="@color/g_gray700" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipDescuento"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Descuento"
-                android:textColor="@color/g_gray700" />
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipReintegro"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reintegro"
-                android:textColor="@color/g_gray700" />
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCuotas"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cuotas"
-                android:textColor="@color/g_gray700" />
-
-            <!-- Agrega más Chips para los otros días de la semana -->
-        </com.google.android.material.chip.ChipGroup>
-    </LinearLayout>
-
-    
 
     <LinearLayout
         app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +59,7 @@
         android:orientation="vertical"
         android:padding="20dp"
         android:id="@+id/llVigencia"
-        app:layout_constraintTop_toBottomOf="@id/llTipoPromocion"
+        app:layout_constraintTop_toBottomOf="@id/llDescripcionPromocion"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -250,9 +197,92 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/llGuardarPromocion"
+        android:id="@+id/llTipoPromocion"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/llDias"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccioná el tipo de Promoción"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/violeta"
+            />
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTipoPromocion"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip2x1"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2x1"
+                android:textColor="@color/g_gray700" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDescuento"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descuento"
+                android:textColor="@color/g_gray700" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipReintegro"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reintegro"
+                android:textColor="@color/g_gray700" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCuotas"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cuotas"
+                android:textColor="@color/g_gray700" />
+
+            <!-- Agrega más Chips para los otros días de la semana -->
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTipoPromocion"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monto Descuento"
+            android:textSize="15sp"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/FormFieldSemiRound"
+            android:hint="30"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
+    <LinearLayout
+        android:id="@+id/llGuardarPromocion"
+        app:layout_constraintTop_toBottomOf="@id/svCargarPromocion"
+        android:layout_width="match_parent"
         android:background="@color/white"
         android:gravity="center_vertical|center_horizontal"
         android:layout_height="90dp">
