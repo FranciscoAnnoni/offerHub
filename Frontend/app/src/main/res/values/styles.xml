@@ -79,6 +79,17 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="FormFieldSemiRound">
+        <item name="android:layout_width">330dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/semi_rounded_text_background</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:elevation">0.9dp</item> <!-- Agrega elevación para la sombra -->
+        <item name="android:translationZ">0.5dp</item> <!-- Cambia la elevación para la sombra -->
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <!-- Es para la reutilizacion de los botones pero todavia no logro utilizarlo -->
     <style name="RoundedButtonBackground">
         <item name="android:background">@drawable/rounded_button_background</item>
