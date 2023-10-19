@@ -38,34 +38,53 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var promociones = emptyList<Promocion>()
+        var promosDisponibles = emptyList<Promocion>()
+        var promocionesRechazadas = emptyList<Promocion>()
+        val promocionesRechazadasHeader = view.findViewById<TextView>(R.id.promocionesRechazadasHeader)
+        val promocionesRechazadasLayout = view.findViewById<LinearLayout>(R.id.promocionesRechazadasLayout)
         val promocionesHeader = view.findViewById<TextView>(R.id.promotionsHeader)
         val promocionesLayout = view.findViewById<LinearLayout>(R.id.promotionsLayout)
         val job = CoroutineScope(Dispatchers.Main).launch {
             val usuario = Funciones().traerUsuarioPartner()
             if (usuario != null) {
+                view.findViewById<TextView>(R.id.inicioHome).text = "Bienvenido " + usuario.nombreDeEmpresa
                 if (usuario.idComercio != null) {
                     promociones = FuncionesPartners().obtenerPromosPorComercio(
                         usuario.idComercio!!
                     )
                 }
             }
-            val promocionesRechazadas = promociones.filter { it.estado == "rechazado" }
-            val promosDisponibles = promociones.filterNot { it in promocionesRechazadas }
+            promocionesRechazadas = promociones.filter { it.estado == "rechazado" }
+            promosDisponibles = promociones.filterNot { it in promocionesRechazadas }
+        }
             promocionesHeader.setOnClickListener {
                 if (promocionesLayout.visibility == View.VISIBLE) {
                     promocionesLayout.visibility = View.GONE
                 } else {
                     promocionesLayout.visibility = View.VISIBLE
-                    if (promociones.isNotEmpty()) {
+                    if (promosDisponibles.isNotEmpty()) {
                         val recyclerView =
                             view.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
                         recyclerView.layoutManager =
                             LinearLayoutManager(requireContext())
-                        recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles)
-                    }
+                        recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles as MutableList<Promocion>,true)
                     }
                 }
-        }
+            }
+            promocionesRechazadasHeader.setOnClickListener {
+                if (promocionesRechazadasLayout.visibility == View.VISIBLE) {
+                    promocionesRechazadasLayout.visibility = View.GONE
+                } else {
+                    promocionesRechazadasLayout.visibility = View.VISIBLE
+                    if (promocionesRechazadas.isNotEmpty()) {
+                        val recyclerView =
+                            view.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
+                        recyclerView.layoutManager =
+                            LinearLayoutManager(requireContext())
+                        recyclerView.adapter = PromotionsAdapterPartners(promocionesRechazadas as MutableList<Promocion>,false)
+                    }
+                }
+            }
     }
 }
 
