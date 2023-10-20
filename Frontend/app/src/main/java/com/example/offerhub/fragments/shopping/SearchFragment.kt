@@ -175,6 +175,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         viewModel.promociones=promocionesActuales
         updateBadgeDrawable()
         // 4. Actualizar la lista de promociones en la interfaz de usuario (por ejemplo, en tu adaptador)
+        adapter.vaciarCacheResultados()
         adapter.actualizarDatos(promocionesResultantes)
         adapter.notifyDataSetChanged()
     }
@@ -234,6 +235,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 }
                 adapter.actualizarDatos(viewModel.promociones)
                 // Notifica al GridView que los datos han cambiado
+                adapter.vaciarCacheResultados()
                 adapter.notifyDataSetChanged()
                 promocionesGridView.adapter = adapter
                 promoGridView.visibility = View.VISIBLE

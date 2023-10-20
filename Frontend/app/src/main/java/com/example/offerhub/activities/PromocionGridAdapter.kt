@@ -35,6 +35,10 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         fragmentListener = listener
     }
 
+    fun vaciarCacheResultados(){
+        elementoCache.clear()
+    }
+
     private lateinit var fragment : Fragment
     fun eliminarLista(){
         lista.clear()
