@@ -43,6 +43,10 @@
             android:name=".activities.ShoppingPartnersActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".activities.ShoppingAdminActivity"
+            android:exported="false">
+        </activity>
         <service
             android:name=".fragments.settings.MyFirebaseMessagingService"
             android:exported="false">

@@ -15,7 +15,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-var esPartner = false;
 
 class Funciones {
     val instancialeerId = LeerId()

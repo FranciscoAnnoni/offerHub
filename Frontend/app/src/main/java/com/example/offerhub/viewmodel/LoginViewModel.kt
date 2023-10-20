@@ -44,8 +44,13 @@ class LoginViewModel @Inject constructor(
             ).addOnSuccessListener {
                 viewModelScope.launch {
                     it.user?.let {
-                        sharedPreferences.edit().putString(Constants.PARTNER_USER,"user").apply()
-                        _login.emit(Resource.Success(it))
+                        if(email == "admin@offerhub.com"){
+                            sharedPreferences.edit().putString(Constants.USER_STATUS,"userAdmin").apply()
+                            _login.emit(Resource.SuccessAdmin(it))
+                        }else{
+                            sharedPreferences.edit().putString(Constants.USER_STATUS,"user").apply()
+                            _login.emit(Resource.Success(it))
+                        }
                     }
                 }
             }.addOnFailureListener {

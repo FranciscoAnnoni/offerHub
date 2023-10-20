@@ -23,9 +23,10 @@ import com.example.offerhub.KelineApplication
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
+import com.example.offerhub.activities.ShoppingAdminActivity
 import com.example.offerhub.databinding.FragmentLoginBinding
 import com.example.offerhub.dialog.setupBottomSheetDialog
-import com.example.offerhub.esPartner
+
 import com.example.offerhub.util.Resource
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.ProfileViewModel
@@ -163,15 +164,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             binding.btnLogin.revertAnimation()
                             binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
 
-
                             Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
-                                esPartner = false
-                                Log.d("noPartner", esPartner.toString())
+
+
                             }
                         }
                     }
+
                     is Resource.Error -> {
                         Snackbar.make(
                             rootViewLogin,
@@ -181,6 +182,29 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         binding.btnLogin.revertAnimation()
                         binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
                     }
+
+                    is Resource.SuccessAdmin -> {
+                        binding.btnLogin.revertAnimation()
+                        binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
+
+                        Intent(requireActivity(), ShoppingAdminActivity::class.java).also { intent ->
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+
+
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        Snackbar.make(
+                            rootViewLogin,
+                            "Error de Login, la contraseña o el correo son incorrectos",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        binding.btnLogin.revertAnimation()
+                        binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
+                    }
+
                     else -> Unit
                 }
             }
