@@ -418,6 +418,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 // Establece el color de fondo en la vista.
                 binding.botonGuardar.backgroundTintList = colorStateList
                 adapter.eliminarLista()
+                adapter.notifyDataSetChanged()
             }
         }
 
