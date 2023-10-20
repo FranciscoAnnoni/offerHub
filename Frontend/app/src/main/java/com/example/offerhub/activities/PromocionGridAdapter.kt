@@ -87,13 +87,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             if(useListener) {
                 if (isChecked) {
-                    Log.d("isChecked", "SI")
-                    Log.d("CANT CHECKED", numCheckBoxesSeleccionados.toString())
-                    Log.d("LISTA", lista.size.toString())
                     numCheckBoxesSeleccionados++
-                    Log.d("CANT CHECKED", numCheckBoxesSeleccionados.toString())
                     lista.add(promociones[position])
-                    Log.d("LISTA", lista.size.toString())
 
                     if (numCheckBoxesSeleccionados == 3) {
                         numCheckBoxesSeleccionados--
@@ -103,13 +98,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
                         fragmentListener.mostrarAvisoSobreeleccion()
                     }
                 } else {
-                    Log.d("isChecked", "NO")
-                    Log.d("CANT CHECKED", numCheckBoxesSeleccionados.toString())
-                    Log.d("LISTA", lista.size.toString())
                     lista.removeIf { it->promociones[position].id==it.id}
                     numCheckBoxesSeleccionados--
-                    Log.d("CANT CHECKED", numCheckBoxesSeleccionados.toString())
-                    Log.d("LISTA", lista.size.toString())
                     numCheckBoxesSeleccionados = max(numCheckBoxesSeleccionados, 0)
                     if (numCheckBoxesSeleccionados == 1) {
                         fragmentListener.updateButtonVisibility(false)
