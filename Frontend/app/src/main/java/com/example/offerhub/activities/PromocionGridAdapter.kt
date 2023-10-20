@@ -29,6 +29,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
     private var areCheckBoxesVisible = false
     private var numCheckBoxesSeleccionados = 0
     public var lista:MutableList<Promocion> = mutableListOf()
+    private val elementoCache = HashMap<Int, View>()
+
     fun setFragmentListener(listener: PromocionFragmentListener) {
         fragmentListener = listener
     }
@@ -103,16 +105,17 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         val promocion = getItem(position) as Promocion
 
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
+        val gridViewItem: View
+
+        if (elementoCache.containsKey(position)) {
+            gridViewItem = elementoCache[position]!! // Recupera desde la caché
+        } else {
+         gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
         val instancia = Funciones()
-        val checkBox: CheckBox = gridViewItem.findViewById(R.id.checkBox)
-        checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
-        checkBox.isChecked=lista.any { it.id == promocion.id }
         val tvComercio = gridViewItem.findViewById<TextView>(R.id.tvPromocionComercio)
         val tvDescuento = gridViewItem.findViewById<TextView>(R.id.tvPromocionDescuento)
         val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
-        setOnCheckedChangeListener(checkBox, position)
         var textoPromo=promocion.obtenerDesc()
         if(promocion.tipoPromocion=="Reintegro" || promocion.tipoPromocion=="Descuento"){
             textoPromo=textoPromo+"%"
@@ -158,7 +161,12 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         if (position == promociones.size - 1) {
             cargarMasPromociones()
         }
-
+            elementoCache[position] = gridViewItem
+            }
+        val checkBox: CheckBox = gridViewItem.findViewById(R.id.checkBox)
+        checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
+        checkBox.isChecked=lista.any { it.id == promocion.id }
+        setOnCheckedChangeListener(checkBox, position)
         return gridViewItem
     }
 
