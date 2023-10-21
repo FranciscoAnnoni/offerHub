@@ -167,8 +167,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
             Glide.with(context)
                 .load(logo)
                 .placeholder(R.drawable.offerhub_logo_color)
-                .error(android.R.drawable.ic_dialog_alert)
-                .thumbnail(0.25f)
+                .error(R.drawable.offerhub_logo_color)
+                .centerCrop()
                 .into(imgViewCategory)
         }
 
