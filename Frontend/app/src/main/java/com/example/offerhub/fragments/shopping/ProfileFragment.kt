@@ -54,6 +54,9 @@ class ProfileFragment : Fragment() {
         binding.llTarjetas.setOnClickListener{
             findNavController().navigate(R.id.action_profileFragment_to_misTarjetasFragment)
         }
+        binding.notificarError.setOnClickListener{
+            findNavController().navigate(R.id.action_profileFragment_to_notificarErrorFragment)
+        }
 
         binding.linearLogOut.setOnClickListener{
             val builder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)

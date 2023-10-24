@@ -65,6 +65,9 @@
             android:id="@+id/action_profileFragment_to_misTarjetasFragment"
             app:destination="@id/misTarjetasFragment"
             />
+        <action
+            android:id="@+id/action_profileFragment_to_notificarErrorFragment"
+            app:destination="@id/notificarErrorFragment" />
     </fragment>
 
     <fragment
@@ -85,7 +88,11 @@
         android:id="@+id/cargadoTarjetasFragment"
         android:name="com.example.offerhub.fragments.settings.CargadoTarjetasFragment"
         android:label="CargadoTarjetasFragment"
-        />
+        >
+        <action
+            android:id="@+id/action_cargadoTarjetasFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
@@ -130,6 +137,11 @@
             android:name="promocion2"
             app:argType="com.example.offerhub.Promocion" />
     </fragment>
+    <fragment
+        android:id="@+id/notificarErrorFragment"
+        android:name="com.example.offerhub.fragments.settings.NotificarErrorFragment"
+        android:label="NotificarErrorFragment"
+        tools:layout="@layout/fragment_notificar_error"/>
 </navigation>
 
 
