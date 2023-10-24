@@ -1,19 +1,85 @@
 package com.example.offerhub.funciones
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.offerhub.Comercio
 import com.example.offerhub.EscribirBD
 import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.PromocionEscritura
 import com.example.offerhub.SucursalEscritura
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class FuncionesPartners{
     fun aprobarPromocion(promocion:Promocion){
         val instancia = EscribirBD()
         promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it,"estado","Aprobado") }
+    }
+    suspend fun  obtenerPromosPorComercio(comercioparam: String): List<Promocion> = suspendCoroutine { continuation ->
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val promocionRef = database.getReference("/Promocion")
+        val lista: MutableList<Promocion> = mutableListOf()
+        promocionRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (data in dataSnapshot.children){
+                        val comercio: String? = data.child("comercio").getValue(String::class.java)
+                        if (comercio == comercioparam) {
+                            val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            val desdeFormateado: LocalDate?
+                            val hastaFormateado: LocalDate?
+                            var vigenciaDesdeString = data.child("vigenciaDesde").getValue(String::class.java)
+                            if(vigenciaDesdeString != "No posee" && vigenciaDesdeString != " - "){
+                                desdeFormateado = LocalDate.parse(vigenciaDesdeString, formato)
+                            } else { desdeFormateado = null }
+                            var vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
+                            if(vigenciaHastaString != "No posee" && vigenciaHastaString != " - "){
+                                hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
+                            } else { hastaFormateado = null }
+                            val coroutineScope = CoroutineScope(Dispatchers.Main)
+                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
+                                data.child("cuotas").getValue(String::class.java),
+                                data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
+                                data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                mutableListOf(),
+                                data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("tipoPromocion").getValue(String::class.java),
+                                data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
+                                data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
+                                data.child("url").getValue(String::class.java),
+                                desdeFormateado,
+                                hastaFormateado,
+                                data.child("estado").getValue(String::class.java),
+                                data.child("motivo").getValue(String::class.java))
+                            lista.add(instancia)
+                        }
+
+                    }
+                }
+
+                continuation.resume(lista)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d("Error","Error en lectura de bd")
+                continuation.resumeWithException(databaseError.toException())
+            }
+        })
     }
 
     fun rechazarPromocion(promocion:Promocion,  razon:String){
@@ -29,14 +95,6 @@ class FuncionesPartners{
 
         val comercioReferencia = referenciaCom.push()
         comercioReferencia.setValue(comercio)
-        if (sucursales != null){
-            val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
-            for (sucursal in sucursales){
-                sucursal.idComercio = comercioReferencia.key
-                val sucursalReferencia = referenciaSuc.push()
-                sucursalReferencia.setValue(sucursal)
-            }
-        }
         return comercioReferencia.key
     }
 
@@ -46,20 +104,6 @@ class FuncionesPartners{
         return resultado == null
     }
 
-    suspend fun agregarSucursal(cuilComercio:String,sucursal: SucursalEscritura) {
-        val database: FirebaseDatabase =
-            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val referenciaSuc: DatabaseReference = database.reference.child("/Sucursal")
-        var instancia = LeerId()
-        val resultado = instancia.obtenerIdSinc("Comercio", "cuil",cuilComercio)
-        if (resultado!=null){
-            sucursal.idComercio=resultado
-            val sucursalReferencia = referenciaSuc.push()
-            sucursalReferencia.setValue(sucursal)
-        }else{
-            Log.d("Comercio inexistente","El cuil del comercio aun no se encuentra registrado o no fue encontrado")
-        }
-    }
 
     fun escribirPromocion(promocion: PromocionEscritura) {
 

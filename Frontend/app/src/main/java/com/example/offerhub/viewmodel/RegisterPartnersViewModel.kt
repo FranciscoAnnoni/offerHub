@@ -79,7 +79,7 @@ class RegisterPartnersViewModel @Inject constructor(
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     it.user?.let {
-                        sharedPreferences.edit().putString(Constants.PARTNER_USER,"parterRegister").apply()
+                        sharedPreferences.edit().putString(Constants.USER_STATUS,"parterRegister").apply()
                         _register.value = Resource.Success(true)
                     }
                 }.addOnFailureListener {

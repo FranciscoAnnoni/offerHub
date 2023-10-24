@@ -291,6 +291,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"
+                android:id="@+id/etMontoDescuento"
                 android:hint="10000"
                 />
            <!-- <com.google.android.material.textfield.TextInputLayout
@@ -328,6 +329,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"
+                android:id="@+id/etCantidadCuotas"
                 android:hint="6"
                 />
 
@@ -354,6 +356,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"
+                android:id="@+id/etTopeDeReintegro"
                 android:hint="2000"
                 />
 
@@ -381,6 +384,7 @@
         <ListView
             android:layout_width="wrap_content"
             android:choiceMode="multipleChoice"
+            android:id="@+id/lvSucursales"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

@@ -103,6 +103,21 @@ class LeerId {
         }
     }
 
+    suspend fun obtenerComercioPorId(id: String): Comercio? {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
+        val dataSnapshot = database.child("Comercio").child(id).get().await()
+
+        if(dataSnapshot.exists()) {
+            val key = dataSnapshot.key
+            val nombre = dataSnapshot.child("nombre").getValue(String::class.java)
+            val categoria = dataSnapshot.child("categoria").getValue(String::class.java)
+            val comercio = Comercio(key, categoria, nombre, null, null)
+            return comercio
+        } else {
+            return null
+        }
+    }
+
     suspend fun obtenerUsuarioPorId(id: String): Usuario? = withContext(Dispatchers.IO) {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
         val dataSnapshot = database.child("Usuario").child(id).get().await()

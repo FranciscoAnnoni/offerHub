@@ -11,12 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.R
 import com.example.offerhub.activities.ShoppingActivity
+import com.example.offerhub.activities.ShoppingAdminActivity
 import com.example.offerhub.activities.ShoppingPartnersActivity
 import com.example.offerhub.databinding.FragmentIntroductionBinding
 import com.example.offerhub.databinding.FragmentUserAccountBinding
 import com.example.offerhub.viewmodel.IntroductionViewModel
 import com.example.offerhub.viewmodel.IntroductionViewModel.Companion.ACCOUNT_OPTIONS_FRAGMENT
 import com.example.offerhub.viewmodel.IntroductionViewModel.Companion.SHOPPING_ACTIVITY
+import com.example.offerhub.viewmodel.IntroductionViewModel.Companion.SHOPPING_ACTIVITY_ADMIN
 import com.example.offerhub.viewmodel.IntroductionViewModel.Companion.SHOPPING_ACTIVITY_PARTNERS
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,6 +54,13 @@ class IntroductionFragment:Fragment(R.layout.fragment_introduction) {
 
                     SHOPPING_ACTIVITY ->{
                         Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                    }
+
+                    SHOPPING_ACTIVITY_ADMIN ->{
+                        Intent(requireActivity(), ShoppingAdminActivity::class.java).also { intent ->
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                         }

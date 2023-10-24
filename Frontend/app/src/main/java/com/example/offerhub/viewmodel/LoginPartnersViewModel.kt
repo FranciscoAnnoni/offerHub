@@ -46,7 +46,7 @@ class LoginPartnersViewModel @Inject constructor(
                 viewModelScope.launch {
                     it.user?.let {
                         _login.emit(Resource.Success(it))
-                        sharedPreferences.edit().putString(Constants.PARTNER_USER,"partner").apply()
+                        sharedPreferences.edit().putString(Constants.USER_STATUS,"partner").apply()
                     }
                 }
             }.addOnFailureListener {
@@ -61,6 +61,11 @@ class LoginPartnersViewModel @Inject constructor(
 
         }
     }
+
+
+
+
+
 
     fun resetPassword(email: String){
             viewModelScope.launch {

@@ -283,13 +283,20 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
                 }
             }
+            var listaDefault= mapOf("LU" to "Lunes", "MA" to "Martes", "MI" to "Miercoles", "JU" to "Jueves", "VI" to "Viernes", "SA" to "Sabado", "DO" to "Domingo")
             var lista= listOf<String?>()
-            if(promocion.dias ==null) {
-                lista= listOf("Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo")
+            if(promocion.dias !=null) {
+                lista= promocion.dias as List<String>
             } else {
-                lista=promocion.dias
+                lista=listaDefault.values.toList()
             }
-                for (dia in lista) {
+                for (diaLista in lista) {
+                   var dia: String=""
+                    if(!listaDefault.values.any({it->diaLista==it})){
+                        dia=listaDefault[diaLista].toString()
+                    } else {
+                        dia=diaLista
+                    }
                     val nombreDia = removeAccents(dia)
                     val circleId = resources.getIdentifier(
                         "circle$nombreDia",
@@ -297,8 +304,10 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                         requireContext().packageName
                     )
                     val circleView = view.findViewById<TextView>(circleId)
-                    circleView.setBackgroundResource(R.drawable.circle_foreground)
-                    circleView.setTextColor(Color.parseColor("#FFFFFF"))
+                    if(circleView!=null) {
+                        circleView.setBackgroundResource(R.drawable.circle_foreground)
+                        circleView.setTextColor(Color.parseColor("#FFFFFF"))
+                    }
                 }
 
             }

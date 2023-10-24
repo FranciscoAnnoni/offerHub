@@ -1,5 +1,6 @@
 package com.example.offerhub.fragments.partners
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +27,11 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.VectorDrawable
+import android.net.Uri
 import android.util.Base64
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 import com.example.offerhub.Comercio
 import com.example.offerhub.funciones.FuncionesPartners
 import kotlinx.coroutines.CoroutineScope
@@ -35,12 +40,25 @@ import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
 class RegisterPartnersFragment2: Fragment() {
+    private lateinit var imageActivityResultLauncher: ActivityResultLauncher <Intent>
 
     private lateinit var binding: FragmentRegisterPartners2Binding
 
     private val viewModel by viewModels<RegisterPartnersViewModel>()
 
+    private var imageUri: Uri? = null
+
     private lateinit var rootView: View
+
+    override fun onCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+
+        imageActivityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                imageUri = it.data?.data
+                Glide.with(this).load(imageUri).into(binding.imageUser)
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,7 +104,7 @@ class RegisterPartnersFragment2: Fragment() {
                 val selectedOption = spinner.selectedItem as String
 
                 // Obtén el ImageView
-                val imageView = binding.imagenDeLaEmpresa
+                val imageView = binding.imageUser
 
 // Obtén el Drawable del ImageView
                 val drawable = imageView.drawable
@@ -118,7 +136,15 @@ class RegisterPartnersFragment2: Fragment() {
                     viewModel.createAccountUserPartner(user, selectedOption)
                 }
             }
+
         }
+
+        binding.imageUser.setOnClickListener{
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            imageActivityResultLauncher.launch(intent)
+        }
+
 
         // VOLVER A LA PANTALLA DE ATRAS
         binding.atras.setOnClickListener {

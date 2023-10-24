@@ -48,6 +48,8 @@ class PromocionEscritura {
     val vigenciaDesde: String?
     val vigenciaHasta: String?
     val estado: String?
+    val motivo: String?
+
 
     // Constructor primario
 
@@ -68,7 +70,8 @@ class PromocionEscritura {
         url: String?,
         vigenciaDesde: String?,
         vigenciaHasta: String?,
-        estado: String?
+        estado: String?,
+        motivo: String?
     ) {
         this.categoria = categoria
         this.comercio = comercio
@@ -87,6 +90,7 @@ class PromocionEscritura {
         this.vigenciaDesde = vigenciaDesde
         this.vigenciaHasta = vigenciaHasta
         this.estado = estado
+        this.motivo = motivo
     }
 }
 
@@ -115,6 +119,8 @@ class Usuario{
         this.homeModoFull=homeModoFull
     }
 }
+
+
 
 class EscribirBD {
     private val _registrationSuccess = MutableLiveData<Boolean>()

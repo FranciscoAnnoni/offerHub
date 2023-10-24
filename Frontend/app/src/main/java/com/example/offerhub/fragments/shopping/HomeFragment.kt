@@ -37,6 +37,7 @@ import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentHomeBinding
 import com.example.offerhub.interfaces.FilterData
+import com.example.offerhub.interfaces.PromocionFragmentListener
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import com.google.android.material.internal.ViewUtils.hideKeyboard
@@ -46,7 +47,7 @@ import kotlinx.coroutines.launch
 import java.lang.Math.ceil
 
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener {
     private lateinit var binding: FragmentHomeBinding
 
     private var scrollPosition: Int = 0
@@ -73,10 +74,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return binding.root
     }
 
-    fun mostrarAvisoSobreeleccion() {
+    override fun mostrarAvisoSobreeleccion() {
         showToast("El limite de seleccion son 2 promociones.", 10000)
     }
-    fun updateButtonVisibility(shouldBeVisible: Boolean) {
+    override fun updateButtonVisibility(shouldBeVisible: Boolean) {
         binding.btnComparar.visibility = if (shouldBeVisible) View.VISIBLE else View.GONE
     }
 
@@ -115,9 +116,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 val job = coroutineScope.launch {
                     try {
                         var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo!!.lowercase() }
-                        val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas)
+                        val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas,this@HomeFragment)
                         adapter.eliminarLista()
-                        adapter.setHomeFragment(this@HomeFragment)
+                        adapter.setFragment(this@HomeFragment)
                         listView.adapter = adapter
                         binding.botonGuardar.setOnClickListener{
                             checkPrendido = !checkPrendido
