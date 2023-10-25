@@ -11,6 +11,7 @@ import com.example.offerhub.util.validateEmail
 import com.example.offerhub.util.validatePassword
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,11 +39,9 @@ class NotificarErrorViewModel @Inject constructor(
                     FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
                 val referencia: DatabaseReference = database.reference.child("/Reportes")
 
-                referencia.setValue(notificacionDeError)
+                referencia.push().setValue(notificacionDeError)
                     .addOnSuccessListener {
                         viewModelScope.launch {
-                            referencia.setValue(notificacionDeError)
-
                             _notificacionExitosa.emit(Resource.Success("exitoso"))
                         }
                     }.addOnFailureListener{
