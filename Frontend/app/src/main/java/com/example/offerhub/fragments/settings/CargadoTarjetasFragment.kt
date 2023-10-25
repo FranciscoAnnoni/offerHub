@@ -33,6 +33,7 @@ import com.example.offerhub.Tarjeta
 //import com.example.offerhub.activities.EntidadTarjetasAdapter
 //import com.example.offerhub.databinding.FragmentEntidadTarjetasBinding
 import com.example.offerhub.databinding.FragmentTarjetasBinding
+import com.example.offerhub.util.hideBottomNavigationView
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 //import com.example.offerhub.viewmodel.CargadoTarjetasViewModel
@@ -217,6 +218,13 @@ class CargadoTarjetasFragment : Fragment() {
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        hideBottomNavigationView()
+    }
+
 
 }
 

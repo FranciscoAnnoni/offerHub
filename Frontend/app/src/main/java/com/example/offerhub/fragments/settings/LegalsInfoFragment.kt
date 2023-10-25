@@ -44,11 +44,8 @@ class LegalsInfoFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         hideBottomNavigationView()
     }
-
-
 
 
 }

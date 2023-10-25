@@ -47,7 +47,7 @@ class PartnersProfileFragment : Fragment() {
         }
 
         binding.linearLegals.setOnClickListener{
-            findNavController().navigate(R.id.action_partnersProfileFragment_to_legalsInfoFragment2)
+            // findNavController().navigate()
         }
 
 
