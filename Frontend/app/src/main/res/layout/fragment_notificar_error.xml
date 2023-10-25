@@ -20,7 +20,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/rapLayourLegal"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="25dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +54,7 @@
                         android:id="@+id/icono"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="0dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/icon_background"
                         android:backgroundTint="@color/violeta"
@@ -65,10 +65,12 @@
                     <TextView
                         android:id="@+id/inicioHome"
                         style="@style/titulos"
-                        android:layout_gravity="center_vertical"
+                        android:layout_width="219dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
                         android:layout_marginStart="15dp"
                         android:contentDescription="@null"
-                        android:text="Notificar Error"
+                        android:text="Reportar un problema"
                         app:layout_constraintHorizontal_bias="1.0" />
                 </LinearLayout>
 
@@ -79,21 +81,20 @@
                 android:id="@+id/privacidad"
                 style="@style/textoChicoNegro"
                 android:layout_marginTop="48dp"
-
-                android:text="Notifique su error"
+                android:text="Reporte aqui su problema:"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.203"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rapLayourLegal"
                 tools:ignore="MissingConstraints" />
 
             <TextView
+
                 android:id="@+id/legales1"
-                android:layout_width="313dp"
-                android:layout_height="119dp"
-                android:layout_marginTop="10dp"
-                android:text="En el siguiente recuadro describa detalladamente el error que encontró al usar la app, esto permitira a los desarrolladores solucionarlo y mejorar la experiencia de la aplicación, muchas gracias!"
+                android:layout_width="325dp"
+                android:layout_height="90dp"
+                android:gravity="center"
+                android:text="Esperemos que no sea necesario, pero en caso de que haya tenido un problema o simplemente desee opinar sobre la aplicación puede hacerlo en la casilla de abajo."
                 android:textSize="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +110,6 @@
                 android:hint="Describa aquí su problema."
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
-                android:maxLength="250"
                 app:layout_constraintEnd_toEndOf="@+id/rightGuideline"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"
                 app:layout_constraintTop_toBottomOf="@id/legales1"
