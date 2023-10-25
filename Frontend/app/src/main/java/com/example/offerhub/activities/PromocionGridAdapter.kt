@@ -2,6 +2,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +22,15 @@ import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
 class PromocionGridAdapter(private val context: Context, private var promociones: List<Promocion>,private var fragmentListener: PromocionFragmentListener) : BaseAdapter() {
 
     private var currentPage = 1 // Página actual
     private val promocionesPorPagina = 25
     private var areCheckBoxesVisible = false
+    private var useListener = true
     private var numCheckBoxesSeleccionados = 0
     public var lista:MutableList<Promocion> = mutableListOf()
     private val elementoCache = HashMap<Int, View>()
@@ -43,12 +47,17 @@ class PromocionGridAdapter(private val context: Context, private var promociones
     fun eliminarLista(){
         lista.clear()
         numCheckBoxesSeleccionados = 0
+        notifyDataSetChanged()
     }
     fun setFragment(newFragment: Fragment) {
         fragment = newFragment
     }
     fun setCheckBoxesVisibility(shouldBeVisible: Boolean) {
         areCheckBoxesVisible = shouldBeVisible
+        if(!areCheckBoxesVisible){
+            eliminarLista()
+            numCheckBoxesSeleccionados=0
+        }
         notifyDataSetChanged()
     }
 
@@ -76,28 +85,32 @@ class PromocionGridAdapter(private val context: Context, private var promociones
     // ...
     fun setOnCheckedChangeListener(checkBox: CheckBox, position: Int) {
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                numCheckBoxesSeleccionados++
-                lista.add(promociones[position])
+            if(useListener) {
+                if (isChecked) {
+                    numCheckBoxesSeleccionados++
+                    lista.add(promociones[position])
 
-                if(numCheckBoxesSeleccionados==3){
+                    if (numCheckBoxesSeleccionados == 3) {
                         numCheckBoxesSeleccionados--
-                        lista.remove(promociones[position])
-                        checkBox.isChecked=false
+                        numCheckBoxesSeleccionados = max(numCheckBoxesSeleccionados, 0)
+                        lista.removeIf { it->promociones[position].id==it.id}
+                        checkBox.isChecked = false
                         fragmentListener.mostrarAvisoSobreeleccion()
+                    }
+                } else {
+                    lista.removeIf { it->promociones[position].id==it.id}
+                    numCheckBoxesSeleccionados--
+                    numCheckBoxesSeleccionados = max(numCheckBoxesSeleccionados, 0)
+                    if (numCheckBoxesSeleccionados == 1) {
+                        fragmentListener.updateButtonVisibility(false)
+                    }
                 }
-            } else {
-                lista.remove(promociones[position])
-                numCheckBoxesSeleccionados--
-                if (numCheckBoxesSeleccionados==1){
-                    fragmentListener.updateButtonVisibility(false)
-                }
-            }
 
-            // Actualizar visibilidad del botón
-            // asumiendo que 'btnActivar' es el botón que quieres mostrar
-            if (numCheckBoxesSeleccionados==2){
-                fragmentListener.updateButtonVisibility(true)
+                // Actualizar visibilidad del botón
+                // asumiendo que 'btnActivar' es el botón que quieres mostrar
+                if (numCheckBoxesSeleccionados == 2) {
+                    fragmentListener.updateButtonVisibility(true)
+                }
             }
 
         }
@@ -154,8 +167,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
             Glide.with(context)
                 .load(logo)
                 .placeholder(R.drawable.offerhub_logo_color)
-                .error(android.R.drawable.ic_dialog_alert)
-                .thumbnail(0.25f)
+                .error(R.drawable.offerhub_logo_color)
+                .centerCrop()
                 .into(imgViewCategory)
         }
 
@@ -168,9 +181,11 @@ class PromocionGridAdapter(private val context: Context, private var promociones
             elementoCache[position] = gridViewItem
             }
         val checkBox: CheckBox = gridViewItem.findViewById(R.id.checkBox)
-        checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
-        checkBox.isChecked=lista.any { it.id == promocion.id }
         setOnCheckedChangeListener(checkBox, position)
+        checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
+        useListener=false
+        checkBox.isChecked=areCheckBoxesVisible && lista.any { it -> it.id == promocion.id }
+        useListener=true
         return gridViewItem
     }
 
