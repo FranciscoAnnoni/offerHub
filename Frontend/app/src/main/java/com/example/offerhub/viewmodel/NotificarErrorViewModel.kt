@@ -36,12 +36,12 @@ class NotificarErrorViewModel @Inject constructor(
 
                 val database: FirebaseDatabase =
                     FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-                val referencia: DatabaseReference = database.getReference("/Reportes")
+                val referencia: DatabaseReference = database.reference.child("/Reportes")
 
                 referencia.setValue(notificacionDeError)
                     .addOnSuccessListener {
                         viewModelScope.launch {
-                            referencia.push().setValue(notificacionDeError)
+                            referencia.setValue(notificacionDeError)
 
                             _notificacionExitosa.emit(Resource.Success("exitoso"))
                         }
