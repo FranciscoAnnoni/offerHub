@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.offerhub.Funciones
 import com.example.offerhub.R
 import com.example.offerhub.util.Constants.INTRODUCTION_KEY
-import com.example.offerhub.util.Constants.PARTNER_USER
+import com.example.offerhub.util.Constants.USER_STATUS
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,13 +29,13 @@ class IntroductionViewModel @Inject constructor (
         const val SHOPPING_ACTIVITY = 23
         const val ACCOUNT_OPTIONS_FRAGMENT = 1000053
         const val SHOPPING_ACTIVITY_PARTNERS = 25
+        const val SHOPPING_ACTIVITY_ADMIN = 24
     }
 
     init {
         val isButtonChecked = sharedPreferences.getBoolean(INTRODUCTION_KEY, false)
-        val isPartner = sharedPreferences.getString(PARTNER_USER, "user")
+        val isPartner = sharedPreferences.getString(USER_STATUS, "user")
         val user = firebaseAuth.currentUser
-
 
         if (user != null) {
             if (isPartner == "partner") {
@@ -54,6 +54,12 @@ class IntroductionViewModel @Inject constructor (
                 viewModelScope.launch {
                     // El ID del usuario no está en la lista de partners
                     _navigate.emit(ACCOUNT_OPTIONS_FRAGMENT)
+                }
+            }
+            if (isPartner == "userAdmin"){
+                viewModelScope.launch {
+                    // El ID del usuario no está en la lista de partners
+                    _navigate.emit(SHOPPING_ACTIVITY_ADMIN)
                 }
             }
 

@@ -24,6 +24,8 @@ object UserViewModelSingleton {
     fun getSingleUserViewModel(): UserViewModel? {
         return userViewModel
     }
+
+
     fun getUserViewModel(create:Boolean=true): UserViewModel {
 
         val userViewModelCache = UserViewModelCache()

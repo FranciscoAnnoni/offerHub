@@ -64,17 +64,29 @@
             app:layout_constraintTop_toBottomOf="@id/textRegistrarSesion"
             tools:ignore="MissingConstraints" />
 
-        <ImageView
-        android:id="@+id/imagenDeLaEmpresa"
-        android:layout_width="100dp"
-        android:layout_height="70dp"
-        app:layout_constraintEnd_toEndOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/logoDeLaEmpresa"
-        android:background="@drawable/placeholder_image"
-        android:src="@drawable/ic_uploadimage"
-        app:tint="@color/violeta"
-        />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageUser"
+            android:layout_width="95dp"
+            android:layout_height="85dp"
+            android:background="@drawable/placeholder_image"
+            android:src="@drawable/ic_uploadimage"
+            app:tint="@color/violeta"
+            app:layout_constraintEnd_toEndOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/logoDeLaEmpresa"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageEdit"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/settings_items_background"
+            android:backgroundTint="@color/violetaMasClaro"
+            android:src="@drawable/ic_edit"
+            app:layout_constraintBottom_toBottomOf="@id/imageUser"
+            app:layout_constraintEnd_toEndOf="@id/imageUser" />
+
 
         <TextView
             android:id="@+id/nombreDeEmpresa"
@@ -86,7 +98,7 @@
             android:padding="5dp"
             android:text="Nombre de la Empresa"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/imagenDeLaEmpresa"
+            app:layout_constraintTop_toBottomOf="@id/imageUser"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputEditText

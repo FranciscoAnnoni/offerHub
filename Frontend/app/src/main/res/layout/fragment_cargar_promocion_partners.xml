@@ -5,19 +5,28 @@
     android:layout_height="match_parent"
     android:background="@color/fondo"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/imageClose"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_close"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        app:tint="@color/g_red"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/tvCargarPromocion"
         style="@style/titulos"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:text="Cargá tu promoción"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageClose"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-<ScrollView
+    <ScrollView
     android:layout_width="match_parent"
     app:layout_constraintTop_toBottomOf="@id/tvCargarPromocion"
     app:layout_constraintBottom_toTopOf="@id/llGuardarPromocion"
@@ -288,6 +297,7 @@
                 android:layout_marginRight="10dp"
                 />
             <EditText
+                android:id="@+id/montoDto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"
@@ -325,6 +335,7 @@
                 android:layout_marginRight="10dp"
                 />
             <EditText
+                android:id="@+id/cantidadCuotas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"
@@ -351,6 +362,7 @@
                 android:layout_marginRight="10dp"
                 />
             <EditText
+                android:id="@+id/topeReintegro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"

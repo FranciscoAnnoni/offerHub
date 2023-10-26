@@ -40,17 +40,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".fragments.shopping.FilterActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="filter" />
-            </intent-filter>
+            android:name=".activities.ShoppingPartnersActivity"
+            android:exported="false">
         </activity>
         <activity
-            android:name=".activities.ShoppingPartnersActivity"
+            android:name=".activities.ShoppingAdminActivity"
             android:exported="false">
         </activity>
         <service

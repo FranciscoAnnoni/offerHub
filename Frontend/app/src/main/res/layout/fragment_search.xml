@@ -89,7 +89,66 @@
             android:padding="10dp"
             />
 
+
+
     </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:id="@+id/middleLine"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:layout_marginEnd="28dp"
+        android:layout_marginStart="22dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/primeraLinearLayoutBuscador">
+    <TextView
+        android:id="@+id/tvPromocionesDisponibles"
+        style="@style/textoMedianoNegro"
+        android:text="Resultados"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="start"
+        android:textSize="25sp"
+        />
+    <LinearLayout
+        android:id="@+id/comparador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:gravity="end"
+        >
+        <ImageView
+            android:id="@+id/botonGuardar"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_checklist"
+            app:layout_constraintEnd_toStartOf="@id/btnComparar"
+            android:background="@drawable/icon_background"
+            android:padding="10dp"
+            />
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/btnCompararSearch"
+            style="@style/RoundedButtonBackground"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/white"
+            app:spinning_bar_color="@color/white"
+            android:textColor="#582C8F"
+            tools:ignore="MissingConstraints"
+            android:layout_marginStart="8dp"
+            android:text="Comparar"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
         <!--................... Aca arranca la parte de abajo del buscador .................. -->
     <LinearLayout
         android:id="@+id/sergundaLinearLayoutBuscador"
@@ -102,7 +161,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/primeraLinearLayoutBuscador"
+        app:layout_constraintTop_toBottomOf="@id/middleLine"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/search_category_background">
 
@@ -160,7 +219,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/primeraLinearLayoutBuscador">
+        app:layout_constraintTop_toBottomOf="@id/middleLine">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -172,9 +231,21 @@
             android:textColor="@color/violeta"
             android:textStyle="bold"
             android:textSize="15dp"
+            android:visibility="gone"
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="No hay promociones disponibles para tu busqueda."
             />
+        <ProgressBar
+            android:id="@+id/progressBarResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvPromocionesDisponibles"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_gravity="center_vertical|center_horizontal"
+             />
         <GridLayout
             android:id="@+id/promocionesGridLayout"
             android:layout_width="match_parent"

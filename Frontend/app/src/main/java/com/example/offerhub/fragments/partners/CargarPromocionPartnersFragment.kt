@@ -1,23 +1,40 @@
 package com.example.offerhub.fragments.partners
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.example.offerhub.Funciones
+import com.example.offerhub.Promocion
+import com.example.offerhub.PromocionEscritura
 import com.example.offerhub.R
+import androidx.navigation.fragment.findNavController
 import com.example.offerhub.databinding.FragmentCargarPromocionPartnersBinding
 import com.example.offerhub.fragments.shopping.FilterFragment
+import com.example.offerhub.funciones.FuncionesPartners
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
@@ -30,6 +47,14 @@ class CargarPromocionPartnersFragment: Fragment()  {
     private val mesActual = calendario.get(Calendar.MONTH)
     private val díaActual = calendario.get(Calendar.DAY_OF_MONTH)
 
+    fun transformarFecha(fechaOriginal: String): String {
+        val formatoOriginal = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val fecha = formatoOriginal.parse(fechaOriginal)
+
+        val formatoNuevo = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return formatoNuevo.format(fecha)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,6 +64,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val fechaDesde = view.findViewById<EditText>(R.id.editTextDesde)
@@ -48,8 +74,11 @@ class CargarPromocionPartnersFragment: Fragment()  {
         val chipGroupDias = view.findViewById<ChipGroup>(R.id.chipGroupDias)
         val chipGroupTipoPromocion = view.findViewById<ChipGroup>(R.id.chipGroupTipoPromocion)
         val montoDto = view.findViewById<LinearLayout>(R.id.llMontoDescuento)
+        val montoDtotext = view.findViewById<EditText>(R.id.montoDto)
         val topeReintegro = view.findViewById<LinearLayout>(R.id.llTopeDeReintegro)
+        val topeReintegrotext = view.findViewById<EditText>(R.id.topeReintegro)
         val cantCuotas = view.findViewById<LinearLayout>(R.id.llCantidadCuotas)
+        val cuotastext = view.findViewById<EditText>(R.id.cantidadCuotas)
         /*val listaSimboloDescuento = view.findViewById<AutoCompleteTextView>(R.id.tvTipoDescuento)
         val simboloDescuento = listOf("%", "$")
         val simboloDescuentoAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, simboloDescuento)
@@ -84,17 +113,27 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 cantCuotas.visibility = View.GONE
             }
         }
-
+        val imageClose =  view.findViewById<ImageView>(R.id.imageClose)
+        imageClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.llGuardarPromocion.setOnClickListener {
+
+            //agregar chequeo que no queden en null fecha fecha hasta, tipoPromocion, etc
             val descPromo = view.findViewById<TextInputEditText>(R.id.tiDescripcionPromocion).text.toString().trim()
+            val tycPromo = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones).text.toString().trim()
             val mensaje = "La promo va desde: " + fechaDesde.text.toString().trim() + " hasta: " + fechaHasta.text.toString().trim()
             var diasSeleccionados = "Los días seleccionados son: "
-            var tipoPromocion = "Los tipos de promoción seleccionados son: "
+            var tipoPromocion = ""
+            val desde = transformarFecha(fechaDesde.text.toString().trim())
+            val hasta = transformarFecha(fechaHasta.text.toString().trim())
+            var diasLista: MutableList<String?> = mutableListOf()
             for (index in 0 until chipGroupDias.childCount) {
                 val chip = chipGroupDias.getChildAt(index) as Chip
                 val diaChip = chip.text.toString()
                 if (chip.isChecked) {
+                    diasLista.add(diaChip)
                     diasSeleccionados += diaChip + ", "
                 }
             }
@@ -106,7 +145,41 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 }
             }
 
+            CoroutineScope(Dispatchers.Main).launch {
+                val usuario = Funciones().traerUsuarioPartner()
+                var promocion = PromocionEscritura("otros", usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,null,null,null,tycPromo,null,descPromo,desde,hasta ,"pendiente")
 
+                if (tipoPromocion.contains("Cuotas")){
+                    promocion.cuotas = cuotastext.text.toString().trim()
+                }
+                if  (tipoPromocion.contains("Descuento")){
+                    promocion.porcentaje = montoDtotext.text.toString().trim()
+                }
+                if (tipoPromocion.contains("Reintegro")) {
+                    promocion.topeNro = topeReintegrotext.text.toString().trim()
+                }
+
+                FuncionesPartners().escribirPromocion(promocion)
+
+                val alertDialog = AlertDialog.Builder(requireContext())
+                    .setTitle("Promocion guardada")
+                    .setMessage("La promocion se ha guardado exitosamente")
+                    .setCancelable(false)
+                    .show()
+
+                // Crear un Handler para esperar 10 segundos
+                Handler().postDelayed({
+                    // Cerrar el diálogo después de 10 segundos
+                    alertDialog.dismiss()
+
+                    // Aquí continua con el proceso de ejecución
+                    // Puedes agregar código adicional que quieres ejecutar después de mostrar el cartel.
+                }, 1000)
+
+                findNavController().popBackStack()
+
+
+            }
 
         }
     }

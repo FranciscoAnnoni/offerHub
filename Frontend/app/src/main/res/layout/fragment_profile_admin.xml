@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".fragments.partners.PartnersProfileFragment"
+    tools:context=".fragments.admin.AdminProfileFragment"
     android:background="@color/fondo">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -101,103 +101,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tvOrders"
-                style="@style/MediumTextViewThin"
-                android:textColor="@color/g_gray700"
-                android:textStyle="normal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Datos de Empresa"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/constraintProfile" />
-
-
-            <LinearLayout
-                android:id="@+id/linearOrders"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintEnd_toEndOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/tvOrders"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/search_box_background">
-
-                <LinearLayout
-                    android:id="@+id/llTarjetas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_calendar"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:id="@+id/tvBilling"
-                        style="@style/MediumTextViewThin"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mis publicaciones"
-                        android:textColor="@color/g_gray700"
-                        android:textStyle="bold"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"/>
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_arrow"
-                        app:tint="@color/g_blue_gray200"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp"
-                    android:id="@+id/linearLegals">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_exclamation"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        android:backgroundTint="#ff5823"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:id="@+id/tvTrackOrders"
-                        style="@style/MediumTextViewThin"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Legales"
-                        android:textColor="@color/g_gray700"
-                        android:textStyle="bold"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"/>
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_arrow"
-                        app:tint="@color/g_blue_gray200"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
-
-
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvNotifications"
@@ -206,10 +109,9 @@
                 android:textStyle="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Manejo de Sesion"
+                android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/linearOrders" />
+                app:layout_constraintTop_toBottomOf="@id/constraintProfile" />
 
             <LinearLayout
                 android:id="@+id/linearNotifications"

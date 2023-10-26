@@ -41,13 +41,16 @@ class PromocionEscritura {
     val tarjetas: List<String?>?
     val tipoPromocion: String?
     val titulo: String?
-    val topeNro: String?
+    var topeNro: String?
     val topeTexto: String?
     val tyc: String?
     val url: String?
+    val descripcion: String?
     val vigenciaDesde: String?
     val vigenciaHasta: String?
     val estado: String?
+    val motivo: String?
+
 
     // Constructor primario
 
@@ -66,9 +69,11 @@ class PromocionEscritura {
         topeTexto: String?,
         tyc: String?,
         url: String?,
+        descripcion: String?,
         vigenciaDesde: String?,
         vigenciaHasta: String?,
-        estado: String?
+        estado: String?,
+        motivo: String? = null
     ) {
         this.categoria = categoria
         this.comercio = comercio
@@ -84,9 +89,11 @@ class PromocionEscritura {
         this.topeTexto = topeTexto
         this.tyc = tyc
         this.url = url
+        this.descripcion = descripcion
         this.vigenciaDesde = vigenciaDesde
         this.vigenciaHasta = vigenciaHasta
         this.estado = estado
+        this.motivo = motivo
     }
 }
 
@@ -115,6 +122,8 @@ class Usuario{
         this.homeModoFull=homeModoFull
     }
 }
+
+
 
 class EscribirBD {
     private val _registrationSuccess = MutableLiveData<Boolean>()

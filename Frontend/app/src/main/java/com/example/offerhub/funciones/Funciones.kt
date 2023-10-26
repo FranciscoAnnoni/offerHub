@@ -15,7 +15,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-var esPartner = false;
 
 class Funciones {
     val instancialeerId = LeerId()
@@ -257,8 +256,6 @@ class Funciones {
         promocionesFiltradas
     }*/
 
-
-
     suspend fun traerUsuarioActual(): Usuario? = coroutineScope {
 
         val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
@@ -273,6 +270,29 @@ class Funciones {
             usuario =  instancialeerId.obtenerUsuarioPorId(currentUser.uid)
             if (usuario != null) {
                 Log.d("DB - ID", "${usuario.nombre}")
+            }
+        } else {
+            usuario =  null
+            Log.d("DB - ID", "Usuario no autenticado") // Manejar el caso en que el usuario no esté autenticado
+        }
+
+        usuario
+    }
+
+    suspend fun traerUsuarioPartner(): UserPartner? = coroutineScope {
+
+        val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
+        val currentUser = auth.currentUser
+        var usuario : UserPartner?
+
+        if (currentUser != null) {
+            Log.d("DB - IDCurrentUser", "${currentUser.uid}")
+        }
+
+        if (currentUser != null) {
+            usuario =  instancialeerId.obtenerUsuarioPartnerPorId(currentUser.uid)
+            if (usuario != null) {
+                Log.d("DB - ID", "${usuario.nombreDeEmpresa}")
             }
         } else {
             usuario =  null

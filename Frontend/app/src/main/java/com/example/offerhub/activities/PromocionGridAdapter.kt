@@ -2,6 +2,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,36 +10,54 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.fragments.shopping.HomeFragment
 import com.example.offerhub.funciones.getFavResource
+import com.example.offerhub.interfaces.PromocionFragmentListener
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
-class PromocionGridAdapter(private val context: Context, private var promociones: List<Promocion>) : BaseAdapter() {
+class PromocionGridAdapter(private val context: Context, private var promociones: List<Promocion>,private var fragmentListener: PromocionFragmentListener) : BaseAdapter() {
 
     private var currentPage = 1 // Página actual
     private val promocionesPorPagina = 25
     private var areCheckBoxesVisible = false
+    private var useListener = true
     private var numCheckBoxesSeleccionados = 0
     public var lista:MutableList<Promocion> = mutableListOf()
+    private val elementoCache = HashMap<Int, View>()
 
+    fun setFragmentListener(listener: PromocionFragmentListener) {
+        fragmentListener = listener
+    }
 
-    private lateinit var homeFragment: HomeFragment
+    fun vaciarCacheResultados(){
+        elementoCache.clear()
+    }
+
+    private lateinit var fragment : Fragment
     fun eliminarLista(){
         lista.clear()
         numCheckBoxesSeleccionados = 0
+        notifyDataSetChanged()
     }
-    fun setHomeFragment(fragment: HomeFragment) {
-        homeFragment = fragment
+    fun setFragment(newFragment: Fragment) {
+        fragment = newFragment
     }
     fun setCheckBoxesVisibility(shouldBeVisible: Boolean) {
         areCheckBoxesVisible = shouldBeVisible
+        if(!areCheckBoxesVisible){
+            eliminarLista()
+            numCheckBoxesSeleccionados=0
+        }
         notifyDataSetChanged()
     }
 
@@ -66,28 +85,32 @@ class PromocionGridAdapter(private val context: Context, private var promociones
     // ...
     fun setOnCheckedChangeListener(checkBox: CheckBox, position: Int) {
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                numCheckBoxesSeleccionados++
-                lista.add(promociones[position])
+            if(useListener) {
+                if (isChecked) {
+                    numCheckBoxesSeleccionados++
+                    lista.add(promociones[position])
 
-                if(numCheckBoxesSeleccionados==3){
+                    if (numCheckBoxesSeleccionados == 3) {
                         numCheckBoxesSeleccionados--
-                        lista.remove(promociones[position])
-                        checkBox.isChecked=false
-                        homeFragment.mostrarAvisoSobreeleccion()
+                        numCheckBoxesSeleccionados = max(numCheckBoxesSeleccionados, 0)
+                        lista.removeIf { it->promociones[position].id==it.id}
+                        checkBox.isChecked = false
+                        fragmentListener.mostrarAvisoSobreeleccion()
+                    }
+                } else {
+                    lista.removeIf { it->promociones[position].id==it.id}
+                    numCheckBoxesSeleccionados--
+                    numCheckBoxesSeleccionados = max(numCheckBoxesSeleccionados, 0)
+                    if (numCheckBoxesSeleccionados == 1) {
+                        fragmentListener.updateButtonVisibility(false)
+                    }
                 }
-            } else {
-                lista.remove(promociones[position])
-                numCheckBoxesSeleccionados--
-                if (numCheckBoxesSeleccionados==1){
-                    homeFragment.updateButtonVisibility(false)
-                }
-            }
 
-            // Actualizar visibilidad del botón
-            // asumiendo que 'btnActivar' es el botón que quieres mostrar
-            if (numCheckBoxesSeleccionados==2){
-                homeFragment.updateButtonVisibility(true)
+                // Actualizar visibilidad del botón
+                // asumiendo que 'btnActivar' es el botón que quieres mostrar
+                if (numCheckBoxesSeleccionados == 2) {
+                    fragmentListener.updateButtonVisibility(true)
+                }
             }
 
         }
@@ -99,15 +122,17 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         val promocion = getItem(position) as Promocion
 
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
+        val gridViewItem: View
+
+        if (elementoCache.containsKey(position)) {
+            gridViewItem = elementoCache[position]!! // Recupera desde la caché
+        } else {
+         gridViewItem = inflater.inflate(R.layout.fragment_promocion_card, null)
         val instancia = Funciones()
-        val checkBox: CheckBox = gridViewItem.findViewById(R.id.checkBox)
-        checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
         val tvComercio = gridViewItem.findViewById<TextView>(R.id.tvPromocionComercio)
         val tvDescuento = gridViewItem.findViewById<TextView>(R.id.tvPromocionDescuento)
         val favIcon = gridViewItem.findViewById<ImageView>(R.id.promoFav)
         val imgViewCategory = gridViewItem.findViewById<ImageView>(R.id.imgComercio)
-        setOnCheckedChangeListener(checkBox, position)
         var textoPromo=promocion.obtenerDesc()
         if(promocion.tipoPromocion=="Reintegro" || promocion.tipoPromocion=="Descuento"){
             textoPromo=textoPromo+"%"
@@ -142,8 +167,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
             Glide.with(context)
                 .load(logo)
                 .placeholder(R.drawable.offerhub_logo_color)
-                .error(android.R.drawable.ic_dialog_alert)
-                .thumbnail(0.25f)
+                .error(R.drawable.offerhub_logo_color)
+                .centerCrop()
                 .into(imgViewCategory)
         }
 
@@ -153,7 +178,14 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         if (position == promociones.size - 1) {
             cargarMasPromociones()
         }
-
+            elementoCache[position] = gridViewItem
+            }
+        val checkBox: CheckBox = gridViewItem.findViewById(R.id.checkBox)
+        setOnCheckedChangeListener(checkBox, position)
+        checkBox.visibility = if (areCheckBoxesVisible) View.VISIBLE else View.GONE
+        useListener=false
+        checkBox.isChecked=areCheckBoxesVisible && lista.any { it -> it.id == promocion.id }
+        useListener=true
         return gridViewItem
     }
 
