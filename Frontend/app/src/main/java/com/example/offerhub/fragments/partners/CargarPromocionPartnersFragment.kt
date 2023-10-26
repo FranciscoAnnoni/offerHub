@@ -192,14 +192,10 @@ class CargarPromocionPartnersFragment: Fragment()  {
                     .setCancelable(false)
                     .show()
 
-                // Crear un Handler para esperar 10 segundos
-                Handler().postDelayed({
-                    // Cerrar el diálogo después de 10 segundos
-                    alertDialog.dismiss()
 
-                    // Aquí continua con el proceso de ejecución
-                    // Puedes agregar código adicional que quieres ejecutar después de mostrar el cartel.
-                }, 1000)
+                Handler().postDelayed({
+                    alertDialog.dismiss()
+                }, 3000)
 
                 findNavController().popBackStack()
             }
