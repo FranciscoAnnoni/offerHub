@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
-import com.example.offerhub.PromocionEscritura
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentHomePartnersBinding
 import com.example.offerhub.funciones.FuncionesPartners
@@ -35,11 +34,9 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
         return binding.root
     }
 
-    // ...
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var botonAgregarPromocion = view.findViewById<LinearLayout>(R.id.llAgregarPromocion)
 
         var promociones = emptyList<Promocion>()
         var promosDisponibles = emptyList<Promocion>()
@@ -48,7 +45,12 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
         val promocionesRechazadasLayout = view.findViewById<LinearLayout>(R.id.promocionesRechazadasLayout)
         val promocionesHeader = view.findViewById<TextView>(R.id.promotionsHeader)
         val promocionesLayout = view.findViewById<LinearLayout>(R.id.promotionsLayout)
-        CoroutineScope(Dispatchers.Main).launch {
+        var botonAgregarPromocion = view.findViewById<LinearLayout>(R.id.llAgregarPromocion)
+
+
+
+        val job = CoroutineScope(Dispatchers.Main).launch {
+
             val usuario = Funciones().traerUsuarioPartner()
             if (usuario != null) {
                 view.findViewById<TextView>(R.id.inicioHome).text = "Bienvenido " + usuario.nombreDeEmpresa
@@ -92,8 +94,8 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
                     }
                 }
             }
+        }
     }
-}
 
 
 

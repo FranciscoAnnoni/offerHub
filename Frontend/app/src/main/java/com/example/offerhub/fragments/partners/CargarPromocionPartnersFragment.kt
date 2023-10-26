@@ -14,17 +14,17 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.offerhub.Funciones
-import com.example.offerhub.Promocion
 import com.example.offerhub.PromocionEscritura
 import com.example.offerhub.R
 import androidx.navigation.fragment.findNavController
+
+import com.example.offerhub.Comercio
+import com.example.offerhub.LeerId
+import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentCargarPromocionPartnersBinding
-import com.example.offerhub.fragments.shopping.FilterFragment
 import com.example.offerhub.funciones.FuncionesPartners
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -32,8 +32,6 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -67,6 +65,23 @@ class CargarPromocionPartnersFragment: Fragment()  {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var usuario: UserPartner?
+        var idComercio: String = ""
+        var comercio: Comercio = Comercio(null, null, null, null, null)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            usuario = Funciones().traerUsuarioPartner()
+            if (usuario != null ) {
+                if (usuario!!.idComercio != null) {
+                    idComercio = usuario!!.idComercio!!
+                    val lecturaComercio = LeerId().obtenerComercioPorId(idComercio)
+                    if (lecturaComercio != null) {
+                        comercio = lecturaComercio!!
+                    }
+                }
+            }
+        }
+
         val fechaDesde = view.findViewById<EditText>(R.id.editTextDesde)
         val fechaHasta = view.findViewById<EditText>(R.id.editTextHasta)
         fechaDesde.setOnClickListener { showDatePickerDialog(fechaDesde) }
@@ -87,6 +102,10 @@ class CargarPromocionPartnersFragment: Fragment()  {
             val selectedOption = simboloDescuentoAdapter.getItem(position)
             listaSimboloDescuento.setText(selectedOption.toString())
         }*/
+        val sucursales = listOf<String>("Sucursal 1", "Sucursal 2", "Sucursal 3")
+        val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_multiple_choice, sucursales)
+        val listaSucursales = view.findViewById<ListView>(R.id.lvSucursales)
+        listaSucursales.adapter = listAdapter
 
         chipGroupTipoPromocion.setOnCheckedStateChangeListener { group, checkedIds ->
             var chips = mutableListOf<String>()
@@ -129,6 +148,12 @@ class CargarPromocionPartnersFragment: Fragment()  {
             val desde = transformarFecha(fechaDesde.text.toString().trim())
             val hasta = transformarFecha(fechaHasta.text.toString().trim())
             var diasLista: MutableList<String?> = mutableListOf()
+
+            var vigenciaDesde = fechaDesde.text.toString().trim()
+            var vigenciaHasta = fechaHasta.text.toString().trim()
+            var terminosYCondiciones = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones).text.toString().trim()
+            var topeReintegroTexto = "Tope de reintegro de " + topeReintegro + "."
+            var tituloPromocion = comercio.nombre + ": promocion"
             for (index in 0 until chipGroupDias.childCount) {
                 val chip = chipGroupDias.getChildAt(index) as Chip
                 val diaChip = chip.text.toString()
@@ -177,8 +202,6 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 }, 1000)
 
                 findNavController().popBackStack()
-
-
             }
 
         }
