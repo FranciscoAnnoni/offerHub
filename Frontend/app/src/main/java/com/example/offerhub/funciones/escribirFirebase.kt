@@ -106,15 +106,19 @@ class PromocionEscritura {
             error.add("Título requerido")
             campos.add("errorTitulo")
         }
+
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         val fechaActual = Date()
         if(this.vigenciaHasta==null || this.vigenciaHasta!!.isNotEmpty()) {
             val fechaHastaDate = dateFormat.parse(this.vigenciaHasta)
-            if (this.vigenciaDesde !== null && this.vigenciaDesde!!.isNotEmpty() && fechaHastaDate <= dateFormat.parse(this.vigenciaDesde)) {
-                error.add("Fecha Hasta debe ser posterior a la Fecha Desde.")
-                campos.add("errorVigencia")
+            if (this.vigenciaDesde != null && this.vigenciaDesde!!.isNotEmpty()){
+                if(fechaHastaDate <= dateFormat.parse(this.vigenciaDesde)){
+                        error.add("Fecha Hasta debe ser posterior a la Fecha Desde.")
+                        campos.add("errorVigencia")
+                }
             }
+
 
             if (fechaHastaDate <= fechaActual) {
                 error.add("Fecha Hasta debe ser mayor a la Fecha Actual.")

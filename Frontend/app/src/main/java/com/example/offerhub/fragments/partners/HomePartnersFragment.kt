@@ -76,7 +76,7 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
                             view.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
                         recyclerView.layoutManager =
                             LinearLayoutManager(requireContext())
-                        recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles as MutableList<Promocion>,true)
+                        recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles as MutableList<Promocion>,true,this)
                     }
                 }
             }
@@ -90,12 +90,20 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
                             view.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
                         recyclerView.layoutManager =
                             LinearLayoutManager(requireContext())
-                        recyclerView.adapter = PromotionsAdapterPartners(promocionesRechazadas as MutableList<Promocion>,false)
+                        recyclerView.adapter = PromotionsAdapterPartners(promocionesRechazadas as MutableList<Promocion>,false,this)
                     }
                 }
             }
         }
+    fun editPromocion(promo:Promocion){
+        val bundle = Bundle()
+        bundle.putParcelable("promocion", promo)
+        bundle.putBoolean("isEditing", true)
+
+        // Navegar usando NavController
+        findNavController().navigate(R.id.action_homePartnersFragment_to_cargarPromocionPartnersFragment, bundle)
     }
+}
 
 
 

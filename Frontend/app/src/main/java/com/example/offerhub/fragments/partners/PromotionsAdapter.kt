@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
 import com.google.firebase.database.FirebaseDatabase
 
-class PromotionsAdapterPartners(private val promociones: MutableList<Promocion>,private val editable: Boolean) :
+class PromotionsAdapterPartners(private val promociones: MutableList<Promocion>,private val editable: Boolean, private val homePartnersFragment: HomePartnersFragment) :
     RecyclerView.Adapter<PromotionsAdapterPartners.PromotionViewHolder>() {
 
     inner class PromotionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,8 +48,7 @@ class PromotionsAdapterPartners(private val promociones: MutableList<Promocion>,
         currentPromotion.estado?.let { Log.d("estado", it) }
         // Configurar acciones para los botones de editar y eliminar
         holder.editButton.setOnClickListener {
-            // Acción de editar aquí
-            // Puedes abrir un diálogo o fragmento de edición
+            homePartnersFragment.editPromocion(currentPromotion)
         }
 
         holder.deleteButton.setOnClickListener {

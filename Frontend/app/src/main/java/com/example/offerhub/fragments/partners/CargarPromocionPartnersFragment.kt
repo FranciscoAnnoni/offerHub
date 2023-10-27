@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,12 +26,14 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.offerhub.Comercio
 import com.example.offerhub.LeerId
+import com.example.offerhub.Promocion
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentCargarPromocionPartnersBinding
 import com.example.offerhub.funciones.FuncionesPartners
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,18 +77,8 @@ class CargarPromocionPartnersFragment: Fragment()  {
         var idComercio: String = ""
         var comercio: Comercio = Comercio(null, null, null, null, null)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            usuario = Funciones().traerUsuarioPartner()
-            if (usuario != null ) {
-                if (usuario!!.idComercio != null) {
-                    idComercio = usuario!!.idComercio!!
-                    val lecturaComercio = LeerId().obtenerComercioPorId(idComercio)
-                    if (lecturaComercio != null) {
-                        comercio = lecturaComercio!!
-                    }
-                }
-            }
-        }
+        val promocionAnterior = arguments?.getParcelable("promocion") as? Promocion
+        val isEditing = arguments?.getBoolean("isEditing", false) ?: false
 
         val fechaDesde = view.findViewById<EditText>(R.id.editTextDesde)
         val fechaHasta = view.findViewById<EditText>(R.id.editTextHasta)
@@ -98,27 +92,15 @@ class CargarPromocionPartnersFragment: Fragment()  {
         val topeReintegrotext = view.findViewById<EditText>(R.id.topeReintegro)
         val cantCuotas = view.findViewById<LinearLayout>(R.id.llCantidadCuotas)
         val cuotastext = view.findViewById<EditText>(R.id.cantidadCuotas)
-        /*val listaSimboloDescuento = view.findViewById<AutoCompleteTextView>(R.id.tvTipoDescuento)
-        val simboloDescuento = listOf("%", "$")
-        val simboloDescuentoAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, simboloDescuento)
-        listaSimboloDescuento.setAdapter(simboloDescuentoAdapter)
-        listaSimboloDescuento.setOnItemClickListener { parent, view, position, id ->
-            val selectedOption = simboloDescuentoAdapter.getItem(position)
-            listaSimboloDescuento.setText(selectedOption.toString())
-        }*/
+        val tituloPromo = view.findViewById<TextInputEditText>(R.id.tiTituloPromocion)
+        val descPromo = view.findViewById<TextInputEditText>(R.id.tiDescripcionPromocion)
+        val tycPromo = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones)
         val sucursales = listOf<String>("Sucursal 1", "Sucursal 2", "Sucursal 3")
         val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_multiple_choice, sucursales)
         val listaSucursales = view.findViewById<ListView>(R.id.lvSucursales)
         listaSucursales.adapter = listAdapter
 
-        chipGroupTipoPromocion.setOnCheckedStateChangeListener { group, checkedIds ->
-            var chips = mutableListOf<String>()
-            for (checkedId in checkedIds) {
-                val selectedChip = group.findViewById<Chip>(checkedId)
-                val tipoPromocion = selectedChip?.text.toString()
-                chips.add(tipoPromocion)
-
-            }
+        fun habilitarTipos(chips: MutableList<String>){
             if (chips.contains("Descuento") || chips.contains("Reintegro")) {
                 montoDto.visibility = View.VISIBLE
             } else {
@@ -136,6 +118,149 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 cantCuotas.visibility = View.GONE
             }
         }
+        if (isEditing){
+            binding.llGuardarPromocion.visibility = View.GONE
+            if (promocionAnterior != null) {
+                if (promocionAnterior.vigenciaDesde!= null){
+                    fechaDesde.text = Editable.Factory.getInstance().newEditable(promocionAnterior.vigenciaDesde.toString())
+                }
+                if (promocionAnterior.cuotas !=null){
+                    cuotastext.text = Editable.Factory.getInstance().newEditable(promocionAnterior.cuotas.toString())
+                }
+                if (promocionAnterior.descripcion!= null){
+                    descPromo.text = Editable.Factory.getInstance().newEditable(promocionAnterior.descripcion.toString())
+                }
+                if (promocionAnterior.tyc != null){
+                    tycPromo.text = Editable.Factory.getInstance().newEditable(promocionAnterior.tyc.toString())
+                }
+                if (promocionAnterior.topeNro != null){
+                    topeReintegrotext.text = Editable.Factory.getInstance().newEditable(promocionAnterior.topeNro.toString())
+                }
+                if (promocionAnterior.porcentaje != null){
+                    montoDtotext.text = Editable.Factory.getInstance().newEditable(promocionAnterior.porcentaje.toString())
+                }
+                fechaHasta.text = Editable.Factory.getInstance().newEditable(promocionAnterior.vigenciaHasta.toString())
+                tituloPromo.text = Editable.Factory.getInstance().newEditable(promocionAnterior.titulo.toString())
+                for (index in 0 until chipGroupDias.childCount) {
+                    val chip = chipGroupDias.getChildAt(index) as Chip
+                    val diaChip = chip.text.toString()
+                    if (promocionAnterior.dias?.contains(diaChip) == true){
+                        chip.isChecked = true
+                    }
+                }
+                var chips = mutableListOf<String>()
+                for (index in 0 until chipGroupTipoPromocion.childCount) {
+                    val chip = chipGroupTipoPromocion.getChildAt(index) as Chip
+                    val tipoPromoChip = chip.text.toString()
+                    if (promocionAnterior.tipoPromocion?.contains(tipoPromoChip)!!){
+                        chip.isChecked = true
+                        chips.add(tipoPromoChip)
+                    }
+                }
+                habilitarTipos(chips)
+            }
+
+            tituloPromo.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+            for (i in 0 until chipGroupDias.childCount) {
+                val chip = chipGroupDias.getChildAt(i) as Chip
+                chip.setOnCheckedChangeListener { buttonView, isChecked ->
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+            }
+
+            for (i in 0 until chipGroupTipoPromocion.childCount) {
+                val chip = chipGroupTipoPromocion.getChildAt(i) as Chip
+                chip.setOnCheckedChangeListener { buttonView, isChecked ->
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+            }
+
+            cuotastext.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+            topeReintegrotext.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+            montoDtotext.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+            descPromo.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+            tycPromo.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+        }
+
+
+        CoroutineScope(Dispatchers.Main).launch {
+            usuario = Funciones().traerUsuarioPartner()
+            if (usuario != null ) {
+                if (usuario!!.idComercio != null) {
+                    idComercio = usuario!!.idComercio!!
+                    val lecturaComercio = LeerId().obtenerComercioPorId(idComercio)
+                    if (lecturaComercio != null) {
+                        comercio = lecturaComercio!!
+                    }
+                }
+            }
+        }
+
+
+        chipGroupTipoPromocion.setOnCheckedStateChangeListener { group, checkedIds ->
+            var chips = mutableListOf<String>()
+            for (checkedId in checkedIds) {
+                val selectedChip = group.findViewById<Chip>(checkedId)
+                val tipoPromocion = selectedChip?.text.toString()
+                chips.add(tipoPromocion)
+            }
+            habilitarTipos(chips)
+
+        }
         val imageClose =  view.findViewById<ImageView>(R.id.imageClose)
         imageClose.setOnClickListener {
             findNavController().popBackStack()
@@ -144,20 +269,20 @@ class CargarPromocionPartnersFragment: Fragment()  {
         binding.llGuardarPromocion.setOnClickListener {
 
             //agregar chequeo que no queden en null fecha fecha hasta, tipoPromocion, etc
-            val tituloPromo = view.findViewById<TextInputEditText>(R.id.tiTituloPromocion).text.toString().trim()
-            val descPromo = view.findViewById<TextInputEditText>(R.id.tiDescripcionPromocion).text.toString().trim()
-            val tycPromo = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones).text.toString().trim()
             val mensaje = "La promo va desde: " + fechaDesde.text.toString().trim() + " hasta: " + fechaHasta.text.toString().trim()
             var diasSeleccionados = "Los días seleccionados son: "
             var tipoPromocion = ""
-            val desde = transformarFecha(fechaDesde.text.toString().trim())
-            val hasta = transformarFecha(fechaHasta.text.toString().trim())
-            var diasLista: MutableList<String?> = mutableListOf()
+            var desde: String? = null
+            var hasta: String? = null
+            try{
+                desde = transformarFecha(fechaDesde.text.toString().trim())
+                hasta = transformarFecha(fechaHasta.text.toString().trim())
+            }catch (e: Exception) {
+                desde = fechaDesde.text.toString()
+                hasta = fechaHasta.text.toString()
+            }
 
-            var vigenciaDesde = fechaDesde.text.toString().trim()
-            var vigenciaHasta = fechaHasta.text.toString().trim()
-            var terminosYCondiciones = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones).text.toString().trim()
-            var topeReintegroTexto = "Tope de reintegro de " + topeReintegro + "."
+            var diasLista: MutableList<String?> = mutableListOf()
             var tituloPromocion = comercio.nombre +": " + tituloPromo
             for (index in 0 until chipGroupDias.childCount) {
                 val chip = chipGroupDias.getChildAt(index) as Chip
@@ -178,7 +303,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
             CoroutineScope(Dispatchers.Main).launch {
                 val usuario = Funciones().traerUsuarioPartner()
 
-                var promocion = PromocionEscritura(comercio.categoria, usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,tituloPromo,null,null,tycPromo,null,descPromo,desde,hasta ,"pendiente")
+                var promocion = PromocionEscritura(comercio.categoria, usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,tituloPromo.text.toString().trim(),null,null,tycPromo.text.toString().trim(),null,descPromo.text.toString().trim(),desde,hasta ,"pendiente")
 
                 if (cuotastext.text.isNotEmpty()){
                     promocion.cuotas = cuotastext.text.toString().trim()
@@ -200,8 +325,11 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 view.findViewById<TextView>(R.id.errorTipoPromo).text=""
                 view.findViewById<TextView>(R.id.errorDias).visibility=View.GONE
                 view.findViewById<TextView>(R.id.errorDias).text=""
-                var errores=promocion.validar()
-                if(errores[0].size>0){
+                var errores: List<MutableList<String>> = mutableListOf()
+                if (!isEditing){
+                    errores = promocion.validar()
+                }
+                if (!errores.isEmpty() && errores[0].size > 0) {
                     var campos=errores[0]
                     var error=errores[1]
                     var i=0
@@ -220,10 +348,18 @@ class CargarPromocionPartnersFragment: Fragment()  {
                         alertDialog.dismiss()
                     }, 3000)
                 } else {
-                    promocion.titulo=tituloPromocion
                     promocion.vigenciaDesde=if(promocion.vigenciaDesde!!.isEmpty()) "No posee" else promocion.vigenciaDesde
                     promocion.vigenciaHasta=if(promocion.vigenciaHasta!!.isEmpty()) "No posee" else promocion.vigenciaHasta
                     FuncionesPartners().escribirPromocion(promocion)
+                    if (isEditing){
+                        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+                        val promocionRef =
+                            promocionAnterior?.id?.let { it1 -> database.getReference("/Promocion").child(it1) }
+
+                        if (promocionRef != null) {
+                            promocionRef.removeValue()
+                        }
+                    }
 
                     val alertDialog = AlertDialog.Builder(requireContext())
                         .setTitle("Promocion guardada")
