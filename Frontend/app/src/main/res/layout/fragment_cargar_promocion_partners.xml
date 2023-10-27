@@ -20,7 +20,7 @@
         android:id="@+id/tvCargarPromocion"
         style="@style/titulos"
         android:layout_marginTop="16dp"
-        android:text="Cargá tu promoción"
+        android:text="Nueva Promoción"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/imageClose"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,19 +39,60 @@
 
 
     <LinearLayout
-    app:layout_constraintStart_toStartOf="parent"
-    android:id="@+id/llDescripcionPromocion"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="20dp"
-    app:layout_constraintTop_toBottomOf="@id/tvCargarPromocion"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/llTituloPromocion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tvCargarPromocion"
         tools:ignore="NotSibling">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Agregá la descripción de la promoción"
+            android:text="Titulo"
+            android:textColor="@color/violeta"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_marginTop="10dp"
+            android:id="@+id/tiTituloPromocion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            style="@style/FormFieldSemiRound"
+            android:hint="20% de descuento"
+            android:textColorHint="#98B7AACC"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/errorTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#C30000"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+    app:layout_constraintStart_toStartOf="parent"
+    android:id="@+id/llDescripcionPromocion"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    app:layout_constraintTop_toBottomOf="@id/llTituloPromocion"
+        tools:ignore="NotSibling">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
             android:textColor="@color/violeta"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -65,6 +106,15 @@
             android:hint="20% de descuento pagando en una cuota en productos seleccionados..."
             android:textColorHint="#98B7AACC"
             android:textSize="15sp" />
+        <TextView
+            android:id="@+id/errorDescripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#C30000"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 
@@ -80,7 +130,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Seleccioná la vigencia de tu promoción"
+            android:text="Fechas de Vigencia"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/violeta"
@@ -123,10 +173,19 @@
                 android:clickable="true"
                 android:focusable="false"
                 android:layout_gravity="center"
-                android:textColor="@color/g_gray700"
+                android:textColor="?attr/colorPrimary"
                 android:gravity="center" />
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/errorVigencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#C30000"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -136,13 +195,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         app:layout_constraintTop_toBottomOf="@id/llVigencia"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Seleccioná los días válidos para tu promoción"
+            android:text="Dias de Validez"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/violeta"
@@ -210,6 +270,15 @@
 
             <!-- Agrega más Chips para los otros días de la semana -->
         </com.google.android.material.chip.ChipGroup>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/errorDias"
+            android:layout_marginTop="10dp"
+            android:textColor="#C30000"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -218,13 +287,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:paddingRight="20dp"
         app:layout_constraintTop_toBottomOf="@id/llDias"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Seleccioná el tipo de Promoción"
+            android:text="Tipo de Promoción"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/violeta"
@@ -236,7 +307,9 @@
             android:layout_marginBottom="20dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:singleSelection="true"
+            >
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip2x1"
@@ -285,14 +358,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chipGroupTipoPromocion"
             android:layout_marginBottom="10dp"
-            android:padding="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:visibility="gone"
             android:id="@+id/llMontoDescuento"
             >
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Monto Descuento:    "
+                android:text="Porcentaje Descuento:    "
                 android:textSize="15sp"
                 android:layout_marginRight="10dp"
                 />
@@ -300,55 +374,26 @@
                 android:id="@+id/montoDto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 style="@style/FormFieldSemiRound"
-                android:hint="10000"
+                android:hint="20"
                 />
-           <!-- <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                >
-                <AutoCompleteTextView
-                    android:id="@+id/tvTipoDescuento"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:hint="%"/>
-            </com.google.android.material.textfield.TextInputLayout>-->
+                android:text="%"
+                android:textSize="15sp"
+                android:layout_marginLeft="10dp"
+                />
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llMontoDescuento"
-            android:layout_marginBottom="10dp"
-            android:padding="20dp"
-            android:id="@+id/llCantidadCuotas"
-            android:visibility="gone"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cantidad de Cuotas:  "
-                android:textSize="15sp"
-                android:layout_marginRight="10dp"
-                />
-            <EditText
-                android:id="@+id/cantidadCuotas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/FormFieldSemiRound"
-                android:hint="6"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llCantidadCuotas"
             android:layout_marginBottom="10dp"
             android:padding="20dp"
             android:visibility="gone"
@@ -366,10 +411,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FormFieldSemiRound"
+                android:inputType="number"
                 android:hint="2000"
                 />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTopeDeReintegro"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:id="@+id/llCantidadCuotas"
+            android:visibility="gone"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cantidad de Cuotas:  "
+                android:textSize="15sp"
+                android:layout_marginRight="10dp"
+                />
+            <EditText
+                android:id="@+id/cantidadCuotas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                style="@style/FormFieldSemiRound"
+                android:hint="6"
+                />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/errorTipoPromo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="#C30000"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -378,14 +461,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         app:layout_constraintTop_toBottomOf="@id/llTipoPromocion"
         tools:ignore="NotSibling">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Seleccioná las sucursales válidas para tu promoción"
+            android:text="Sucursales Adheridas"
             android:textColor="@color/violeta"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -405,14 +489,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/llSucursales"
         tools:ignore="NotSibling">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Agregá los términos y condiciones de tu promoción"
+            android:text="Términos y Condiciones"
             android:textColor="@color/violeta"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -423,7 +509,7 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             style="@style/FormFieldSemiRound"
-            android:hint="Esta promoción es válida únicamente abonando en efectivo..."
+            android:hint="Esta promoción es válida únicamente en el AMBA..."
             android:textColorHint="#98B7AACC"
             android:textSize="15sp" />
     </LinearLayout>

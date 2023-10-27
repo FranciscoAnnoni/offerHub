@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.offerhub.Funciones
@@ -47,10 +48,13 @@ class CargarPromocionPartnersFragment: Fragment()  {
 
     fun transformarFecha(fechaOriginal: String): String {
         val formatoOriginal = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val fecha = formatoOriginal.parse(fechaOriginal)
+        if(fechaOriginal.isNotEmpty()) {
+            val fecha = formatoOriginal.parse(fechaOriginal)
 
-        val formatoNuevo = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return formatoNuevo.format(fecha)
+            val formatoNuevo = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return formatoNuevo.format(fecha)
+        }
+        return ""
     }
 
     override fun onCreateView(
@@ -115,7 +119,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 chips.add(tipoPromocion)
 
             }
-            if (chips.contains("Descuento")) {
+            if (chips.contains("Descuento") || chips.contains("Reintegro")) {
                 montoDto.visibility = View.VISIBLE
             } else {
                 montoDto.visibility = View.GONE
@@ -125,7 +129,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
             } else {
                 topeReintegro.visibility = View.GONE
             }
-            if (chips.contains("Cuotas")) {
+            if (chips.contains("Cuotas") || chips.contains("Descuento") || chips.contains("Reintegro")) {
                 cantCuotas.visibility = View.VISIBLE
 
             } else {
@@ -140,6 +144,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
         binding.llGuardarPromocion.setOnClickListener {
 
             //agregar chequeo que no queden en null fecha fecha hasta, tipoPromocion, etc
+            val tituloPromo = view.findViewById<TextInputEditText>(R.id.tiTituloPromocion).text.toString().trim()
             val descPromo = view.findViewById<TextInputEditText>(R.id.tiDescripcionPromocion).text.toString().trim()
             val tycPromo = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones).text.toString().trim()
             val mensaje = "La promo va desde: " + fechaDesde.text.toString().trim() + " hasta: " + fechaHasta.text.toString().trim()
@@ -153,7 +158,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
             var vigenciaHasta = fechaHasta.text.toString().trim()
             var terminosYCondiciones = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones).text.toString().trim()
             var topeReintegroTexto = "Tope de reintegro de " + topeReintegro + "."
-            var tituloPromocion = comercio.nombre + ": promocion"
+            var tituloPromocion = comercio.nombre +": " + tituloPromo
             for (index in 0 until chipGroupDias.childCount) {
                 val chip = chipGroupDias.getChildAt(index) as Chip
                 val diaChip = chip.text.toString()
@@ -166,38 +171,73 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 val chip = chipGroupTipoPromocion.getChildAt(index) as Chip
                 val tipoPromoChip = chip.text.toString()
                 if (chip.isChecked) {
-                    tipoPromocion += tipoPromoChip + ", "
+                    tipoPromocion = tipoPromoChip
                 }
             }
 
             CoroutineScope(Dispatchers.Main).launch {
                 val usuario = Funciones().traerUsuarioPartner()
-                var promocion = PromocionEscritura("otros", usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,null,null,null,tycPromo,null,descPromo,desde,hasta ,"pendiente")
 
-                if (tipoPromocion.contains("Cuotas")){
+                var promocion = PromocionEscritura(comercio.categoria, usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,tituloPromo,null,null,tycPromo,null,descPromo,desde,hasta ,"pendiente")
+
+                if (cuotastext.text.isNotEmpty()){
                     promocion.cuotas = cuotastext.text.toString().trim()
                 }
-                if  (tipoPromocion.contains("Descuento")){
+                if (montoDtotext.text.isNotEmpty()){
                     promocion.porcentaje = montoDtotext.text.toString().trim()
                 }
-                if (tipoPromocion.contains("Reintegro")) {
+                if (topeReintegrotext.text.isNotEmpty()){
+                    promocion.topeNro = topeReintegrotext.text.toString().trim()
                     promocion.topeNro = topeReintegrotext.text.toString().trim()
                 }
+                view.findViewById<TextView>(R.id.errorTitulo).visibility=View.GONE
+                view.findViewById<TextView>(R.id.errorTitulo).text=""
+                view.findViewById<TextView>(R.id.errorVigencia).visibility=View.GONE
+                view.findViewById<TextView>(R.id.errorVigencia).text=""
+                view.findViewById<TextView>(R.id.errorVigencia).visibility=View.GONE
+                view.findViewById<TextView>(R.id.errorVigencia).text=""
+                view.findViewById<TextView>(R.id.errorTipoPromo).visibility=View.GONE
+                view.findViewById<TextView>(R.id.errorTipoPromo).text=""
+                view.findViewById<TextView>(R.id.errorDias).visibility=View.GONE
+                view.findViewById<TextView>(R.id.errorDias).text=""
+                var errores=promocion.validar()
+                if(errores[0].size>0){
+                    var campos=errores[0]
+                    var error=errores[1]
+                    var i=0
+                    for (i in 0 until campos.size) {
+                        val campoId = resources.getIdentifier(campos[i], "id", requireContext().packageName)
+                        val campo = view.findViewById<TextView>(campoId)
+                        campo.text = if (campo.text.isNotEmpty()) campo.text.toString() + " " + error[i] else error[i]
+                        campo.visibility = View.VISIBLE
+                    }
+                    val alertDialog = AlertDialog.Builder(requireContext())
+                        .setTitle("Errores")
+                        .setMessage("Por favor revise los errores indicados y vuelva a intentar.")
+                        .setCancelable(false)
+                        .show()
+                    Handler().postDelayed({
+                        alertDialog.dismiss()
+                    }, 3000)
+                } else {
+                    promocion.titulo=tituloPromocion
+                    promocion.vigenciaDesde=if(promocion.vigenciaDesde!!.isEmpty()) "No posee" else promocion.vigenciaDesde
+                    promocion.vigenciaHasta=if(promocion.vigenciaHasta!!.isEmpty()) "No posee" else promocion.vigenciaHasta
+                    FuncionesPartners().escribirPromocion(promocion)
 
-                FuncionesPartners().escribirPromocion(promocion)
-
-                val alertDialog = AlertDialog.Builder(requireContext())
-                    .setTitle("Promocion guardada")
-                    .setMessage("La promocion se ha guardado exitosamente")
-                    .setCancelable(false)
-                    .show()
+                    val alertDialog = AlertDialog.Builder(requireContext())
+                        .setTitle("Promocion guardada")
+                        .setMessage("La promocion se ha guardado exitosamente")
+                        .setCancelable(false)
+                        .show()
 
 
-                Handler().postDelayed({
-                    alertDialog.dismiss()
-                }, 3000)
+                    Handler().postDelayed({
+                        alertDialog.dismiss()
+                    }, 3000)
 
-                findNavController().popBackStack()
+                    findNavController().popBackStack()
+                }
             }
 
         }

@@ -111,7 +111,7 @@ class LeerId {
             val key = dataSnapshot.key
             val nombre = dataSnapshot.child("nombre").getValue(String::class.java)
             val categoria = dataSnapshot.child("categoria").getValue(String::class.java)
-            val comercio = Comercio(key, categoria, nombre, null, null)
+            val comercio = Comercio(key, nombre,categoria, null, null)
             return comercio
         } else {
             return null

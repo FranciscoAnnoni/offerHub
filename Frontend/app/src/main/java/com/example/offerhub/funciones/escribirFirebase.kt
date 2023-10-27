@@ -12,6 +12,9 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.threeten.bp.LocalDate
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SucursalEscritura{
     // Propiedades (atributos) de la clase
@@ -40,14 +43,14 @@ class PromocionEscritura {
     val sucursales: List<String?>?
     val tarjetas: List<String?>?
     val tipoPromocion: String?
-    val titulo: String?
+    var titulo: String?
     var topeNro: String?
     val topeTexto: String?
     val tyc: String?
     val url: String?
     val descripcion: String?
-    val vigenciaDesde: String?
-    val vigenciaHasta: String?
+    var vigenciaDesde: String?
+    var vigenciaHasta: String?
     val estado: String?
     val motivo: String?
 
@@ -94,6 +97,55 @@ class PromocionEscritura {
         this.vigenciaHasta = vigenciaHasta
         this.estado = estado
         this.motivo = motivo
+    }
+
+    fun validar(): List<MutableList<String>> {
+        var error= mutableListOf<String>()
+        var campos= mutableListOf<String>()
+        if (this.titulo==null || this.titulo!!.isEmpty()) {
+            error.add("Título requerido")
+            campos.add("errorTitulo")
+        }
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        val fechaActual = Date()
+        if(this.vigenciaHasta==null || this.vigenciaHasta!!.isNotEmpty()) {
+            val fechaHastaDate = dateFormat.parse(this.vigenciaHasta)
+            if (this.vigenciaDesde !== null && this.vigenciaDesde!!.isNotEmpty() && fechaHastaDate <= dateFormat.parse(this.vigenciaDesde)) {
+                error.add("Fecha Hasta debe ser posterior a la Fecha Desde.")
+                campos.add("errorVigencia")
+            }
+
+            if (fechaHastaDate <= fechaActual) {
+                error.add("Fecha Hasta debe ser mayor a la Fecha Actual.")
+                campos.add("errorVigencia")
+            }
+        } else {
+            error.add("Fecha Hasta no puede estar vacio.")
+            campos.add("errorVigencia")
+        }
+        if (this.dias == null || this.dias.size==0) {
+            error.add("Al menos un Día de Validez debe ser seleccionado.")
+            campos.add("errorDias")
+        }
+        if (this.tipoPromocion != null && this.tipoPromocion.isNotEmpty()) {
+
+            if (tipoPromocion == "Cuotas") {
+                if (cuotas==null || cuotas!!.isEmpty()) {
+                    error.add("Cantidad de cuotas no puede estar vacio.")
+                    campos.add("errorTipoPromo")
+                }
+            } else if (tipoPromocion == "Reintegro" || tipoPromocion == "Descuento") {
+                if (porcentaje==null || porcentaje!!.isEmpty()) {
+                    error.add("Porcentaje de Descuento no puede estar vacio.")
+                    campos.add("errorTipoPromo")
+                }
+            }
+        } else {
+            error.add("Tipo de Promoción debe ser seleccionado.")
+            campos.add("errorTipoPromo")
+        }
+        return listOf<MutableList<String>>(campos,error)
     }
 }
 
