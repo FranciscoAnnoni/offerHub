@@ -124,7 +124,7 @@ class RegisterPartnersFragment2: Fragment() {
                 val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 val instancia = FuncionesPartners()
-                var comercio = Comercio(null, edNombreRegisterDeEmpresa.text.toString().trim(),selectedOption,base64String,edCuilRegisterDeEmpresa.text.toString().trim())
+                var comercio = Comercio(null, edNombreRegisterDeEmpresa.text.toString().trim(),selectedOption,base64String,edCuilRegisterDeEmpresa.text.toString().trim(),null)
                 coroutineScope.launch {
                     val idComercio = instancia.registrarComercio(comercio,null)
                     val user = UserPartner(

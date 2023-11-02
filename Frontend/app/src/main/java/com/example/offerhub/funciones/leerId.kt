@@ -111,7 +111,9 @@ class LeerId {
             val key = dataSnapshot.key
             val nombre = dataSnapshot.child("nombre").getValue(String::class.java)
             val categoria = dataSnapshot.child("categoria").getValue(String::class.java)
-            val comercio = Comercio(key, nombre,categoria, null, null)
+            val sucursales = dataSnapshot.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {})
+            val cuil = dataSnapshot.child("cuil").getValue(String::class.java)
+            val comercio = Comercio(key, nombre,categoria, null, cuil,sucursales)
             return comercio
         } else {
             return null
@@ -205,7 +207,7 @@ class LeerId {
 
             val estado = dataSnapshot.child("estado").getValue(String::class.java)
 
-            val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales,mutableListOf(), tarjetas,
+            val promocion = Promocion(key, categoria, comercio, cuotas, dias, porcentaje, proveedor, sucursales, tarjetas,
                 tipoPromocion, titulo, topeNro, topeTexto, tyc,descripcion, url, vigenciaDesde, vigenciaHasta,estado)
 
 
@@ -233,32 +235,6 @@ class LeerId {
         }
     }
 
-    suspend fun obtenerSucursalPorId(id: String): Sucursal? {
-        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com").reference
-        val dataSnapshot = database.child("Sucursal").child(id).get().await()
-
-        if (dataSnapshot.exists()) {
-            var latitud = dataSnapshot.child("latitud").getValue(String::class.java)
-            if (latitud != null) {
-                if(latitud.contains("posee")|| latitud.contains("Error")){
-                    latitud = "0.1"
-                }
-            }
-            var longitud = dataSnapshot.child("longitud").getValue(String::class.java)
-            if (longitud != null) {
-                if(longitud.contains("posee") || longitud.contains("Error")){
-                    longitud = "0.1"
-                }
-            }
-            val key = dataSnapshot.key
-            val direccion = dataSnapshot.child("direccion").getValue(String::class.java)
-            val idComercio = dataSnapshot.child("idComercio").getValue(String::class.java)
-            val sucursal = Sucursal(key,direccion,idComercio,latitud?.toDouble(),longitud?.toDouble())
-            return sucursal
-        } else {
-            return null
-        }
-    }
 }
 
 

@@ -56,7 +56,6 @@ class FuncionesPartners{
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
                                 data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                mutableListOf(),
                                 data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("tipoPromocion").getValue(String::class.java),
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
@@ -100,7 +99,7 @@ class FuncionesPartners{
 
     fun agregarSucursalAComercio(idComercio: String, sucursal: String) {
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val referencia = database.getReference("/Comercio").child(idComercio).child("Sucursales")
+        val referencia = database.getReference("/Comercio").child(idComercio).child("sucursales")
 
         referencia.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

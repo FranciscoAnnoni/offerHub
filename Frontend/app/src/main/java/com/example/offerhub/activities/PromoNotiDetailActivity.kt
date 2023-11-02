@@ -174,11 +174,7 @@ class PromoNotiDetailActivity : AppCompatActivity() {
                 promoTyC.text = promocion.tyc
                 promoVigencia.text=promocion.obtenerTextoVigencia()
                 promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
-                val logoBitmap = Comercio(
-                        "",
-                        "",
-                        "","",""
-                ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
+                val logoBitmap = Comercio().base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
                 if (logoBitmap != null) {
                     viewPagerProductImages.setImageBitmap(logoBitmap)
                     val color= obtenerColorMayoritario(logoBitmap)

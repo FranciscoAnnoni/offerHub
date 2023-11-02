@@ -257,18 +257,14 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             promoVigencia.text=promocion.obtenerTextoVigencia()
             coroutineScope.launch {
                 Log.d("PROMO DETAIL sucursales",promocion.sucursales!!.size.toString())
-                val sucursales = promocion.idSucursales ?: emptyList() // Asume que `sucursales` es una lista de Strings en tu objeto `promocion`
+                val sucursales = promocion.sucursales ?: emptyList() // Asume que `sucursales` es una lista de Strings en tu objeto `promocion`
                 val sucursalAdapter = SucursalesAdapter(sucursales)
                 recyclerViewSucursales.adapter = sucursalAdapter
             }
 
             coroutineScope.launch {
                 promoComercio.text = Funciones().traerInfoComercio(promocion.comercio,"nombre")
-                val logoBitmap = Comercio(
-                    "",
-                    "",
-                    "","",""
-                ).base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
+                val logoBitmap = Comercio().base64ToBitmap(Funciones().traerLogoComercio(promocion.comercio))
                 if (logoBitmap != null) {
                     viewPagerProductImages.setImageBitmap(logoBitmap)
                     val color=obtenerColorMayoritario(logoBitmap)

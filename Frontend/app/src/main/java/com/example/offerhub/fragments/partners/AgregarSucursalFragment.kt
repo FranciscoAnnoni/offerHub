@@ -1,6 +1,7 @@
 package com.example.offerhub.fragments.partners
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.offerhub.Comercio
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
-import com.example.offerhub.Sucursal
 import com.example.offerhub.SucursalEscritura
 import com.example.offerhub.databinding.FragmentAgregarSucursalBinding
 import com.example.offerhub.fragments.shopping.CompararFragment

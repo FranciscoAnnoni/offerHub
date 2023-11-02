@@ -47,19 +47,22 @@ class Comercio() : Parcelable {
     var nombre: String? = null
     var logo: String? = null
     var cuil: String? = null
+    var sucursales: List<String?>? = null
 
     constructor(
         id: String?,
         nombre: String?,
         categoria: String?,
         logo: String?,
-        cuil: String?
+        cuil: String?,
+        sucursales: List<String?>?
     ) : this() {
         this.id = id
         this.nombre = nombre
         this.categoria = categoria
         this.logo = logo
         this.cuil = cuil
+        this.sucursales = sucursales
     }
 
     // Implementación de Parcelable
@@ -125,15 +128,6 @@ class Tarjeta{
         this.entidad = entidad
     }
 }
-@Parcelize
-class Sucursal(
-    // Propiedades (atributos) de la clase
-    var id: String?,
-    var direccion: String?,
-    var idComercio: String?,
-    var latitud: Double?,
-    var longitud: Double?
-    ): Parcelable
 
 @Parcelize
 class Promocion(
@@ -144,8 +138,7 @@ class Promocion(
     val dias: List<String?>? = null,
     var porcentaje: String? = null,
     var proveedor: String? = null,
-    val idSucursales: List<String?>? = null,
-    var sucursales: List<Sucursal?>? = null,
+    var sucursales: List<String?>? = null,
     val tarjetas: List<String?>? = null,
     val tipoPromocion: String? = null,
     val titulo: String? = null,
@@ -187,22 +180,6 @@ class Promocion(
             return this.cuotas.toString()
         }
         return ""
-    }
-
-    suspend fun obtenerSucursales() {
-        val listaSucursales: MutableList<Sucursal> = mutableListOf()
-        val instancia = LeerId()
-
-        this.idSucursales?.forEach { idSucursal ->
-            idSucursal?.let { id ->
-                val sucursal = instancia.obtenerSucursalPorId(id)
-                sucursal?.let {
-                    listaSucursales.add(it)
-                }
-            }
-        }
-        Log.d("DB - Obtener Sucursales", "Obteniendo sucursales de DB")
-        this.sucursales = listaSucursales
     }
 
 }
@@ -250,30 +227,11 @@ class LecturaBD {
                                     lista.add(instancia as T)
                                 }
                                 "Comercio" ->{
-                                    val instancia = Comercio(data.key,data.child("nombre").getValue(String::class.java),  data.child("categoria").getValue(String::class.java),data.child("logo").getValue(String::class.java),data.child("cuil").getValue(String::class.java))
+                                    val instancia = Comercio(data.key,data.child("nombre").getValue(String::class.java),  data.child("categoria").getValue(String::class.java),data.child("logo").getValue(String::class.java),data.child("cuil").getValue(String::class.java),data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),)
                                     lista.add(instancia as T)
                                 }
                                 "Tarjeta" ->{
                                     val instancia = Tarjeta(data.key,data.child("procesadora").getValue(String::class.java),  data.child("segmento").getValue(String::class.java),data.child("tipoTarjeta").getValue(String::class.java),data.child("entidad").getValue(String::class.java))
-                                    lista.add(instancia as T)
-                                }
-                                "Sucursal" ->{
-                                    var latitud = data.child("latitud").getValue(String::class.java)
-                                    if (latitud != null) {
-                                        if(latitud.contains("posee") || latitud.contains("Error")){
-                                            latitud = "0"
-                                        }
-                                    }
-                                    var longitud = data.child("longitud").getValue(String::class.java)
-                                    if (longitud != null) {
-                                        if(longitud.contains("posee") || longitud.contains("Error")){
-                                            longitud = "0"
-                                        }
-                                    }
-                                    val instancia = Sucursal(data.key,data.child("direccion").getValue(String::class.java),  data.child("idComercio").getValue(String::class.java),
-                                        latitud?.toDouble(),
-                                        longitud?.toDouble()
-                                    )
                                     lista.add(instancia as T)
                                 }
                                 "Promocion" ->{
@@ -309,7 +267,6 @@ class LecturaBD {
                                         data.child("porcentaje").getValue(String::class.java),
                                         data.child("proveedor").getValue(String::class.java),
                                         data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                        mutableListOf(),
                                         data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                         data.child("tipoPromocion").getValue(String::class.java),
                                         data.child("titulo").getValue(String::class.java),
@@ -486,7 +443,6 @@ class LecturaBD {
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
                                 data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                mutableListOf(),
                                 data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
                                 data.child("tipoPromocion").getValue(String::class.java),
                                 data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),

@@ -11,7 +11,6 @@ import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.LecturaBD
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
-import com.example.offerhub.Sucursal
 import com.example.offerhub.Usuario
 import com.example.offerhub.LeerId
 import com.google.firebase.auth.FirebaseAuth

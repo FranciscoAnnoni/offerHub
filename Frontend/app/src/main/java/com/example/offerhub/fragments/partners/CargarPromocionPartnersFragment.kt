@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.CheckBox
@@ -80,46 +81,42 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
         (binding.lvSucursales.adapter as ArrayAdapter<String>).notifyDataSetChanged()
     }
 
-    fun obtenerSucursalesChequeadas(): MutableList<String> {
-        val listView =binding.lvSucursales
-        val adapter = listView.adapter as ArrayAdapter<String>
+    fun obtenerSucursalesChequeadas(listView: ListView): List<String> {
+        val elementosSeleccionados = mutableListOf<String>()
 
-// Inicializa una lista para almacenar los valores de los elementos marcados
-        val elementosMarcados = mutableListOf<String>()
+        val itemCount = listView.count
+        val checkedItemPositions = listView.checkedItemPositions
 
-// Itera a través de los elementos de la ListView
-        for (i in 0 until adapter.count) {
-            val item = adapter.getItem(i) // Obtiene el elemento en la posición i
-            val view = listView.getChildAt(i) // Obtiene la vista en la posición i
-
-            if (view is ViewGroup) {
-                // Itera a través de las vistas secundarias en busca de CheckBoxes
-                for (j in 0 until view.childCount) {
-                    val childView = view.getChildAt(j)
-                    if (childView is CheckBox) {
-                        if (childView.isChecked) {
-                            // Si el CheckBox está marcado, agrega el valor del elemento a la lista
-                            if (item != null) {
-                                elementosMarcados.add(item)
-                                Log.d("Item Chequeado",elementosMarcados.size.toString())
-                            }
-                        }
-                    }
-                }
+        for (i in 0 until itemCount) {
+            val isChecked = checkedItemPositions.get(i)
+            if (isChecked) {
+                val item = listView.getItemAtPosition(i) as String
+                elementosSeleccionados.add(item)
             }
         }
-        return elementosMarcados
 
-// Ahora, elementosMarcados contiene los valores de los elementos con CheckBoxes marcados
-
+        return elementosSeleccionados
     }
+
+    /*
+    fun marcarSucursales(listView: ListView, sucursales: List<String?>){
+        val itemCount = listView.count
+
+        for (i in 0 until itemCount) {
+            if (sucursales.contains(listView.getItemAtPosition(i))){
+                listView.setItemChecked(i, true)
+            }
+        }
+    }
+
+     */
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var usuario: UserPartner?
         var idComercio: String = ""
-        var comercio: Comercio = Comercio(null, null, null, null, null)
+        var comercio: Comercio = Comercio()
 
         val promocionAnterior = arguments?.getParcelable("promocion") as? Promocion
         val isEditing = arguments?.getBoolean("isEditing", false) ?: false
@@ -142,6 +139,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
         val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_multiple_choice, sucursalesList)
         val listaSucursales = view.findViewById<ListView>(R.id.lvSucursales)
         listaSucursales.adapter = listAdapter
+
 
         fun habilitarTipos(chips: MutableList<String>){
             if (chips.contains("Descuento") || chips.contains("Reintegro")) {
@@ -291,6 +289,28 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                     }
                 }
             }
+            if (comercio.sucursales != null && comercio.sucursales!!.isNotEmpty()) {
+                for (sucursal in comercio.sucursales!!) {
+                    if (sucursal != null) {
+                        updateSucursalesList(sucursal)
+                    }
+                }
+            }
+            /*
+            if(isEditing){
+                if (promocionAnterior != null) {
+                    if (promocionAnterior.sucursales !=null && promocionAnterior.sucursales!!.isNotEmpty()){
+                        marcarSucursales(listaSucursales, promocionAnterior.sucursales!!)
+                    }
+                }
+                listaSucursales.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                    // Acción que se realiza cuando se selecciona un elemento
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+
+            }
+
+             */
         }
 
 
@@ -362,8 +382,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                     promocion.topeNro = topeReintegrotext.text.toString().trim()
                     promocion.topeTexto = "Tope de Reintegro: $"+topeReintegrotext.text.toString().trim()
                 }
-                var sucursales=obtenerSucursalesChequeadas()
-                Log.d("Sucursales Cant",sucursales.size.toString())
+                var sucursales=obtenerSucursalesChequeadas(listaSucursales)
                 if (sucursales.isNotEmpty()){
                     promocion.sucursales = sucursales
                 }
@@ -450,7 +469,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
 
     override fun onAddItem(item: String) {
         updateSucursalesList(item)
-        Log.d("Test","Testing test")
+
     }
 
 

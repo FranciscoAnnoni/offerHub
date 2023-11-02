@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.R
-import com.example.offerhub.Sucursal
 
 class SucursalesAdapter(private val sucursales: List<String?>) : RecyclerView.Adapter<SucursalesAdapter.ViewHolder>() {
 
