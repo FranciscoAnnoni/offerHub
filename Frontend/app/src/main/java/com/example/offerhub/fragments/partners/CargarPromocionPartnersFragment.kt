@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -29,7 +31,9 @@ import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentCargarPromocionPartnersBinding
+import com.example.offerhub.fragments.shopping.CompararFragment
 import com.example.offerhub.funciones.FuncionesPartners
+import com.example.offerhub.interfaces.OnAddItemListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -42,13 +46,15 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class CargarPromocionPartnersFragment: Fragment()  {
+class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
 
     private lateinit var binding: FragmentCargarPromocionPartnersBinding
     private val calendario = Calendar.getInstance()
     private val añoActual = calendario.get(Calendar.YEAR)
     private val mesActual = calendario.get(Calendar.MONTH)
     private val díaActual = calendario.get(Calendar.DAY_OF_MONTH)
+    private val sucursalesList = mutableListOf<String>()
+
 
     fun transformarFecha(fechaOriginal: String): String {
         val formatoOriginal = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -68,6 +74,44 @@ class CargarPromocionPartnersFragment: Fragment()  {
     ): View? {
         binding = FragmentCargarPromocionPartnersBinding.inflate(inflater)
         return binding.root
+    }
+    fun updateSucursalesList(newItem: String) {
+        sucursalesList.add(newItem)
+        (binding.lvSucursales.adapter as ArrayAdapter<String>).notifyDataSetChanged()
+    }
+
+    fun obtenerSucursalesChequeadas(): MutableList<String> {
+        val listView =binding.lvSucursales
+        val adapter = listView.adapter as ArrayAdapter<String>
+
+// Inicializa una lista para almacenar los valores de los elementos marcados
+        val elementosMarcados = mutableListOf<String>()
+
+// Itera a través de los elementos de la ListView
+        for (i in 0 until adapter.count) {
+            val item = adapter.getItem(i) // Obtiene el elemento en la posición i
+            val view = listView.getChildAt(i) // Obtiene la vista en la posición i
+
+            if (view is ViewGroup) {
+                // Itera a través de las vistas secundarias en busca de CheckBoxes
+                for (j in 0 until view.childCount) {
+                    val childView = view.getChildAt(j)
+                    if (childView is CheckBox) {
+                        if (childView.isChecked) {
+                            // Si el CheckBox está marcado, agrega el valor del elemento a la lista
+                            if (item != null) {
+                                elementosMarcados.add(item)
+                                Log.d("Item Chequeado",elementosMarcados.size.toString())
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return elementosMarcados
+
+// Ahora, elementosMarcados contiene los valores de los elementos con CheckBoxes marcados
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -95,8 +139,7 @@ class CargarPromocionPartnersFragment: Fragment()  {
         val tituloPromo = view.findViewById<TextInputEditText>(R.id.tiTituloPromocion)
         val descPromo = view.findViewById<TextInputEditText>(R.id.tiDescripcionPromocion)
         val tycPromo = view.findViewById<TextInputEditText>(R.id.tiTerminosYCondiciones)
-        val sucursales = listOf<String>("Sucursal 1", "Sucursal 2", "Sucursal 3")
-        val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_multiple_choice, sucursales)
+        val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_multiple_choice, sucursalesList)
         val listaSucursales = view.findViewById<ListView>(R.id.lvSucursales)
         listaSucursales.adapter = listAdapter
 
@@ -266,6 +309,10 @@ class CargarPromocionPartnersFragment: Fragment()  {
             findNavController().popBackStack()
         }
 
+        binding.botonAgregarSucursal.setOnClickListener {
+            val bottomSheetDialog = AgregarSucursalFragment.newInstance(comercio,this)
+            bottomSheetDialog.show(requireActivity().supportFragmentManager, "AgregarSucursal")
+        }
         binding.llGuardarPromocion.setOnClickListener {
 
             //agregar chequeo que no queden en null fecha fecha hasta, tipoPromocion, etc
@@ -313,7 +360,12 @@ class CargarPromocionPartnersFragment: Fragment()  {
                 }
                 if (topeReintegrotext.text.isNotEmpty()){
                     promocion.topeNro = topeReintegrotext.text.toString().trim()
-                    promocion.topeNro = topeReintegrotext.text.toString().trim()
+                    promocion.topeTexto = "Tope de Reintegro: $"+topeReintegrotext.text.toString().trim()
+                }
+                var sucursales=obtenerSucursalesChequeadas()
+                Log.d("Sucursales Cant",sucursales.size.toString())
+                if (sucursales.isNotEmpty()){
+                    promocion.sucursales = sucursales
                 }
                 view.findViewById<TextView>(R.id.errorTitulo).visibility=View.GONE
                 view.findViewById<TextView>(R.id.errorTitulo).text=""
@@ -394,6 +446,11 @@ class CargarPromocionPartnersFragment: Fragment()  {
             díaActual
         )
         datePickerDialog.show()
+    }
+
+    override fun onAddItem(item: String) {
+        updateSucursalesList(item)
+        Log.d("Test","Testing test")
     }
 
 

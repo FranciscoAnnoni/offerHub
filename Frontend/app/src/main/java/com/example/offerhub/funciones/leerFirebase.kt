@@ -2,6 +2,7 @@ package com.example.offerhub
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.database.ValueEventListener
 import org.threeten.bp.format.DateTimeFormatter
@@ -39,25 +40,59 @@ class Entidad{
     }
 }
 
-class Comercio{
+class Comercio() : Parcelable {
     // Propiedades (atributos) de la clase
-    var id:String?
-    var categoria: String?
-    var nombre: String?
-    var logo: String?
-    var cuil: String?
+    var id: String? = null
+    var categoria: String? = null
+    var nombre: String? = null
+    var logo: String? = null
+    var cuil: String? = null
 
-    // Constructor primario
-    constructor(id:String?,nombre: String?, categoria: String?,logo:String?,cuil:String?) {
+    constructor(
+        id: String?,
+        nombre: String?,
+        categoria: String?,
+        logo: String?,
+        cuil: String?
+    ) : this() {
         this.id = id
         this.nombre = nombre
         this.categoria = categoria
-        this.logo =  logo
+        this.logo = logo
         this.cuil = cuil
     }
 
-    //Funcion que convierte de base64 a bitmap para luego poder mostrar como imagen
-     fun base64ToBitmap(logo: String?): Bitmap? {
+    // Implementación de Parcelable
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        categoria = parcel.readString()
+        nombre = parcel.readString()
+        logo = parcel.readString()
+        cuil = parcel.readString()
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(categoria)
+        parcel.writeString(nombre)
+        parcel.writeString(logo)
+        parcel.writeString(cuil)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Comercio> {
+        override fun createFromParcel(parcel: Parcel): Comercio {
+            return Comercio(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Comercio?> {
+            return arrayOfNulls(size)
+        }
+    }
+    fun base64ToBitmap(logo: String?): Bitmap? {
         if (logo.isNullOrBlank()) {
             return null
         }
@@ -65,13 +100,12 @@ class Comercio{
         val decodedBytes = Base64.decode(logo, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
     }
-
-   //Desde codigo xml con id: imageView se llamaria de la siguiente forma:
-    //val bitmap = base64ToBitmap(base64Image)
-    //if (bitmap != null) {
-    //    imageView.setImageBitmap(bitmap)
-    //}
 }
+
+
+
+
+
 
 class Tarjeta{
     // Propiedades (atributos) de la clase

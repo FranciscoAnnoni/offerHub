@@ -98,6 +98,31 @@ class FuncionesPartners{
         return comercioReferencia.key
     }
 
+    fun agregarSucursalAComercio(idComercio: String, sucursal: String) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia = database.getReference("/Comercio").child(idComercio).child("Sucursales")
+
+        referencia.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val listaSucursales = mutableListOf<String>()
+
+                for (snapshot in dataSnapshot.children) {
+                    val valor = snapshot.getValue(String::class.java)
+                    if (valor != null) {
+                        listaSucursales.add(valor)
+                    }
+                }
+
+                val nuevoIndice = listaSucursales.size.toString()
+                referencia.child(nuevoIndice).setValue(sucursal)
+                    .addOnCompleteListener {}
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+    }
+
     suspend fun validarComercioNuevo(comercio: Comercio): Boolean {
         var instancia = LeerId()
         val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }

@@ -25,7 +25,7 @@ class SucursalEscritura{
 
 
     // Constructor primario
-    constructor(id:String?,direccion: String?, idComercio: String?,latitud: String?,longitud: String?) {
+    constructor(direccion: String?, idComercio: String?,latitud: String?,longitud: String?) {
         this.direccion = direccion
         this.idComercio = idComercio
         this.latitud = latitud
@@ -40,12 +40,12 @@ class PromocionEscritura {
     val dias: List<String?>?
     var porcentaje: String?
     var proveedor: String?
-    val sucursales: List<String?>?
+    var sucursales: List<String?>?
     val tarjetas: List<String?>?
     val tipoPromocion: String?
     var titulo: String?
     var topeNro: String?
-    val topeTexto: String?
+    var topeTexto: String?
     val tyc: String?
     val url: String?
     val descripcion: String?

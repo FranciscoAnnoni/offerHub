@@ -24,6 +24,14 @@
         tools:layout="@layout/fragment_cargar_promocion_partners"
         />
     <fragment
+        android:id="@+id/AgregarSucursalFragment"
+        android:name="com.example.offerhub.fragments.partners.AgregarSucursalFragment"
+        android:label="AgregarSucursalFragment" >
+        <argument
+            android:name="comercio"
+            app:argType="com.example.offerhub.Comercio" />
+    </fragment>
+    <fragment
         android:id="@+id/partnersProfileFragment"
         android:name="com.example.offerhub.fragments.partners.PartnersProfileFragment"
         android:label="PartnersProfileFragment"
