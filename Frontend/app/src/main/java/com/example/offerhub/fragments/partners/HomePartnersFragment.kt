@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 
 import androidx.navigation.fragment.findNavController
 import android.widget.TextView
@@ -46,6 +47,8 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
         val promocionesHeader = view.findViewById<TextView>(R.id.promotionsHeader)
         val promocionesLayout = view.findViewById<LinearLayout>(R.id.promotionsLayout)
         var botonAgregarPromocion = view.findViewById<LinearLayout>(R.id.llAgregarPromocion)
+        var disponiblesProgress = view.findViewById<ProgressBar>(R.id.disponiblesProgress)
+        var rechazadasProgress = view.findViewById<ProgressBar>(R.id.rechazadasProgress)
 
 
 
@@ -60,8 +63,12 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
                     )
                 }
             }
+            disponiblesProgress.visibility=View.VISIBLE
+            rechazadasProgress.visibility=View.VISIBLE
             promocionesRechazadas = promociones.filter { it.estado == "rechazado" }
             promosDisponibles = promociones.filterNot { it in promocionesRechazadas }
+        }.invokeOnCompletion {
+            cargarPromociones(promosDisponibles,promocionesRechazadas)
         }
         botonAgregarPromocion.setOnClickListener {
             findNavController().navigate(R.id.action_homePartnersFragment_to_cargarPromocionPartnersFragment)
@@ -71,27 +78,15 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
                     promocionesLayout.visibility = View.GONE
                 } else {
                     promocionesLayout.visibility = View.VISIBLE
-                    if (promosDisponibles.isNotEmpty()) {
-                        val recyclerView =
-                            view.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
-                        recyclerView.layoutManager =
-                            LinearLayoutManager(requireContext())
-                        recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles as MutableList<Promocion>,true,this)
-                    }
+
                 }
             }
+
             promocionesRechazadasHeader.setOnClickListener {
                 if (promocionesRechazadasLayout.visibility == View.VISIBLE) {
                     promocionesRechazadasLayout.visibility = View.GONE
                 } else {
                     promocionesRechazadasLayout.visibility = View.VISIBLE
-                    if (promocionesRechazadas.isNotEmpty()) {
-                        val recyclerView =
-                            view.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
-                        recyclerView.layoutManager =
-                            LinearLayoutManager(requireContext())
-                        recyclerView.adapter = PromotionsAdapterPartners(promocionesRechazadas as MutableList<Promocion>,false,this)
-                    }
                 }
             }
         }
@@ -102,6 +97,25 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
 
         // Navegar usando NavController
         findNavController().navigate(R.id.action_homePartnersFragment_to_cargarPromocionPartnersFragment, bundle)
+    }
+
+    fun cargarPromociones(promosDisponibles:List<Promocion>,promocionesRechazadas:List<Promocion>){
+        if (promosDisponibles.isNotEmpty()) {
+            val recyclerView =
+                view!!.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
+            recyclerView.layoutManager =
+                LinearLayoutManager(requireContext())
+            recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles as MutableList<Promocion>,true,this)
+        }
+        if (promocionesRechazadas.isNotEmpty()) {
+            val recyclerView =
+                view!!.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
+            recyclerView.layoutManager =
+                LinearLayoutManager(requireContext())
+            recyclerView.adapter = PromotionsAdapterPartners(promocionesRechazadas as MutableList<Promocion>,false,this)
+        }
+        view!!.findViewById<ProgressBar>(R.id.disponiblesProgress).visibility=View.GONE
+        view!!.findViewById<ProgressBar>(R.id.rechazadasProgress).visibility=View.GONE
     }
 }
 

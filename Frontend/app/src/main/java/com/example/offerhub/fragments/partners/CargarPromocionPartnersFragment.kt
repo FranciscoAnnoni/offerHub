@@ -201,6 +201,11 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                 habilitarTipos(chips)
             }
 
+            listaSucursales.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                // Acción que se realiza cuando se selecciona un elemento
+                binding.llGuardarPromocion.visibility = View.VISIBLE
+            }
+
             tituloPromo.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     binding.llGuardarPromocion.visibility = View.VISIBLE

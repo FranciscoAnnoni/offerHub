@@ -8,7 +8,7 @@
     <!-- LinearLayout para los botones de edición y eliminación -->
     <LinearLayout
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp"
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_weight="1"
+            android:gravity="left"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/editButton">
@@ -28,6 +29,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="left"
                 android:orientation="vertical">
 
                 <TextView
@@ -35,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-
+                    android:ellipsize="end"
                     android:text="Título"
                     android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +92,11 @@
 
         </LinearLayout>
 
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="right"
+    android:orientation="horizontal">
         <!-- Botón de Editar -->
         <ImageButton
             android:id="@+id/editButton"
@@ -108,5 +114,6 @@
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             />
+</LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
