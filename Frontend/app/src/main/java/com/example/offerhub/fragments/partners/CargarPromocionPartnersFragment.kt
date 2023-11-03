@@ -13,8 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -26,13 +24,11 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.PromocionEscritura
 import com.example.offerhub.R
 import androidx.navigation.fragment.findNavController
-
 import com.example.offerhub.Comercio
 import com.example.offerhub.LeerId
 import com.example.offerhub.Promocion
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentCargarPromocionPartnersBinding
-import com.example.offerhub.fragments.shopping.CompararFragment
 import com.example.offerhub.funciones.FuncionesPartners
 import com.example.offerhub.interfaces.OnAddItemListener
 import com.google.android.material.chip.Chip
@@ -45,6 +41,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
 
 
 class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
@@ -98,7 +95,6 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
         return elementosSeleccionados
     }
 
-    /*
     fun marcarSucursales(listView: ListView, sucursales: List<String?>){
         val itemCount = listView.count
 
@@ -109,7 +105,6 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
         }
     }
 
-     */
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -301,7 +296,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                     }
                 }
             }
-            /*
+
             if(isEditing){
                 if (promocionAnterior != null) {
                     if (promocionAnterior.sucursales !=null && promocionAnterior.sucursales!!.isNotEmpty()){
@@ -314,8 +309,6 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                 }
 
             }
-
-             */
         }
 
 
