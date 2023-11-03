@@ -201,6 +201,28 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                 binding.llGuardarPromocion.visibility = View.VISIBLE
             }
 
+            fechaDesde.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+
+            fechaHasta.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    binding.llGuardarPromocion.visibility = View.VISIBLE
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+
             tituloPromo.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     binding.llGuardarPromocion.visibility = View.VISIBLE
@@ -334,16 +356,19 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
         binding.llGuardarPromocion.setOnClickListener {
 
             //agregar chequeo que no queden en null fecha fecha hasta, tipoPromocion, etc
-            val mensaje = "La promo va desde: " + fechaDesde.text.toString().trim() + " hasta: " + fechaHasta.text.toString().trim()
-            var diasSeleccionados = "Los días seleccionados son: "
+           var diasSeleccionados = "Los días seleccionados son: "
             var tipoPromocion = ""
             var desde: String? = null
             var hasta: String? = null
             try{
                 desde = transformarFecha(fechaDesde.text.toString().trim())
-                hasta = transformarFecha(fechaHasta.text.toString().trim())
             }catch (e: Exception) {
                 desde = fechaDesde.text.toString()
+
+            }
+            try{
+                hasta = transformarFecha(fechaHasta.text.toString().trim())
+            }catch (e: Exception) {
                 hasta = fechaHasta.text.toString()
             }
 
@@ -395,9 +420,8 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                 view.findViewById<TextView>(R.id.errorDias).visibility=View.GONE
                 view.findViewById<TextView>(R.id.errorDias).text=""
                 var errores: List<MutableList<String>> = mutableListOf()
-                if (!isEditing){
-                    errores = promocion.validar()
-                }
+                errores = promocion.validar()
+
                 if (!errores.isEmpty() && errores[0].size > 0) {
                     var campos=errores[0]
                     var error=errores[1]

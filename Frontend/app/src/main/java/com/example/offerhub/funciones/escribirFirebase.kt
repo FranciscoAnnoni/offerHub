@@ -114,8 +114,8 @@ class PromocionEscritura {
             val fechaHastaDate = dateFormat.parse(this.vigenciaHasta)
             if (this.vigenciaDesde != null && this.vigenciaDesde!!.isNotEmpty()){
                 if(fechaHastaDate <= dateFormat.parse(this.vigenciaDesde)){
-                        error.add("Fecha Hasta debe ser posterior a la Fecha Desde.")
-                        campos.add("errorVigencia")
+                    error.add("Fecha Hasta debe ser posterior a la Fecha Desde.")
+                    campos.add("errorVigencia")
                 }
             }
 
