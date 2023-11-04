@@ -11,8 +11,8 @@
     <TextView
         android:id="@+id/inicioHome"
         style="@style/titulos"
-        android:layout_width="356dp"
-        android:layout_height="146dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="Bienvenido"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/promotionsHeader"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Promociones disponibles"
         android:drawableRight="@drawable/ic_expand_more"
@@ -56,7 +56,7 @@
     </LinearLayout>
     <TextView
         android:id="@+id/promocionesRechazadasHeader"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Promociones rechazadas"
         android:drawableRight="@drawable/ic_expand_more"

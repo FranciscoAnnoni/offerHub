@@ -76,8 +76,14 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
             promocionesHeader.setOnClickListener {
                 if (promocionesLayout.visibility == View.VISIBLE) {
                     promocionesLayout.visibility = View.GONE
+                    promocionesHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0, 0, R.drawable.ic_expand_more, 0
+                    )
                 } else {
                     promocionesLayout.visibility = View.VISIBLE
+                    promocionesHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0, 0, R.drawable.ic_expand_less, 0
+                    )
 
                 }
             }
@@ -85,8 +91,14 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
             promocionesRechazadasHeader.setOnClickListener {
                 if (promocionesRechazadasLayout.visibility == View.VISIBLE) {
                     promocionesRechazadasLayout.visibility = View.GONE
+                    promocionesRechazadasHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0, 0, R.drawable.ic_expand_more, 0
+                    )
                 } else {
                     promocionesRechazadasLayout.visibility = View.VISIBLE
+                    promocionesRechazadasHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0, 0, R.drawable.ic_expand_less, 0
+                    )
                 }
             }
         }

@@ -1,6 +1,8 @@
 package com.example.offerhub.fragments.partners
 
+import android.app.AlertDialog
 import android.graphics.PorterDuff
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton
 import com.example.offerhub.Promocion
@@ -39,7 +42,7 @@ class PromotionsAdapterPartners(private val context: HomePartnersFragment, priva
 
     override fun onBindViewHolder(holder: PromotionViewHolder, position: Int) {
         val currentPromotion = promociones[position]
-        if (currentPromotion.estado!!.lowercase()=="aprobado"){
+        if (currentPromotion.estado!!.lowercase() in listOf<String>("aprobado","pendiente")){
             holder.previewButton.visibility = View.VISIBLE
         } else {
             holder.previewButton.visibility = View.GONE
@@ -63,7 +66,28 @@ class PromotionsAdapterPartners(private val context: HomePartnersFragment, priva
         currentPromotion.estado?.let { Log.d("estado", it) }
         // Configurar acciones para los botones de editar y eliminar
         holder.editButton.setOnClickListener {
+            if(currentPromotion.estado.lowercase() in listOf<String>("aprobado","rechazado")) {
+                val alertDialog = AlertDialog.Builder(context.requireContext())
+                    .setTitle("Atención")
+                    .setMessage("Por favor, tenga en cuenta que al editar esta promoción, será nuevamente enviada para revisión y no será visible para los usuarios hasta ser aprobada.")
+                    .setCancelable(true)
+                    .show()
+                Handler().postDelayed({
+                    alertDialog.dismiss()
+                }, 3000)
+            }
             homePartnersFragment.editPromocion(currentPromotion)
+        }
+        holder.previewButton.setOnClickListener {
+            val action =
+                HomePartnersFragmentDirections.actionHomePartnersFragmentToPromoDetailPartnersFragment(
+                    currentPromotion
+                )
+            context.requireView().findNavController().navigate(action)
+        }
+        holder.btnVerMotivo.setOnClickListener {
+            val bottomSheetDialog = VerMotivoFragment.newInstance(currentPromotion.motivo.toString())
+            bottomSheetDialog.show(context.requireActivity().supportFragmentManager, "VerMotivo")
         }
 
         holder.deleteButton.setOnClickListener {

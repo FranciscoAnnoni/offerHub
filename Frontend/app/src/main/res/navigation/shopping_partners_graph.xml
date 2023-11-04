@@ -11,10 +11,21 @@
         android:label="HomePartnersFragment"
         tools:layout="@layout/fragment_home_partners"
         >
-    <action
-        android:id="@+id/action_homePartnersFragment_to_cargarPromocionPartnersFragment"
-        app:destination="@id/cargarPromocionPartnersFragment"
-        />
+            <action
+                android:id="@+id/action_homePartnersFragment_to_cargarPromocionPartnersFragment"
+                app:destination="@id/cargarPromocionPartnersFragment"
+                app:enterAnim="@anim/from_bottom"
+                app:exitAnim="@anim/to_start"
+                app:popEnterAnim="@anim/from_start"
+                app:popExitAnim="@anim/to_bottom"
+                />
+                <action
+                android:id="@+id/action_homePartnersFragment_to_promoDetailPartnersFragment"
+                app:destination="@id/promoDetailPartnersFragment"
+                app:enterAnim="@anim/from_bottom"
+                app:exitAnim="@anim/to_start"
+                app:popEnterAnim="@anim/from_start"
+                app:popExitAnim="@anim/to_bottom" />
     </fragment>
 
     <fragment
@@ -59,6 +70,21 @@
         android:name="com.example.offerhub.fragments.settings.LegalsInfoFragment"
         android:label="LegalsInfoFragment"
         tools:layout="@layout/fragment_legals"/>
+    <fragment
+        android:id="@+id/promoDetailPartnersFragment"
+        android:name="com.example.offerhub.fragments.partners.PromoDetailPartnersFragment"
+        android:label="PromoDetailPartnersFragment"
+        tools:layout="@layout/fragment_promo_detail_partners">
+        <argument
+            android:name="promocion"
+            app:argType="com.example.offerhub.Promocion" />
+    </fragment>
+    <fragment
+        android:id="@+id/VerMotivoFragment"
+        android:name="com.example.offerhub.fragments.partners.VerMotivoFragment"
+        android:label="VerMotivoFragment" >
+        <argument android:name="motivo" />
+    </fragment>
 </navigation>
 
 
