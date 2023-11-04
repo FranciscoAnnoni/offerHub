@@ -62,7 +62,7 @@ class Funciones {
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
-            val promos = instanciaLectura.obtenerPromosPorTarjeta("No posee")
+            val promos = instanciaLectura.obtenerPromosPorTarjeta(null)
             for (promo in promos){
                 if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
                     listaPromos.add(promo)
