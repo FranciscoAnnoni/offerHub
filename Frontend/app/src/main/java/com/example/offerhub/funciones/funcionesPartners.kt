@@ -23,72 +23,107 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class FuncionesPartners{
-    fun aprobarPromocion(promocion:Promocion){
+class FuncionesPartners {
+    fun aprobarPromocion(promocion: Promocion) {
         val instancia = EscribirBD()
-        promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it,"estado","Aprobado") }
+        promocion.id?.let {
+            instancia.editarAtributoDeClase(
+                "/Promocion",
+                it,
+                "estado",
+                "Aprobado"
+            )
+        }
     }
-    suspend fun  obtenerPromosPorComercio(comercioparam: String): List<Promocion> = suspendCoroutine { continuation ->
-        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
-        val promocionRef = database.getReference("/Promocion")
-        val lista: MutableList<Promocion> = mutableListOf()
-        promocionRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (data in dataSnapshot.children){
-                        val comercio: String? = data.child("comercio").getValue(String::class.java)
-                        if (comercio == comercioparam) {
-                            val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            val desdeFormateado: LocalDate?
-                            val hastaFormateado: LocalDate?
-                            var vigenciaDesdeString = data.child("vigenciaDesde").getValue(String::class.java)
-                            if(vigenciaDesdeString != "No posee" && vigenciaDesdeString != " - "){
-                                desdeFormateado = LocalDate.parse(vigenciaDesdeString, formato)
-                            } else { desdeFormateado = null }
-                            var vigenciaHastaString: String? = data.child("vigenciaHasta").getValue(String::class.java)
-                            if(vigenciaHastaString != "No posee" && vigenciaHastaString != " - "){
-                                hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
-                            } else { hastaFormateado = null }
-                            val coroutineScope = CoroutineScope(Dispatchers.Main)
-                            val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
-                                data.child("cuotas").getValue(String::class.java),
-                                data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                data.child("porcentaje").getValue(String::class.java), data.child("proveedor").getValue(String::class.java),
-                                data.child("sucursales").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                mutableListOf(),
-                                data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {}),
-                                data.child("tipoPromocion").getValue(String::class.java),
-                                data.child("titulo").getValue(String::class.java), data.child("topeNro").getValue(String::class.java),
-                                data.child("topeTexto").getValue(String::class.java),data.child("tyc").getValue(String::class.java),data.child("descripcion").getValue(String::class.java),
-                                data.child("url").getValue(String::class.java),
-                                desdeFormateado,
-                                hastaFormateado,
-                                data.child("estado").getValue(String::class.java),
-                                data.child("motivo").getValue(String::class.java))
-                            lista.add(instancia)
-                        }
 
+    suspend fun obtenerPromosPorComercio(comercioparam: String): List<Promocion> =
+        suspendCoroutine { continuation ->
+            val database =
+                FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+            val promocionRef = database.getReference("/Promocion")
+            val lista: MutableList<Promocion> = mutableListOf()
+            promocionRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (data in dataSnapshot.children) {
+                            val comercio: String? =
+                                data.child("comercio").getValue(String::class.java)
+                            if (comercio == comercioparam) {
+                                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                val desdeFormateado: LocalDate?
+                                val hastaFormateado: LocalDate?
+                                var vigenciaDesdeString =
+                                    data.child("vigenciaDesde").getValue(String::class.java)
+                                if (vigenciaDesdeString != "No posee" && vigenciaDesdeString != " - ") {
+                                    desdeFormateado = LocalDate.parse(vigenciaDesdeString, formato)
+                                } else {
+                                    desdeFormateado = null
+                                }
+                                var vigenciaHastaString: String? =
+                                    data.child("vigenciaHasta").getValue(String::class.java)
+                                if (vigenciaHastaString != "No posee" && vigenciaHastaString != " - ") {
+                                    hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
+                                } else {
+                                    hastaFormateado = null
+                                }
+                                val coroutineScope = CoroutineScope(Dispatchers.Main)
+                                val instancia = Promocion(
+                                    data.key,
+                                    data.child("categoria").getValue(String::class.java),
+                                    comercio,
+                                    data.child("cuotas").getValue(String::class.java),
+                                    data.child("dias").getValue(object :
+                                        GenericTypeIndicator<List<String?>>() {}),
+                                    data.child("porcentaje").getValue(String::class.java),
+                                    data.child("proveedor").getValue(String::class.java),
+                                    data.child("sucursales").getValue(object :
+                                        GenericTypeIndicator<List<String?>>() {}),
+                                    mutableListOf(),
+                                    data.child("tarjetas").getValue(object :
+                                        GenericTypeIndicator<List<String?>>() {}),
+                                    data.child("tipoPromocion").getValue(String::class.java),
+                                    data.child("titulo").getValue(String::class.java),
+                                    data.child("topeNro").getValue(String::class.java),
+                                    data.child("topeTexto").getValue(String::class.java),
+                                    data.child("tyc").getValue(String::class.java),
+                                    data.child("descripcion").getValue(String::class.java),
+                                    data.child("url").getValue(String::class.java),
+                                    desdeFormateado,
+                                    hastaFormateado,
+                                    data.child("estado").getValue(String::class.java),
+                                    data.child("motivo").getValue(String::class.java)
+                                )
+                                lista.add(instancia)
+                            }
+
+                        }
                     }
+
+                    continuation.resume(lista)
                 }
 
-                continuation.resume(lista)
-            }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d("Error", "Error en lectura de bd")
+                    continuation.resumeWithException(databaseError.toException())
+                }
+            })
+        }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.d("Error","Error en lectura de bd")
-                continuation.resumeWithException(databaseError.toException())
-            }
-        })
-    }
-
-    fun rechazarPromocion(promocion:Promocion,  razon:String){
+    fun rechazarPromocion(promocion: Promocion, razon: String) {
         val instancia = EscribirBD()
-        promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it,"estado","Rechazado") }
-        promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it,"nota",razon) }
+        promocion.id?.let {
+            instancia.editarAtributoDeClase(
+                "/Promocion",
+                it,
+                "estado",
+                "Rechazado"
+            )
+        }
+        promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it, "nota", razon) }
     }
 
-    fun registrarComercio(comercio: Comercio, sucursales:List<SucursalEscritura>?): String? {
+    fun registrarComercio(comercio: Comercio, sucursales: List<SucursalEscritura>?): String? {
         val database: FirebaseDatabase =
             FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val referenciaCom: DatabaseReference = database.reference.child("/Comercio")
@@ -115,6 +150,103 @@ class FuncionesPartners{
         promoReferencia.setValue(promocion)
     }
 
+    suspend fun obtenerPromosPendientes(): List<Promocion> = suspendCoroutine { continuation ->
+        val database =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val promocionRef = database.getReference("/Promocion")
+        val lista: MutableList<Promocion> = mutableListOf()
+        promocionRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (data in dataSnapshot.children) {
+                        val estado: String? = data.child("estado").getValue(String::class.java)
+                        if (estado == "pendiente") {
+                            val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            val desdeFormateado: LocalDate?
+                            val hastaFormateado: LocalDate?
+                            var vigenciaDesdeString =
+                                data.child("vigenciaDesde").getValue(String::class.java)
+                            if (vigenciaDesdeString != "No posee" && vigenciaDesdeString != " - ") {
+                                desdeFormateado = LocalDate.parse(vigenciaDesdeString, formato)
+                            } else {
+                                desdeFormateado = null
+                            }
+                            var vigenciaHastaString: String? =
+                                data.child("vigenciaHasta").getValue(String::class.java)
+                            if (vigenciaHastaString != "No posee" && vigenciaHastaString != " - ") {
+                                hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
+                            } else {
+                                hastaFormateado = null
+                            }
+                            val coroutineScope = CoroutineScope(Dispatchers.Main)
+                            val instancia = Promocion(
+                                data.key,
+                                data.child("categoria").getValue(String::class.java),
+                                data.child("comercio").getValue(String::class.java),
+                                data.child("cuotas").getValue(String::class.java),
+                                data.child("dias")
+                                    .getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("porcentaje").getValue(String::class.java),
+                                data.child("proveedor").getValue(String::class.java),
+                                data.child("sucursales")
+                                    .getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                mutableListOf(),
+                                data.child("tarjetas")
+                                    .getValue(object : GenericTypeIndicator<List<String?>>() {}),
+                                data.child("tipoPromocion").getValue(String::class.java),
+                                data.child("titulo").getValue(String::class.java),
+                                data.child("topeNro").getValue(String::class.java),
+                                data.child("topeTexto").getValue(String::class.java),
+                                data.child("tyc").getValue(String::class.java),
+                                data.child("descripcion").getValue(String::class.java),
+                                data.child("url").getValue(String::class.java),
+                                desdeFormateado,
+                                hastaFormateado,
+                                estado,
+                                data.child("motivo").getValue(String::class.java)
+                            )
+                            lista.add(instancia)
+                        }
+
+                    }
+                }
+
+                continuation.resume(lista)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d("Error", "Error en lectura de bd")
+                continuation.resumeWithException(databaseError.toException())
+            }
+        })
+    }
+
+    suspend fun obtenerReportes(): List<String> = suspendCoroutine { continuation ->
+        val database =
+            FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val promocionRef = database.getReference("/Reportes")
+        val lista: MutableList<String> = mutableListOf()
+        promocionRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (data in dataSnapshot.children) {
+                        val reporte = data.getValue(String::class.java)
+                        if (reporte != null) {
+                            lista.add(reporte)
+                        }
+                    }
+                }
+                continuation.resume(lista)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d("Error", "Error en lectura de bd")
+                continuation.resumeWithException(databaseError.toException())
+            }
+        })
+    }
 }
 
 /*

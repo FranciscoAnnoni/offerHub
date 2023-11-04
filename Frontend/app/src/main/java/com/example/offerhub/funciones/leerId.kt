@@ -2,6 +2,7 @@ package com.example.offerhub
 
 import android.util.Log
 import com.example.offerhub.data.UserPartner
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -119,8 +120,20 @@ class LeerId {
 
             Usuario(id, nombre, correo, tarjetas, favoritos, wishlistComercio, wishlistRubro, promocionesReintegro,homeModoFull)
         } else {
-            Log.d("DB - ID", "El usuario es NULO")
-            null // El usuario no existe
+            val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
+            var usr: Usuario? =null
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                if(currentUser.email=="admin@offerhub.com"){
+                    usr=Usuario(currentUser.uid,"OfferHub Admin","admin@offerhub.com", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(),mutableListOf(),"")
+                    Log.d("Es Admin","Si")
+                } else {
+                    Log.d("DB - IDN", "El usuario es NULO")
+                }
+            } else {
+                Log.d("DB - IDN", "El usuario es NULO")
+            }
+            usr // El usuario no existe
         }
     }
 
@@ -136,7 +149,7 @@ class LeerId {
             val idComercio = dataSnapshot.child("idComercio").getValue(String::class.java) ?: ""
             UserPartner(nombre, cuil, correo, idComercio,id, listaPromociones)
         } else {
-            Log.d("DB - ID", "El usuario es NULO")
+            Log.d("DB - IDP", "El usuario es NULO")
             null // El usuario no existe
         }
     }

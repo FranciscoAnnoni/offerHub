@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.fragment.app.viewModels
 import com.example.offerhub.Funciones
 import com.example.offerhub.contexts.ApplicationContextProvider
+import com.example.offerhub.funciones.FuncionesPartners
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,10 +42,18 @@ object UserViewModelSingleton {
                 val uvm=UserViewModel()
                 var job=CoroutineScope(Dispatchers.Main).launch {
                 uvm.usuario = Funciones().traerUsuarioActual()
-                uvm.listadoDePromosDisp = Funciones().obtenerPromociones(uvm.usuario!!)
-                uvm.favoritos = Funciones().obtenerPromocionesFavoritas(uvm.usuario!!)
-                uvm.reintegros = Funciones().obtenerPromocionesReintegro(uvm.usuario!!)
-                uvm.tarjetasDisponibles = Funciones().obtenerTarjetasDisponibles()
+                    val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
+                    val currentUser = auth.currentUser
+                    if(currentUser!=null) {
+                        if(currentUser.email!="admin@offerhub.com"){
+                        uvm.listadoDePromosDisp = Funciones().obtenerPromociones(uvm.usuario!!)
+                        uvm.favoritos = Funciones().obtenerPromocionesFavoritas(uvm.usuario!!)
+                        uvm.reintegros = Funciones().obtenerPromocionesReintegro(uvm.usuario!!)
+                        uvm.tarjetasDisponibles = Funciones().obtenerTarjetasDisponibles()
+                        } else {
+                            uvm.listadoDePromosDisp = FuncionesPartners().obtenerPromosPendientes()
+                        }
+                    }
                 userViewModelCache.guardarUserViewModel(uvm)
                 }
                 initialize(uvm)
