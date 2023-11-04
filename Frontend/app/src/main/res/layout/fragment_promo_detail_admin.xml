@@ -482,6 +482,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:id="@+id/btnAprobar"
             android:layout_height="wrap_content"
             android:text="✔ Aprobar"
             android:textAlignment="center"
@@ -500,6 +501,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="✘ Rechazar"
+            android:id="@+id/btnRechazar"
             android:textAlignment="center"
             android:textSize="20sp"
             android:background="@drawable/agregar_tarjeta_background"

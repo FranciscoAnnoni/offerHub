@@ -1,11 +1,8 @@
 package com.example.offerhub.fragments.admin
 
-import TarjetasPromocionAdapter
 import UserViewModel
 import android.animation.ObjectAnimator
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -16,6 +13,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -23,7 +21,6 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
 import com.example.offerhub.Funciones
@@ -31,11 +28,8 @@ import com.example.offerhub.Promocion
 import com.example.offerhub.R
 import com.example.offerhub.activities.SucursalesAdapter
 import com.example.offerhub.databinding.FragmentPromoDetailAdminBinding
-import com.example.offerhub.databinding.FragmentPromoDetailBinding
-import com.example.offerhub.funciones.AlarmaNotificacion
-import com.example.offerhub.funciones.CanalNoti
+import com.example.offerhub.funciones.FuncionesPartners
 import com.example.offerhub.funciones.getContrastColor
-import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
 import com.example.offerhub.viewmodel.UserViewModelCache
@@ -43,7 +37,6 @@ import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class PromoDetailAdminFragment: Fragment(R.layout.fragment_promo_detail_admin){
     private val args by navArgs<PromoDetailAdminFragmentArgs>()
@@ -101,7 +94,41 @@ class PromoDetailAdminFragment: Fragment(R.layout.fragment_promo_detail_admin){
                 binding.recyclerViewSucursales.visibility = View.GONE
             }
         }
+        fun mostrarVerificacionPop(action:String, callback: (String?) -> Unit) {
+            val inflater = LayoutInflater.from(context)
+            val dialogView = inflater.inflate(R.layout.dialog_with_text, null)
+            val editText = dialogView.findViewById<EditText>(R.id.editText)
 
+            val alertDialog = AlertDialog.Builder(context)
+                .setTitle("Confirmación")
+                .setView(dialogView)
+                .setPositiveButton(action) { dialog, which ->
+                    val userEnteredText = editText.text.toString()
+                    callback(userEnteredText)
+                    findNavController().navigateUp()
+                }
+                .setNegativeButton("Cancelar") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .create()
+
+            alertDialog.show()
+
+        }
+        binding.btnAprobar.setOnClickListener {
+            mostrarVerificacionPop("Aprobar",fun(comentario:String?){
+                userViewModel.listadoDePromosDisp=userViewModel.listadoDePromosDisp.filter { it -> it.id != promocion.id }
+                UserViewModelCache().guardarUserViewModel(userViewModel)
+                FuncionesPartners().aprobarPromocion(promocion)
+            })
+        }
+        binding.btnRechazar.setOnClickListener {
+            mostrarVerificacionPop("Rechazar",fun(comentario:String?){
+                userViewModel.listadoDePromosDisp=userViewModel.listadoDePromosDisp.filter { it -> it.id != promocion.id }
+                UserViewModelCache().guardarUserViewModel(userViewModel)
+                FuncionesPartners().rechazarPromocion(promocion,comentario?:"")
+            })
+        }
         val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
 
         // Agrega un OnClickListener al ImageView
