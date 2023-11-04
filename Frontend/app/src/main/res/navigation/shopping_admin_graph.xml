@@ -35,6 +35,11 @@
             android:id="@+id/action_adminUserAccountFragment_to_adminProfileFragment"
             app:destination="@id/adminProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/notificarErrorFragmentAdmin"
+        android:name="com.example.offerhub.fragments.admin.NotificarErrorFragmentAdmin"
+        android:label="NotificarErrorFragmentAdmin"
+        tools:layout="@layout/fragment_notificar_error_admin"/>
 </navigation>
 
 
