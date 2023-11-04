@@ -67,7 +67,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
     <TextView
         android:id="@+id/privacidad"
         style="@style/textoChicoNegro"

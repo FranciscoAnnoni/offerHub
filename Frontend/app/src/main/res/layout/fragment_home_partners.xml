@@ -11,8 +11,11 @@
     <TextView
         android:id="@+id/inicioHome"
         style="@style/titulos"
+        android:layout_width="356dp"
+        android:layout_height="146dp"
+        android:layout_marginTop="15dp"
         android:text="Bienvenido"
-        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

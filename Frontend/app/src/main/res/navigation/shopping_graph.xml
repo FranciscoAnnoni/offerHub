@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_promoDetailFragment"
-            app:destination="@id/promoDetailFragment" />
+            app:destination="@id/promoDetailFragment"
+            app:enterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/to_start"
+            app:popEnterAnim="@anim/from_start"
+            app:popExitAnim="@anim/to_bottom" />
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:popUpTo="@id/homeFragment"
@@ -42,7 +46,8 @@
         tools:layout="@layout/fragment_fav">
         <action
             android:id="@+id/action_favFragment_to_promoDetailFragment"
-            app:destination="@id/promoDetailFragment" />
+            app:destination="@id/promoDetailFragment"
+            app:enterAnim="@anim/from_bottom" />
 
     </fragment>
 
@@ -53,18 +58,39 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_userAccountFragment"
-            app:destination="@id/userAccountFragment" />
+            app:destination="@id/userAccountFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
         <action
             android:id="@+id/action_profileFragment_to_legalsInfoFragment"
-            app:destination="@id/legalsInfoFragment" />
+            app:destination="@id/legalsInfoFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_profileFragment_to_cargadoTarjetasFragment"
             app:destination="@id/cargadoTarjetasFragment"
-            />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_profileFragment_to_misTarjetasFragment"
             app:destination="@id/misTarjetasFragment"
-            />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_notificarErrorFragment"
+            app:destination="@id/notificarErrorFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
 
     <fragment
@@ -77,7 +103,10 @@
         <action
             android:id="@+id/action_misTarjetasFragment_to_cargadoTarjetasFragment"
             app:destination="@id/cargadoTarjetasFragment"
-            />
+            app:enterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/to_start"
+            app:popEnterAnim="@anim/from_start"
+            app:popExitAnim="@anim/to_bottom" />
 
     </fragment>
 
@@ -85,7 +114,15 @@
         android:id="@+id/cargadoTarjetasFragment"
         android:name="com.example.offerhub.fragments.settings.CargadoTarjetasFragment"
         android:label="CargadoTarjetasFragment"
-        />
+        >
+        <action
+            android:id="@+id/action_cargadoTarjetasFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
@@ -94,7 +131,8 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_promoDetailFragment"
-            app:destination="@id/promoDetailFragment" />
+            app:destination="@id/promoDetailFragment"
+            app:enterAnim="@anim/from_bottom" />
         <action
             android:id="@+id/action_searchFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
@@ -109,7 +147,11 @@
         android:label="UserAccountFragment">
         <action
             android:id="@+id/action_userAccountFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left"/>
     </fragment>
     <fragment
         android:id="@+id/legalsInfoFragment"
@@ -129,6 +171,19 @@
         <argument
             android:name="promocion2"
             app:argType="com.example.offerhub.Promocion" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificarErrorFragment"
+        android:name="com.example.offerhub.fragments.settings.NotificarErrorFragment"
+        android:label="NotificarErrorFragment"
+        tools:layout="@layout/fragment_notificar_error">
+        <action
+            android:id="@+id/action_notificarErrorFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
     </fragment>
 </navigation>
 

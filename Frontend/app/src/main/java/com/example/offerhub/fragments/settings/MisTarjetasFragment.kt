@@ -22,6 +22,7 @@ import com.example.offerhub.Tarjeta
 import com.example.offerhub.Usuario
 import com.example.offerhub.activities.MisTarjetasAdapter
 import com.example.offerhub.databinding.FragmentMisTarjetasBinding
+import com.example.offerhub.util.hideBottomNavigationView
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
@@ -85,6 +86,13 @@ class MisTarjetasFragment: Fragment() {
 
         }
 
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        hideBottomNavigationView()
     }
 
     override fun onCreateContextMenu(

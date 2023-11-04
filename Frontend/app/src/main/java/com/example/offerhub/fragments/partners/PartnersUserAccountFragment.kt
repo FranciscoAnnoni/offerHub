@@ -16,6 +16,8 @@ import com.example.offerhub.activities.LoginRegisterActivity
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentPartnerUserAccountBinding
 import com.example.offerhub.util.Resource
+import com.example.offerhub.util.hideBottomNavigationView
+import com.example.offerhub.util.hideBottomNavigationViewPartners
 import com.example.offerhub.viewmodel.PartnersUserAccountViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -170,6 +172,12 @@ class PartnersUserAccountFragment: Fragment() {
 
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        hideBottomNavigationViewPartners()
     }
 
 // muestra la info del usuario Partner

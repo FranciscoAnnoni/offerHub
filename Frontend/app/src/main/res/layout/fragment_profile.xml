@@ -207,35 +207,38 @@
                 android:textStyle="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="8dp"
                 android:text=""
                 app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/linearOrders" />
+                app:layout_constraintTop_toBottomOf="@id/linearOrders"
+                />
 
             <LinearLayout
-                android:id="@+id/linearNotifications"
+                android:id="@+id/notificarError"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/tvNotifications"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/search_box_background">
+                android:background="@drawable/search_box_background"
+                >
 
                 <LinearLayout
+                    android:id="@id/notificarError"
+                    android:padding="4dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="3dp">
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/settings_items_background"
-                        android:backgroundTint="#4cd964"
-                        android:src="@drawable/ic_notification"
+                        android:backgroundTint="@color/g_gray700"
+                        android:src="@drawable/ic_close"
                         app:tint="@color/white"
                         android:layout_marginStart="7dp"/>
 
@@ -246,22 +249,16 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Notificacion"
+                        android:text="Notificar un Error"
                         android:textColor="@color/g_gray700"
                         android:textStyle="bold" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchNotification"
-                        style="@style/customSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:backgroundTint="@color/violetaMasClaro"
-                        android:buttonTint="@color/violetaMasClaro"
-                        android:checked="true"
-                        android:thumb="@drawable/thumb_layerlist"
-                        app:track="@drawable/track_backgrounds" />
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_arrow"
+                        app:tint="@color/g_blue_gray200"
+                        android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -275,10 +272,10 @@
                 android:textStyle="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:text=""
                 app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/linearNotifications" />
+                app:layout_constraintTop_toBottomOf="@id/notificarError" />
 
             <LinearLayout
                 android:background="@drawable/search_box_background"
@@ -289,16 +286,14 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/tvRegional"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
-               >
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
                     android:padding="10dp"
                     android:id="@+id/linearLogOut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
->
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="30dp"
@@ -346,7 +341,6 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@+id/linear_regional" />
-
 
 
             <androidx.constraintlayout.widget.Guideline

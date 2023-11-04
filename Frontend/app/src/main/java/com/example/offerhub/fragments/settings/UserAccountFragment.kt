@@ -20,6 +20,7 @@ import com.example.offerhub.data.User
 import com.example.offerhub.databinding.FragmentUserAccountBinding
 import com.example.offerhub.dialog.setupBottomSheetDialog
 import com.example.offerhub.util.Resource
+import com.example.offerhub.util.hideBottomNavigationView
 import com.example.offerhub.viewmodel.LoginViewModel
 import com.example.offerhub.viewmodel.UserAccountViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -40,7 +41,6 @@ class UserAccountFragment: Fragment() {
     val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
     val currentUser = auth.currentUser
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,8 +49,6 @@ class UserAccountFragment: Fragment() {
         binding = FragmentUserAccountBinding.inflate(inflater)
         return binding.root
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -179,6 +177,12 @@ class UserAccountFragment: Fragment() {
 
         }
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigationView()
     }
 
 // muestra la info del usuario
