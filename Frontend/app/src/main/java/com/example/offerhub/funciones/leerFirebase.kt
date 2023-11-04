@@ -171,6 +171,24 @@ class Promocion(
             }
         }
     }
+    fun obtenerEstadoIcono(): kotlin.Int {
+        if (this.estado!!.lowercase()=="aprobado"){
+            return R.drawable.ic_check
+        } else if (this.estado!!.lowercase()=="rechazado"){
+            return R.drawable.ic_cross
+        } else {
+            return R.drawable.ic_pending
+        }
+    }
+    fun obtenerEstadoColor(): kotlin.Int {
+        if (this.estado!!.lowercase()=="aprobado"){
+            return android.R.color.holo_green_dark
+        } else if (this.estado!!.lowercase()=="rechazado"){
+            return android.R.color.holo_red_dark
+        } else {
+            return R.color.g_orange_yellow
+        }
+    }
     fun obtenerDesc(): kotlin.String {
         if(this.tipoPromocion=="Reintegro" || this.tipoPromocion=="Descuento"){
             return this.porcentaje.toString()

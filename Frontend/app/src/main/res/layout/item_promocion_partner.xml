@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toStartOf="@id/editButton">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:orientation="vertical">
@@ -37,7 +37,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:ellipsize="end"
                     android:text="Título"
                     android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -51,6 +50,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Título de la Promoción"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -73,8 +74,19 @@
                     app:layout_constraintTop_toTopOf="@id/guideline"
                     app:layout_constraintStart_toEndOf="@id/tituloText"
                     android:layout_marginStart="8dp" />
-
-                <TextView
+                <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                    android:id="@+id/btnVerMotivo"
+                    style="@style/RoundedButtonBackground"
+                    android:backgroundTint="#582C8F"
+                    android:layout_width="50dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="20dp"
+                    android:textSize="12dp"
+                    android:text="Ver"
+                     />
+                <ImageView
                     android:id="@+id/promotionEstado"
                     android:padding="5dp"
                     android:layout_width="wrap_content"
@@ -84,7 +96,6 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="Estado de la Promoción"
                     app:layout_constraintTop_toBottomOf="@id/estadoText"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -99,12 +110,20 @@
     android:orientation="horizontal">
         <!-- Botón de Editar -->
         <ImageButton
+            android:id="@+id/previewButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_view"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/deleteButton"
+            app:tint="@color/violeta" />
+    <ImageButton
             android:id="@+id/editButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
             app:layout_constraintEnd_toStartOf="@id/deleteButton"
-            />
+            app:tint="@color/violeta" />
 
         <!-- Botón de Eliminar -->
         <ImageButton
@@ -113,7 +132,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:tint="@color/violeta" />
 </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

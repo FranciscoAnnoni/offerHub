@@ -1,26 +1,30 @@
 package com.example.offerhub.fragments.partners
 
+import android.graphics.PorterDuff
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
-import com.example.offerhub.Tarjeta
 import com.google.firebase.database.FirebaseDatabase
 
-class PromotionsAdapterPartners(private val promociones: MutableList<Promocion>,private val editable: Boolean, private val homePartnersFragment: HomePartnersFragment) :
+class PromotionsAdapterPartners(private val context: HomePartnersFragment, private val promociones: MutableList<Promocion>, private val editable: Boolean, private val homePartnersFragment: HomePartnersFragment) :
     RecyclerView.Adapter<PromotionsAdapterPartners.PromotionViewHolder>() {
 
     inner class PromotionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val promotionTitle: TextView = itemView.findViewById(R.id.promotionTitle)
-        val promotionEstado: TextView = itemView.findViewById(R.id.promotionEstado)
+        val promotionEstado: ImageView = itemView.findViewById(R.id.promotionEstado)
         val estadoText: TextView = itemView.findViewById(R.id.estadoText)
+        val previewButton: ImageButton = itemView.findViewById(R.id.previewButton)
         val editButton: ImageButton = itemView.findViewById(R.id.editButton)
+        val btnVerMotivo: CircularProgressButton = itemView.findViewById(R.id.btnVerMotivo)
         val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
     }
     fun removePromo(promo: Promocion) {
@@ -35,12 +39,21 @@ class PromotionsAdapterPartners(private val promociones: MutableList<Promocion>,
 
     override fun onBindViewHolder(holder: PromotionViewHolder, position: Int) {
         val currentPromotion = promociones[position]
-        if (!editable){
-            holder.editButton.visibility = View.GONE
+        if (currentPromotion.estado!!.lowercase()=="aprobado"){
+            holder.previewButton.visibility = View.VISIBLE
+        } else {
+            holder.previewButton.visibility = View.GONE
+        }
+
+        if(currentPromotion.estado!!.lowercase()=="rechazado"){
             holder.estadoText.text = "Motivo"
-            holder.promotionEstado.text=currentPromotion.motivo
-        }else{
-            holder.promotionEstado.text=currentPromotion.estado
+            holder.promotionEstado.visibility=View.GONE
+            holder.btnVerMotivo.visibility=View.VISIBLE
+        } else {
+            holder.promotionEstado.setImageResource(currentPromotion.obtenerEstadoIcono())
+            holder.promotionEstado.setColorFilter(ContextCompat.getColor(context.requireContext(), currentPromotion.obtenerEstadoColor()), PorterDuff.Mode.SRC_IN)
+
+            holder.btnVerMotivo.visibility=View.GONE
         }
 
         var tituloConComercio=currentPromotion.titulo!!.split(":")

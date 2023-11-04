@@ -105,14 +105,14 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
                 view!!.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
             recyclerView.layoutManager =
                 LinearLayoutManager(requireContext())
-            recyclerView.adapter = PromotionsAdapterPartners(promosDisponibles as MutableList<Promocion>,true,this)
+            recyclerView.adapter = PromotionsAdapterPartners(this@HomePartnersFragment,promosDisponibles as MutableList<Promocion>,true,this)
         }
         if (promocionesRechazadas.isNotEmpty()) {
             val recyclerView =
                 view!!.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
             recyclerView.layoutManager =
                 LinearLayoutManager(requireContext())
-            recyclerView.adapter = PromotionsAdapterPartners(promocionesRechazadas as MutableList<Promocion>,false,this)
+            recyclerView.adapter = PromotionsAdapterPartners(this@HomePartnersFragment,promocionesRechazadas as MutableList<Promocion>,false,this)
         }
         view!!.findViewById<ProgressBar>(R.id.disponiblesProgress).visibility=View.GONE
         view!!.findViewById<ProgressBar>(R.id.rechazadasProgress).visibility=View.GONE
