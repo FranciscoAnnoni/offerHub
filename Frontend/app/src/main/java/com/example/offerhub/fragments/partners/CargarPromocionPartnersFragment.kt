@@ -178,7 +178,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                 fechaHasta.text = Editable.Factory.getInstance().newEditable(promocionAnterior.vigenciaHasta.toString())
                 val parts = promocionAnterior.titulo.toString()!!.split(":")
                 val result = parts.getOrNull(1)?.trim()
-                tituloPromo.text = Editable.Factory.getInstance().newEditable(if (result!=null) result else "")
+                tituloPromo.text = Editable.Factory.getInstance().newEditable(if (result!=null) result else promocionAnterior.titulo.toString())
                 for (index in 0 until chipGroupDias.childCount) {
                     val chip = chipGroupDias.getChildAt(index) as Chip
                     val diaChip = chip.text.toString()
