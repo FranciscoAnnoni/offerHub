@@ -96,6 +96,7 @@ class HomeAdminFragment : Fragment(R.layout.fragment_home_admin), PromocionFragm
                     }
                 }
         }
+
         coroutineScope.launch {
             val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
             progressBar.visibility = View.VISIBLE
