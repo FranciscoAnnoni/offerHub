@@ -105,6 +105,13 @@ class PromocionEscritura {
         if (this.titulo==null || this.titulo!!.isEmpty()) {
             error.add("Título requerido")
             campos.add("errorTitulo")
+        } else {
+            val parts = this.titulo!!.split(":")
+            val result = parts.getOrNull(1)?.trim() // Obtener la parte después de ":" si existe
+            if (result == null || (result != null && result.trim().isEmpty())) {
+                error.add("Título requerido")
+                campos.add("errorTitulo")
+            }
         }
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

@@ -43,7 +43,9 @@ class PromotionsAdapterPartners(private val promociones: MutableList<Promocion>,
             holder.promotionEstado.text=currentPromotion.estado
         }
 
-        holder.promotionTitle.text = currentPromotion.titulo
+        var tituloConComercio=currentPromotion.titulo!!.split(":")
+        var titulo = tituloConComercio.getOrNull(1)?.trim()
+        holder.promotionTitle.text = if(titulo!=null) titulo else currentPromotion.titulo
 
         currentPromotion.estado?.let { Log.d("estado", it) }
         // Configurar acciones para los botones de editar y eliminar

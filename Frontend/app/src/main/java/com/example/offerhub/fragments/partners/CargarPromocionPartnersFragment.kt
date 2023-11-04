@@ -176,7 +176,9 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
                     montoDtotext.text = Editable.Factory.getInstance().newEditable(promocionAnterior.porcentaje.toString())
                 }
                 fechaHasta.text = Editable.Factory.getInstance().newEditable(promocionAnterior.vigenciaHasta.toString())
-                tituloPromo.text = Editable.Factory.getInstance().newEditable(promocionAnterior.titulo.toString())
+                val parts = promocionAnterior.titulo.toString()!!.split(":")
+                val result = parts.getOrNull(1)?.trim()
+                tituloPromo.text = Editable.Factory.getInstance().newEditable(if (result!=null) result else "")
                 for (index in 0 until chipGroupDias.childCount) {
                     val chip = chipGroupDias.getChildAt(index) as Chip
                     val diaChip = chip.text.toString()
@@ -373,7 +375,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
             }
 
             var diasLista: MutableList<String?> = mutableListOf()
-            var tituloPromocion = comercio.nombre +": " + tituloPromo
+            var tituloPromocion = comercio.nombre +": " + tituloPromo.text.toString().trim()
             for (index in 0 until chipGroupDias.childCount) {
                 val chip = chipGroupDias.getChildAt(index) as Chip
                 val diaChip = chip.text.toString()
@@ -393,7 +395,7 @@ class CargarPromocionPartnersFragment: Fragment(), OnAddItemListener  {
             CoroutineScope(Dispatchers.Main).launch {
                 val usuario = Funciones().traerUsuarioPartner()
 
-                var promocion = PromocionEscritura(comercio.categoria, usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,tituloPromo.text.toString().trim(),null,null,tycPromo.text.toString().trim(),null,descPromo.text.toString().trim(),desde,hasta ,"pendiente")
+                var promocion = PromocionEscritura(comercio.categoria, usuario?.idComercio,null,diasLista,null,null,null,null,tipoPromocion,tituloPromocion,null,null,tycPromo.text.toString().trim(),null,descPromo.text.toString().trim(),desde,hasta ,"pendiente")
 
                 if (cuotastext.text.isNotEmpty()){
                     promocion.cuotas = cuotastext.text.toString().trim()
