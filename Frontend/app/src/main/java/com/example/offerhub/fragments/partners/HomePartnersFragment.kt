@@ -65,7 +65,7 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
             }
             disponiblesProgress.visibility=View.VISIBLE
             rechazadasProgress.visibility=View.VISIBLE
-            promocionesRechazadas = promociones.filter { it.estado == "rechazado" }
+            promocionesRechazadas = promociones.filter { it.estado!!.lowercase() == "rechazado" }
             promosDisponibles = promociones.filterNot { it in promocionesRechazadas }
         }.invokeOnCompletion {
             cargarPromociones(promosDisponibles,promocionesRechazadas)
