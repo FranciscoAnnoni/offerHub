@@ -1,8 +1,12 @@
 package com.example.offerhub.viewmodel
 
 import android.content.SharedPreferences
+import android.view.View
+import android.widget.ProgressBar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.offerhub.R
+import com.example.offerhub.funciones.FuncionesPartners
 import com.example.offerhub.util.Constants
 import com.example.offerhub.util.RegisterFieldsState
 import com.example.offerhub.util.RegisterValidation
@@ -15,6 +19,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,7 +35,7 @@ class NotificarErrorAdminViewModel @Inject constructor(
 ): ViewModel() {
     private val _notificacionExitosa = MutableSharedFlow<Resource<String>>()
     val notificacionExitosa = _notificacionExitosa.asSharedFlow()
-
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 
 }
