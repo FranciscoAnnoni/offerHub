@@ -135,7 +135,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_calendar"
+                        android:src="@drawable/ic_sucursales"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/settings_items_background"
                         app:tint="@color/white" />
@@ -146,7 +146,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Mis publicaciones"
+                        android:text="Sucursales"
                         android:textColor="@color/g_gray700"
                         android:textStyle="bold"
                         android:layout_marginStart="15dp"
@@ -159,13 +159,38 @@
                         app:tint="@color/g_blue_gray200"
                         android:layout_gravity="center_vertical"/>
                 </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tvLegals"
+                style="@style/MediumTextViewThin"
+                android:textColor="@color/g_gray700"
+                android:textStyle="normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Sobre la App"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintTop_toBottomOf="@id/linearOrders" />
+
+
+            <LinearLayout
+                android:id="@+id/linearLegals"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/tvLegals"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/search_box_background">
 
                 <LinearLayout
+                    android:id="@+id/llApp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="8dp"
-                    android:id="@+id/linearLegals">
+                    android:padding="10dp">
+
 
                     <ImageView
                         android:layout_width="30dp"
@@ -209,17 +234,17 @@
                 android:layout_marginTop="30dp"
                 android:text="Manejo de Sesion"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/linearOrders" />
+                app:layout_constraintTop_toBottomOf="@id/linearLegals" />
 
             <LinearLayout
                 android:id="@+id/linearNotifications"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/tvNotifications"
+                app:layout_constraintTop_toBottomOf="@id/linearLegals"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/search_box_background">
 
 
