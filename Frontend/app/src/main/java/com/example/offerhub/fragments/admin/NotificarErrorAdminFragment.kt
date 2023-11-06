@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Funciones
 import com.example.offerhub.R
 import com.example.offerhub.databinding.FragmentNotificarErrorAdminBinding
@@ -46,77 +48,23 @@ class NotificarErrorFragmentAdmin : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val reportesContainer = view.findViewById<LinearLayout>(R.id.reportLayout)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
 
         coroutineScope.launch {
-            val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-            progressBar.visibility = View.VISIBLE
 
-            binding.reportLayout.visibility = View.GONE
+            binding.recyclerView.visibility = View.GONE
 
             val funciones = FuncionesPartners()
             val quejas = funciones.obtenerReportes()
 
-            quejas.forEach { queja ->
-                val quejaTextView = TextView(requireContext())
-                quejaTextView.text = queja
+            val quejasAdapter = QuejasAdapter(quejas as MutableList<String>)
+            recyclerView.adapter = quejasAdapter
 
-                // Define parámetros de diseño para cada TextView (opcional)
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-
-                // Agrega el TextView al contenedor
-                reportesContainer.addView(quejaTextView, layoutParams)
-            }
-            binding.reportLayout.visibility = View.VISIBLE
-            progressBar.visibility = View.GONE
+            binding.recyclerView.visibility = View.VISIBLE
         }
 
-        /*
-        coroutineScope.launch {
-            var funciones = FuncionesPartners()
-            val quejas = funciones.obtenerReportes()
-
-            // Inicializa el contenido de edNotificacionDeError
-            val edNotificacionDeError = binding.edNotificacionDeError
-
-            // Itera sobre la lista de quejas y actualiza el contenido de edNotificacionDeError
-            quejas.forEach { queja ->
-                // Agrega un salto de línea si ya hay contenido en edNotificacionDeError
-                if (!edNotificacionDeError.text.isNullOrBlank()) {
-                    edNotificacionDeError.append("\n")
-                }
-
-                // Agrega la queja al contenido de edNotificacionDeError
-                edNotificacionDeError.append(queja)
-            }
-        }
-
-         */
     }
 
-
-
 }
-
-/*
-class FavFragment: Fragment(R.layout.fragment_legals){
-    @AndroidEntryPoint
-    class ProfileFragment : Fragment() {
-        private lateinit var binding: FragmentProfileBinding
-        val viewModel by viewModels<ProfileViewModel>()
-        private lateinit var rootView: View
-        override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            binding = FragmentProfileBinding.inflate(inflater)
-            return binding.root
-        }
-
-}
-
- */

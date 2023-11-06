@@ -256,7 +256,6 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             promoTyC.text = promocion.tyc
             promoVigencia.text=promocion.obtenerTextoVigencia()
             coroutineScope.launch {
-                Log.d("PROMO DETAIL sucursales",promocion.sucursales!!.size.toString())
                 val sucursales = promocion.sucursales ?: emptyList() // Asume que `sucursales` es una lista de Strings en tu objeto `promocion`
                 val sucursalAdapter = SucursalesAdapter(sucursales)
                 recyclerViewSucursales.adapter = sucursalAdapter

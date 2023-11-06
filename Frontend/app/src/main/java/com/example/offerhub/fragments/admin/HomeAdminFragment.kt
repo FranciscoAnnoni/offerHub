@@ -57,8 +57,6 @@ class HomeAdminFragment : Fragment(R.layout.fragment_home_admin), PromocionFragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var instancia = InterfaceSinc()
-        var funciones = Funciones()
         val userViewModel = UserViewModelSingleton.getUserViewModel()
         val promosContainer = view.findViewById<LinearLayout>(R.id.containerPromos)
         val listView = view.findViewById<GridView>(R.id.promocionesGridView)
@@ -103,7 +101,7 @@ class HomeAdminFragment : Fragment(R.layout.fragment_home_admin), PromocionFragm
             if(userViewModel.usuario==null){
                 userViewModel.usuario = Funciones().traerUsuarioActual()
             }else {
-                Log.d("YA Existe usuario",userViewModel.usuario!!.nombre)
+                Log.d("Ya Existe usuario",userViewModel.usuario!!.nombre)
             }
             if(userViewModel.listadoDePromosDisp==null || userViewModel.listadoDePromosDisp.size==0){
                 userViewModel.listadoDePromosDisp = FuncionesPartners().obtenerPromosPendientes()
