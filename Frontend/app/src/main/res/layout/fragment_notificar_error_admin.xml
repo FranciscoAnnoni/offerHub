@@ -19,7 +19,7 @@
             <TextView
                 android:id="@+id/rapLayourLegal"
                 style="@style/titulos"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="25dp"
                 android:text="Errores Notificados"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +27,7 @@
             <TextView
                 android:id="@+id/privacidad"
                 style="@style/textoChicoNegro"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="25dp"
                 android:text="Problemas Reportados:"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
