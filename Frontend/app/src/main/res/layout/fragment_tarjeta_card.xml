@@ -52,7 +52,7 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:maxWidth="100dp"
-                android:text="Banco"
+                android:text="Offerhub App"
                 android:textColor="@color/g_light_purple"
                 android:textSize="14sp" />
 
