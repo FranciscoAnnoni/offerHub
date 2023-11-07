@@ -432,7 +432,7 @@ class LecturaBD {
 
 
 
-    suspend fun  obtenerPromosPorTarjeta(tarjeta: String): List<Promocion> = suspendCoroutine { continuation ->
+    suspend fun  obtenerPromosPorTarjeta(tarjeta: String?): List<Promocion> = suspendCoroutine { continuation ->
         val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
         val promocionRef = database.getReference("/Promocion")
         val lista: MutableList<Promocion> = mutableListOf()
@@ -442,7 +442,7 @@ class LecturaBD {
                 if (dataSnapshot.exists()) {
                     for (data in dataSnapshot.children){
                         val listaCampo = data.child("tarjetas").getValue(object : GenericTypeIndicator<List<String?>>() {})
-                        if (listaCampo != null && listaCampo.contains(tarjeta)) {
+                        if ((tarjeta==null && data.hasChild("tarjetas")==false)||(tarjeta != null && listaCampo != null && listaCampo.contains(tarjeta))) {
                             val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             val desdeFormateado: LocalDate?
                             val hastaFormateado: LocalDate?
@@ -468,7 +468,7 @@ class LecturaBD {
                                 data.child("url").getValue(String::class.java),
                                 desdeFormateado,
                                 hastaFormateado,
-                                data.child("estdeado").getValue(String::class.java))
+                                data.child("estado").getValue(String::class.java))
                             lista.add(instancia)
                         }
 

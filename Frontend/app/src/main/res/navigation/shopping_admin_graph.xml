@@ -9,8 +9,15 @@
         android:id="@+id/homeAdminFragment"
         android:name="com.example.offerhub.fragments.admin.HomeAdminFragment"
         android:label="HomeAdminFragment"
-        tools:layout="@layout/fragment_home_admin"
-        />
+        tools:layout="@layout/fragment_home_admin">
+        <action
+            android:id="@+id/action_homeAdminFragment_to_promoDetailAdminFragment"
+            app:destination="@id/promoDetailAdminFragment"
+            app:enterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/to_start"
+            app:popEnterAnim="@anim/from_start"
+            app:popExitAnim="@anim/to_bottom" />
+    </fragment>
 
     <fragment
         android:id="@+id/adminProfileFragment"
@@ -35,6 +42,20 @@
             android:id="@+id/action_adminUserAccountFragment_to_adminProfileFragment"
             app:destination="@id/adminProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/promoDetailAdminFragment"
+        android:name="com.example.offerhub.fragments.admin.PromoDetailAdminFragment"
+        android:label="PromoDetailAdminFragment"
+        tools:layout="@layout/fragment_promo_detail_admin">
+        <argument
+            android:name="promocion"
+            app:argType="com.example.offerhub.Promocion" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificarErrorFragmentAdmin"
+        android:name="com.example.offerhub.fragments.admin.NotificarErrorFragmentAdmin"
+        android:label="NotificarErrorFragmentAdmin"
+        tools:layout="@layout/fragment_notificar_error_admin"/>
 </navigation>
 
 

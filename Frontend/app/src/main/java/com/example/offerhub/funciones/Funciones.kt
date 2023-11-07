@@ -62,7 +62,7 @@ class Funciones {
     suspend fun obtenerPromocionesComunes(): List<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
-            val promos = instanciaLectura.obtenerPromosPorTarjeta("No posee")
+            val promos = instanciaLectura.obtenerPromosPorTarjeta(null)
             for (promo in promos){
                 if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
                     listaPromos.add(promo)
@@ -76,24 +76,22 @@ class Funciones {
 
     suspend fun obtenerPromociones(usuario: Usuario?): MutableList<Promocion> = coroutineScope {
         val listaPromos: MutableList<Promocion> = mutableListOf()
-        val i = 0
-        val deferredPromos = usuario?.tarjetas?.map { tarjeta ->
-            coroutineScope.async {
-                if(i == 0){
-                    val promosComunes = obtenerPromocionesComunes()
-                    if (promosComunes != null) {
-                    listaPromos.addAll(promosComunes)
-                    }
-                }
+        var i = 0
+        val deferredPromos = coroutineScope.async {
+            val promosComunes = obtenerPromocionesComunes()
+            if (promosComunes != null) {
+                listaPromos.addAll(promosComunes)
+            }
 
-                val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
-                if (promos != null) {
-                    listaPromos.addAll(promos)
-                }
+        usuario?.tarjetas?.map { tarjeta ->
+            val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
+            if (promos != null) {
+                listaPromos.addAll(promos)
             }
         }
+        }
         Log.d("DB - Obteniendo Promociones","Se estan descargando promociones de la DB")
-        deferredPromos?.awaitAll()
+        deferredPromos?.await()
         listaPromos
     }
 
