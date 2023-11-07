@@ -34,7 +34,7 @@ class AdminProfileViewModel @Inject constructor(
     }
 
     fun logout(){
-        // UserViewModelCache().vaciarCache()
+        UserViewModelCache().vaciarCache()
         auth.signOut()
 
     }
