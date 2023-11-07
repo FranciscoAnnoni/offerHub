@@ -197,8 +197,13 @@ class LeerId {
 
             val vigenciaDesdeString: String? = dataSnapshot.child("vigenciaDesde").getValue(String::class.java)
             val vigenciaHastaString: String? = dataSnapshot.child("vigenciaHasta").getValue(String::class.java)
+            var vigenciaDesde: LocalDate? = null
+            try{
+                vigenciaDesde = vigenciaDesdeString?.let { LocalDate.parse(it, formato) }
+            }catch (e: Exception) {
 
-            val vigenciaDesde = vigenciaDesdeString?.let { LocalDate.parse(it, formato) }
+            }
+
             val vigenciaHasta = vigenciaHastaString?.let { LocalDate.parse(it, formato) }
 
             val coroutineScope = CoroutineScope(Dispatchers.Main)
