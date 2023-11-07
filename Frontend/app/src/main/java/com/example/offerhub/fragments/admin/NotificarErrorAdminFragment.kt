@@ -53,15 +53,16 @@ class NotificarErrorFragmentAdmin : Fragment() {
 
 
         coroutineScope.launch {
-
+            val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+            progressBar.visibility = View.VISIBLE
             binding.recyclerView.visibility = View.GONE
 
             val funciones = FuncionesPartners()
             val quejas = funciones.obtenerReportes()
 
-            val quejasAdapter = QuejasAdapter(quejas as MutableList<String>)
+            val quejasAdapter = QuejasAdapter(quejas as MutableList<String>, requireContext(), requireView())
             recyclerView.adapter = quejasAdapter
-
+            progressBar.visibility = View.GONE
             binding.recyclerView.visibility = View.VISIBLE
         }
 
