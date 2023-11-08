@@ -168,6 +168,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         android:visibility="gone"
+        android:clickable="true"
+        android:elevation="25dp"
         android:paddingTop="10dp"
         android:paddingBottom="20dp"
         android:paddingLeft="40dp"

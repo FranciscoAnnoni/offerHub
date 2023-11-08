@@ -2,10 +2,12 @@ package com.example.offerhub.fragments.settings
 
 import TarjetasListViewAdapter
 import android.animation.ObjectAnimator
+import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.opengl.Visibility
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +36,7 @@ import com.example.offerhub.Tarjeta
 //import com.example.offerhub.databinding.FragmentEntidadTarjetasBinding
 import com.example.offerhub.databinding.FragmentTarjetasBinding
 import com.example.offerhub.util.hideBottomNavigationView
+import com.example.offerhub.util.showBottomNavigationView
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 //import com.example.offerhub.viewmodel.CargadoTarjetasViewModel
@@ -92,14 +95,23 @@ class CargadoTarjetasFragment : Fragment() {
             UserViewModelCache().guardarUserViewModel(uvm)
             funciones.agregarTarjetasAUsuario( usuario.id, tarjetasSeleccionadas)
             tarjetasSeleccionadas = mutableListOf()
-
+            val alertDialog = AlertDialog.Builder(context)
+                .setTitle("Aguarde un instante")
+                .setMessage("Estamos descargando las promociones de su tarjeta. Esto puede demorar unos minutos. No cierre la aplicación.")
+                .setCancelable(true)
+                .show()
             CoroutineScope(Dispatchers.Main).launch{
+                alertDialog.show()
                 uvm.listadoDePromosDisp = funciones.obtenerPromociones(uvm.usuario!!)
                 UserViewModelCache().guardarUserViewModel(uvm)
+            }.invokeOnCompletion {
+                alertDialog.dismiss()
+                Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
+                findNavController().navigateUp()
+                showBottomNavigationView()
             }
 
-            Toast.makeText(view.context, "Los cambios han sido guardados", Toast.LENGTH_LONG).show()
-            findNavController().navigateUp()
+
 
         }
 
