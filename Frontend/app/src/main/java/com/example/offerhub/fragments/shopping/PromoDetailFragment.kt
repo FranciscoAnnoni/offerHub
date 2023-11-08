@@ -129,10 +129,14 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         }
         coroutineScope.launch {
             var tarjetasComunes = instancia.tarjetasComunes(userViewModel.usuario, promocion)
-            val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
-
-            recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            recyclerViewTarjetas.adapter = adapter
+            if(tarjetasComunes.size>0) {
+                val adapter = TarjetasPromocionAdapter(tarjetasComunes as List<String>?)
+                recyclerViewTarjetas.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                recyclerViewTarjetas.adapter = adapter
+                binding.containerTarjetas.visibility=View.VISIBLE
+            } else {
+                binding.containerTarjetas.visibility=View.GONE
+            }
             val isFavorite = userViewModel.favoritos.any{ it -> comparar(it) }
             val isNotificado = userViewModel.reintegros.any{ it -> comparar(it) }
             binding.imageFav.setImageResource(getFavResource(isFavorite))
@@ -257,8 +261,13 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             promoVigencia.text=promocion.obtenerTextoVigencia()
             coroutineScope.launch {
                 val sucursales = promocion.sucursales ?: emptyList() // Asume que `sucursales` es una lista de Strings en tu objeto `promocion`
-                val sucursalAdapter = SucursalesAdapter(sucursales)
-                recyclerViewSucursales.adapter = sucursalAdapter
+                if(sucursales.size>0) {
+                    val sucursalAdapter = SucursalesAdapter(sucursales)
+                    recyclerViewSucursales.adapter = sucursalAdapter
+                    binding.sucursalesSection.visibility=View.VISIBLE
+                } else {
+                    binding.sucursalesSection.visibility=View.GONE
+                }
             }
 
             coroutineScope.launch {
