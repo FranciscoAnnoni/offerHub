@@ -35,6 +35,7 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.data.Categoria
 import com.example.offerhub.databinding.FragmentHomeBinding
 import com.example.offerhub.interfaces.FilterData
 import com.example.offerhub.interfaces.PromocionFragmentListener
@@ -194,7 +195,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                     promosContainer.visibility = View.GONE
                     categoriasContainer.visibility = View.GONE
                     //Obtengo el listado de categorias.
-                    val categorias = funciones.obtenerCategorias(view.context)
+                    var categorias: MutableList<Categoria> = mutableListOf<Categoria>()
+                    categorias = funciones.obtenerCategorias(view.context) as MutableList<Categoria>
+                    categoriasContainer.removeAllViews()
                     for (categoria in categorias) {
                         // Crea un título de categoría
                         val promocionesDesordenadas: List<Promocion> =
