@@ -3,6 +3,7 @@ package com.example.offerhub.fragments.partners
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -183,7 +184,10 @@ class PartnersUserAccountFragment: Fragment() {
 // muestra la info del usuario Partner
     private fun showUserInformation(data: UserPartner) {
         binding.apply{
+
             edFirstName.setText(data.nombreDeEmpresa)
+            Log.d("Etiqueta nombre", edFirstName.toString())
+            Log.d("Etiqueta nombre", data.nombreDeEmpresa)
             edCuil.setText(data.cuil)
             edEmail.setText(data.email)
 
