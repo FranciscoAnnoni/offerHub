@@ -14,12 +14,14 @@ import com.example.offerhub.LeerId
 import com.example.offerhub.activities.ListaSucursalAdapter
 import com.example.offerhub.data.UserPartner
 import com.example.offerhub.databinding.FragmentPartnersSucursalesBinding
+import com.example.offerhub.interfaces.OnAddItemListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PartnersSucursalesFragment: Fragment() {
+class PartnersSucursalesFragment: Fragment(), OnAddItemListener {
     private lateinit var binding: FragmentPartnersSucursalesBinding
+    private val sucursales = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +47,7 @@ class PartnersSucursalesFragment: Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             usuario = Funciones().traerUsuarioPartner()
-            var sucursales = mutableListOf<String>()
+
             if (usuario != null) {
                 Log.d("id usuario sucursales", usuario!!.id)
                 if (usuario!!.idComercio != null) {
@@ -72,14 +74,26 @@ class PartnersSucursalesFragment: Fragment() {
             var sucursalesAdapter = ListaSucursalAdapter(requireContext(), sucursales)
             binding.lvSucursales.adapter = sucursalesAdapter
 
-            /*binding.botonAgregarSucursal.setOnClickListener {
-                val bottomSheetDialog = AgregarSucursalFragment.newInstance(comercio,this)
-                bottomSheetDialog.show(requireActivity().supportFragmentManager, "AgregarSucursal")
-            }*/
 
         }
 
+        binding.botonAgregarSucursal.setOnClickListener {
+            val bottomSheetDialog = AgregarSucursalFragment.newInstance(comercio,this)
+            bottomSheetDialog.show(requireActivity().supportFragmentManager, "AgregarSucursal")
+        }
 
+
+
+    }
+
+    override fun onAddItem(item: String) {
+        updateSucursalesList(item)
+
+    }
+
+    fun updateSucursalesList(newItem: String) {
+        sucursales.add(newItem)
+        (binding.lvSucursales.adapter as ListaSucursalAdapter).notifyDataSetChanged()
     }
 
 }
