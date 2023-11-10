@@ -13,8 +13,16 @@ TESTING = True
 #DB_URL="https://oh--bknd-4-default-rtdb.firebaseio.com/"
 #CERT_PATH="../certificados/oh-backend-5-firebase-adminsdk-zdmlf-01fcca0491.json"
 #DB_URL="https://oh-backend-5-default-rtdb.firebaseio.com/"
-DB_URL="https://pistacho-21adc-default-rtdb.firebaseio.com/"
-CERT_PATH="../certificados/pistacho-21adc-firebase-adminsdk-6tzpf-766d5badf1.json"
+#DB_URL="https://pistacho-21adc-default-rtdb.firebaseio.com/"
+#CERT_PATH="../certificados/pistacho-21adc-firebase-adminsdk-6tzpf-766d5badf1.json"
+#DB_URL="https://prueba-final-fc417-default-rtdb.firebaseio.com/"
+#CERT_PATH="../certificados/prueba-final-fc417-firebase-adminsdk-dxhtg-660fb7346b.json"
+#DB_URL="https://ahora-si-8dec8-default-rtdb.firebaseio.com/"
+#CERT_PATH="../certificados/ahora-si-8dec8-firebase-adminsdk-4ttvo-c94f49b38c.json"
+#DB_URL="https://carlitos-65fd9-default-rtdb.firebaseio.com/"
+#CERT_PATH="../certificados/carlitos-65fd9-firebase-adminsdk-4ba5r-ce04cc7d6d.json"
+DB_URL="https://cristian-d735c-default-rtdb.firebaseio.com/"
+CERT_PATH="../certificados/cristian-d735c-firebase-adminsdk-2fkvb-874b436a5f.json"
 
 def setearEntorno():
     eliminarDatosPrevios()

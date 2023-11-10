@@ -1,6 +1,8 @@
 package com.example.offerhub.fragments.partners
 
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -111,24 +113,28 @@ class HomePartnersFragment : Fragment(R.layout.fragment_home_partners) {
         findNavController().navigate(R.id.action_homePartnersFragment_to_cargarPromocionPartnersFragment, bundle)
     }
 
-    fun cargarPromociones(promosDisponibles:List<Promocion>,promocionesRechazadas:List<Promocion>){
-        if (promosDisponibles.isNotEmpty()) {
-            val recyclerView =
-                view!!.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
-            recyclerView.layoutManager =
-                LinearLayoutManager(requireContext())
-            recyclerView.adapter = PromotionsAdapterPartners(this@HomePartnersFragment,promosDisponibles as MutableList<Promocion>,true,this)
-        }
-        if (promocionesRechazadas.isNotEmpty()) {
-            val recyclerView =
-                view!!.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
-            recyclerView.layoutManager =
-                LinearLayoutManager(requireContext())
-            recyclerView.adapter = PromotionsAdapterPartners(this@HomePartnersFragment,promocionesRechazadas as MutableList<Promocion>,false,this)
-        }
-        view!!.findViewById<ProgressBar>(R.id.disponiblesProgress).visibility=View.GONE
-        view!!.findViewById<ProgressBar>(R.id.rechazadasProgress).visibility=View.GONE
+    fun cargarPromociones(promosDisponibles: List<Promocion>, promocionesRechazadas: List<Promocion>) {
+        val handler = Handler()
+        handler.postDelayed({
+            if (view != null) {
+                if (promosDisponibles.isNotEmpty()) {
+                    val recyclerView = view!!.findViewById<RecyclerView>(R.id.promotionsRecyclerView)
+                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    recyclerView.adapter = PromotionsAdapterPartners(this@HomePartnersFragment, promosDisponibles as MutableList<Promocion>, true, this)
+                }
+                if (promocionesRechazadas.isNotEmpty()) {
+                    val recyclerView = view!!.findViewById<RecyclerView>(R.id.promotionsRechazadasRecyclerView)
+                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    recyclerView.adapter = PromotionsAdapterPartners(this@HomePartnersFragment, promocionesRechazadas as MutableList<Promocion>, false, this)
+                }
+                view!!.findViewById<ProgressBar>(R.id.disponiblesProgress).visibility = View.GONE
+                view!!.findViewById<ProgressBar>(R.id.rechazadasProgress).visibility = View.GONE
+            } else {
+                Log.d("View es null", "No se pudo cargar las promociones")
+            }
+        }, 2000) // Espera 2 segundos antes de ejecutar el código dentro del handler
     }
+
 }
 
 

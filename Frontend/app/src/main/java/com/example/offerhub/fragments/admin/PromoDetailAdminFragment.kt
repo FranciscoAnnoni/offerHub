@@ -185,9 +185,15 @@ class PromoDetailAdminFragment: Fragment(R.layout.fragment_promo_detail_admin){
             promoTyC.text = promocion.tyc
             promoVigencia.text=promocion.obtenerTextoVigencia()
             coroutineScope.launch {
+
                 val sucursales = promocion.sucursales ?: emptyList() // Asume que `sucursales` es una lista de Strings en tu objeto `promocion`
+                if(sucursales.size>0){
                 val sucursalAdapter = SucursalesAdapter(sucursales)
                 recyclerViewSucursales.adapter = sucursalAdapter
+                    binding.sucursalesSection.visibility=View.VISIBLE
+                    } else{
+                    binding.sucursalesSection.visibility=View.GONE
+                }
             }
 
             coroutineScope.launch {

@@ -35,6 +35,7 @@ import com.example.offerhub.Funciones
 import com.example.offerhub.InterfaceSinc
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
+import com.example.offerhub.data.Categoria
 import com.example.offerhub.databinding.FragmentHomeBinding
 import com.example.offerhub.interfaces.FilterData
 import com.example.offerhub.interfaces.PromocionFragmentListener
@@ -101,7 +102,16 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                 mySwitch.setImageResource(R.drawable.ic_gridview)
             }
         }
+        fun mostrarCargarTarjetas(){
+            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+            cargarTarjetas.visibility = View.VISIBLE
+            binding.btnComparar.visibility=View.GONE
+            binding.botonGuardar.visibility = View.GONE
+
+        }
         fun cargarVista() {
+            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+            cargarTarjetas.visibility = View.GONE
             if (userViewModel.usuario!!.homeModoFull=="1") {
                 val promoFav = view.findViewById<ImageView>(R.id.promoFav)
                 promosContainer.visibility=View.VISIBLE
@@ -116,6 +126,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                 val job = coroutineScope.launch {
                     try {
                         var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo!!.lowercase() }
+                        if(promocionesOrdenadas.size==0){
+                            mostrarCargarTarjetas()
+                            val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
+                            switch.visibility = View.GONE
+                        }
                         val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas,this@HomeFragment)
                         adapter.eliminarLista()
                         adapter.setFragment(this@HomeFragment)
@@ -171,16 +186,18 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                 // listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 var datos: MutableList<String> = mutableListOf()
+                var cantPromos=0
                 // Llamar a la función que obtiene los datos.
                 val job = coroutineScope.launch {
-
                     // Seteo Visibilidad
                     homeScrollView.visibility = View.VISIBLE
                     categoriasContainer.visibility = View.GONE
                     promosContainer.visibility = View.GONE
                     categoriasContainer.visibility = View.GONE
                     //Obtengo el listado de categorias.
-                    val categorias = funciones.obtenerCategorias(view.context)
+                    var categorias: MutableList<Categoria> = mutableListOf<Categoria>()
+                    categorias = funciones.obtenerCategorias(view.context) as MutableList<Categoria>
+                    categoriasContainer.removeAllViews()
                     for (categoria in categorias) {
                         // Crea un título de categoría
                         val promocionesDesordenadas: List<Promocion> =
@@ -191,8 +208,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                             promosDispo.visibility = View.VISIBLE
                             val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
                             switch.visibility = View.VISIBLE
-                            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
-                            cargarTarjetas.visibility = View.GONE
 
                             if (requireContext() != null) {
                                 val categoriaTitle = TextView(requireContext())
@@ -210,7 +225,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
 
                                 // Obtén las promociones para esta categoría (reemplaza esto con tu lógica real)
 
-
+                                cantPromos+=promociones.size
                                 // Configura el adaptador para el RecyclerView
                                 val adapter = PromocionGridPorCategoriaAdapter(
                                     activity!!,
@@ -268,16 +283,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                         } else {
                             val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
                             promosDispo.visibility = View.GONE
-                            val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
-                            switch.visibility = View.GONE
-                            val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
-                            cargarTarjetas.visibility = View.VISIBLE
-
-                            cargarTarjetas.setOnClickListener {
-                                Log.d("Estoy adentro del click de agregar tarjetas", "click click click")
-                                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCargarTarjetasFragment())
-                            }
                         }
+                    }
+                    if(cantPromos==0){
+                        mostrarCargarTarjetas()
+                        val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
+                        switch.visibility = View.GONE
                     }
                     categoriasContainer.visibility = View.VISIBLE
                 }
@@ -375,6 +386,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
             }
             //hideKeyboard()
             false
+        }
+        val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
+        cargarTarjetas.setOnClickListener {
+            Log.d("Estoy adentro del click de agregar tarjetas", "click click click")
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCargarTarjetasFragment())
         }
 
     }

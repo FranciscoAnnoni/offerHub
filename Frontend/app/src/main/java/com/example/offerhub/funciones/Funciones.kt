@@ -325,7 +325,7 @@ class Funciones {
 
     fun tarjetasComunes(usuario:Usuario?,promocion:Promocion):List<String>{
         val lista = mutableListOf<String>()
-        if (usuario != null) {
+        if (usuario != null && usuario.tarjetas!=null && usuario.tarjetas!!.isNotEmpty()) {
             for (tarj in usuario.tarjetas!!){
                 if(promocion.tarjetas?.contains(tarj) == true){
                     if (tarj != null) {

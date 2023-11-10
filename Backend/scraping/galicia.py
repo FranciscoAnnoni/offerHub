@@ -49,12 +49,12 @@ idEntidad = entidad.guardar()
 seccion_categorias = driver.find_element(By.XPATH, '//div[contains(@class,"sc-ibYzZP dlWflE")]').find_elements(By.XPATH, '//div[contains(@class,"sc-dkKxlM bqjISQ brk-card brk-card-row pb-16 brk-card-click no-Hover sc-hQZdRR kftZau")]')
 seccion_categorias.append(driver.find_element(By.XPATH, '//div[contains(@class,"sc-ibYzZP dlWflE")]').find_element(By.XPATH, '//div[contains(@class,"sc-dkKxlM bqjISQ brk-card brk-card-row pb-16 brk-card-click no-Hover sc-hQZdRR dXwRJ")]'))
 
-i = 2
+i = 0
 promocionesTotales = 0
 #Este while hace que recorra todas las categorías
 while i < len(seccion_categorias):
     seccion_categorias[i].click()
-    cantidadTotalPromos = int(wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"sc-fENAjM fQzaaE")]'))).text.split(" ")[1])
+    cantidadTotalPromos = int(wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"sc-fCBrnK hOebmf")]'))).text.split(" ")[1])
     cantidadPromosLeidas = 0
     cantidadPestañasLeidas = 0
 
@@ -69,17 +69,17 @@ while i < len(seccion_categorias):
             while o < len(promosXPagina):
                 promosXPagina = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"jsx-3678252308 brk-card-content")]')))   
                 # TRAIGO IMAGEN COMERCIO    
-                nombreComercio = promosXPagina[o].find_element(By.XPATH, './/p[contains(@class,"sc-gwGGKT sc-ibvwTS dsZCGK jPZedp")]').text
-                categoria = promosXPagina[o].find_element(By.XPATH, './/p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY cdxmFY sc-eThmLp csETDT")]').text
+                nombreComercio = promosXPagina[o].find_element(By.XPATH, './/p[contains(@class,"sc-cNYriL sc-eThmLp jOlqBm PeEVI")]').text
+                categoria = promosXPagina[o].find_element(By.XPATH, './/p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY cdxmFY sc-kQvLVw byAUIa")]').text
                 promosXPagina[o].click()
 
                 if nombreComercio != "Farmacia Scienza":
 
                     #Esto es para ver todas las subpromos de una promo
-                    subpromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-dkKxlM gSPZfe brk-card brk-card-row pb-16 brk-card-click no-Hover sc-cNYriL bMxRag")]')))
+                    subpromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-dkKxlM gSPZfe brk-card brk-card-row pb-16 brk-card-click no-Hover sc-iLmQsS ivzMHy")]')))
                     p = 0
 
-                    urlImagen = driver.find_element(By.XPATH, '//div[contains(@class,"sc-iLmQsS lrwDZ")]').find_element(By.XPATH, '//img').get_attribute("src")
+                    urlImagen = driver.find_element(By.XPATH, '//div[contains(@class,"sc-fCYGkp jNmXJI")]').find_element(By.XPATH, '//img').get_attribute("src")
 
                     comercio = Comercio()
                     comercio.nombre=nombreComercio
@@ -103,7 +103,7 @@ while i < len(seccion_categorias):
                         anda = True
 
                         sleep(1.5)
-                        prueba = driver.find_elements(By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-ePBJll cZcsMc")]')
+                        prueba = driver.find_elements(By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-iOdfRm eNyMem")]')
                         
                         if len(prueba) == 0:
                             anda = False
@@ -111,10 +111,10 @@ while i < len(seccion_categorias):
                         
                         if anda:
                             #TRAIGO VIGENCIA
-                            vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-ePBJll cZcsMc")]')))[1].text.split(" ")
+                            vigencia = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-iOdfRm eNyMem")]')))[1].text.split(" ")
 
                             #TRAIGO OFERTA               
-                            oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h1[contains(@class,"sc-kDvujY sc-ipEyDJ jRMPgA bkESkY sc-cnOiCc ffCkyz")]')))[0].text
+                            oferta = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//h1[contains(@class,"sc-kDvujY sc-ipEyDJ jRMPgA bkESkY sc-bkldj cJbIlD")]')))[0].text
 
                             reintegro = ""
                             
@@ -122,10 +122,10 @@ while i < len(seccion_categorias):
                                     #A la hora de guardar las promos si las queremos separar lo hacemos x acá. Ahora no hace nada.
                                     print("\t\t  Descuento: " + oferta)
                                     #print("\t\t  " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-hLBbgP sc-gKPRtg GzUVM bYVqER sc-eqJLUj fwCLcY")]')))[0].text)
-                                    reintegro = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-ePBJll cZcsMc")]')))[0].text
+                                    reintegro = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-iOdfRm eNyMem")]')))[0].text
                                 
                             #Esto va acá adrede, no mover nada
-                            print("\t\t  Vigencia: " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-ePBJll cZcsMc")]')))[1].text)
+                            print("\t\t  Vigencia: " + wait.until(EC.presence_of_all_elements_located((By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY kJDxkb sc-iOdfRm eNyMem")]')))[1].text)
 
                             urlPromocion = driver.current_url
                             print("\t\t  URL Promociones: "+urlPromocion)
@@ -151,7 +151,7 @@ while i < len(seccion_categorias):
                             #TRAIGO TARJETAS
                             print("\t\t  Tarjeta requerida: ")
 
-                            tarjetas = driver.find_elements(By.XPATH, '//div[contains(@class,"sc-lbzwWw josEjW")]')
+                            tarjetas = driver.find_elements(By.XPATH, '//div[contains(@class,"sc-fpktUn dQgOHH")]')
                             pagoEspecial = ""
 
                             try:
@@ -212,16 +212,16 @@ while i < len(seccion_categorias):
 
                             # TRAIGO SUCURSALES
 
-                            if "web" in driver.find_elements(By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY gbxNow sc-ePBJll cZcsMc")]')[0].text: print("\t\t  Dónde comprar: En el sitio web") 
+                            if "web" in driver.find_elements(By.XPATH, '//p[contains(@class,"sc-kDvujY sc-eDWCr gKuflY gbxNow sc-iOdfRm eNyMem")]')[0].text: print("\t\t  Dónde comprar: En el sitio web") 
                             else:
                                 print("\t\t  Sucursales disponibles: ")
                                 driver.find_element(By.XPATH, '//div[contains(@class,"MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-clickable MuiChip-clickableColorDefault MuiChip-filledDefault sc-eFjyua eAIGAA css-6yx8q4")]').click()
                                 
-                                cantidadTotalSucursales = int(wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"sc-fENAjM fQzaaE")]'))).find_element(By.XPATH, './/p').text.split(" ")[1])
+                                cantidadTotalSucursales = int(wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"sc-fCBrnK hOebmf")]'))).find_element(By.XPATH, './/p').text.split(" ")[1])
                                 cantidadSucursalesLeidas = 0
 
                                 while cantidadSucursalesLeidas < cantidadTotalSucursales:
-                                    direcciones = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-jbwHOj bchzXX")]')))
+                                    direcciones = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-ibdxON irEaxf")]')))
                                     sucursales = []
                                     for direccionSucursal in direcciones:
                                         direccion = direccionSucursal.find_elements(By.XPATH, './/p')
@@ -233,7 +233,7 @@ while i < len(seccion_categorias):
                                         
                                         cantidadSucursalesLeidas += 1
                                     
-                                    wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-fCBrnK bQuGni")]')))[1].click()
+                                    wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-eCihoo iQpjyR")]')))[1].click()
 
 
                                 wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-iFoMEM JEWKm")]')))[1].click()
@@ -283,7 +283,7 @@ while i < len(seccion_categorias):
                                 botonesVolverASubpromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-iFoMEM JEWKm")]')))
                                 botonesVolverASubpromos[1].click()
 
-                            subpromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-dkKxlM gSPZfe brk-card brk-card-row pb-16 brk-card-click no-Hover sc-cNYriL bMxRag")]')))
+                            subpromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"sc-dkKxlM gSPZfe brk-card brk-card-row pb-16 brk-card-click no-Hover sc-iLmQsS ivzMHy")]')))
                             p += 1
                             
                         else:
@@ -291,14 +291,8 @@ while i < len(seccion_categorias):
                                 botonesVolverAPromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-iFoMEM JEWKm")]')))
                                 botonesVolverAPromos[1].click()
                                 sleep(2)
-                                botonesVolverAPromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-iFoMEM JEWKm")]')))
-                                botonesVolverAPromos[1].click()
-                                sleep(2)
                                 p=1000
                             except:
-                                botonesVolverAPromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-iFoMEM JEWKm")]')))
-                                botonesVolverAPromos[1].click()
-                                sleep(2)
                                 botonesVolverAPromos = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-iFoMEM JEWKm")]')))
                                 botonesVolverAPromos[1].click()
                                 sleep(2)
@@ -314,7 +308,7 @@ while i < len(seccion_categorias):
         
                 #Esto se hace por como anda la página de Galicia, cuando volves para atras después de ver una promoción te manda a la primera página. Con esto volvemos a la que estábamos
                 for _ in range(cantidadPestañasLeidas):
-                    wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-fCBrnK bQuGni")]')))[1].click()
+                    wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-eCihoo iQpjyR")]')))[1].click()
 
                 sleep(1)
                 o += 1
@@ -323,7 +317,7 @@ while i < len(seccion_categorias):
 
             #Paso a la siguiente pestaña de promociones de una misma categoria
             cantidadPestañasLeidas += 1
-            wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-fCBrnK bQuGni")]')))[1].click()
+            wait.until(EC.presence_of_all_elements_located((By.XPATH, '//button[contains(@class,"sc-eCihoo iQpjyR")]')))[1].click()
 
 
     #con esto volvemos a las categorias, para pasar a la siguiente

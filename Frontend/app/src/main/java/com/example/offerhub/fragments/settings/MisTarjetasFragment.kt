@@ -79,10 +79,7 @@ class MisTarjetasFragment: Fragment() {
 
                 var gridViewAdapter = MisTarjetasAdapter(view.context, tarjetas)
                 tarjetasGridView.adapter = gridViewAdapter
-            } else{
-                findNavController().navigate(MisTarjetasFragmentDirections.actionMisTarjetasFragmentToCargadoTarjetasFragment())
             }
-
 
         }
 
@@ -125,7 +122,10 @@ class MisTarjetasFragment: Fragment() {
                       }
                     }
                 UserViewModelCache().guardarUserViewModel(uvm)
-                uvm.listadoDePromosDisp = funciones.obtenerPromociones(uvm.usuario!!)
+                uvm.listadoDePromosDisp=uvm.listadoDePromosDisp.filterNot { promo ->
+                    (promo.tarjetas?.contains(tarjeta.id) == true)
+                }
+
                 UserViewModelCache().guardarUserViewModel(uvm)
             }
 
