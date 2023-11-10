@@ -32,7 +32,7 @@ import re
 options = webdriver.ChromeOptions() 
 options.add_argument('--headless')
 options.add_argument("--window-size=1920,1200")
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),options=options)
 
 wait = WebDriverWait(driver, 900000)
 #<a beneficioItem
