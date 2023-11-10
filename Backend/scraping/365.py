@@ -21,7 +21,7 @@ from Sucursal import Sucursal
 from CategoriaPromocion import CategoriaPromocion
 from Promocion import Promocion
 
-#config.setearEntorno()
+config.setearEntorno()
 
 # Configurar el driver de Selenium (en este caso, utilizaremos Chrome)
 options = webdriver.ChromeOptions() 
@@ -54,13 +54,17 @@ while i < cantElementos:
 
     driver.execute_script("window.scrollBy(0, 1000)")
     time.sleep(3)
+
 seccion_categorias = driver.find_elements(By.XPATH, '//a[contains(@class,"clarin-365-card")]')
+
 #de la lista obtenida muestra link asociado y texto de cada elemento
 for boton in seccion_categorias:
     titulo=boton.find_element(By.XPATH, './/h1').text
     url=boton.get_attribute("href")
     print("\t---Inicio Comercio "+titulo+"---")
     print("\t"+titulo)
+    logo = utilidades.imagenABase64(boton.find_element(By.XPATH, './/img').get_attribute("src"))
+    #print("\tLogo: "+logo)
     print("\tURL Promo: "+url)
     categoria=url.split("/")[3].replace("-"," ").title()
     print("\tCategoria: "+categoria)
@@ -68,22 +72,16 @@ for boton in seccion_categorias:
     driver.switch_to.window(driver.window_handles[1])
     driver.get(url)
     time.sleep(3)
-    try:
-        urlComercioBtn=driver.find_element(By.XPATH, '//a[contains(@class,"website-link-wrapper")]')
-        urlComercio=urlComercioBtn.get_attribute("href")
-        print("\t\tURL Comercio: "+urlComercio)
-    except NoSuchElementException:
-        urlComercio=None
+
     comercio = Comercio()
     comercio.nombre=titulo
-    comercio.url=urlComercio
+    comercio.logo=logo
     comercio.categoria=CategoriaPromocion.obtenerCategoria(categoria)
     idComercio=comercio.guardar()
     containersPromos=driver.find_elements(By.XPATH, '//div[contains(@class,"clarin-ficha-beneficio")]')
     print("\t\tInicio Promos:")
-    i=0
+    i=1
     for containerPromo in containersPromos:
-        i+=1
         promocion = Promocion()
         print("\t\t---Promo "+str(i)+"---")
         porcentaje=containerPromo.find_element(By.XPATH, './/div[contains(@class,"benefit")]').get_attribute("textContent")
@@ -99,13 +97,29 @@ for boton in seccion_categorias:
 
         if len(dias) > 0:
             for dia in dias:
-                diasSemana.append(dia.text)
-                print("\t\t"+dia.text)
+                if dia.text == "LU": 
+                    diasSemana.append("Lunes")
+                elif dia.text == "MA": 
+                    diasSemana.append("Martes")
+                elif dia.text == "MI": 
+                    diasSemana.append("Miércoles")
+                elif dia.text == "JU": 
+                    diasSemana.append("Jueves")
+                elif dia.text == "VI": 
+                    diasSemana.append("Viernes")
+                elif dia.text == "SA": 
+                    diasSemana.append("Sábado")
+                elif dia.text == "DO": 
+                    diasSemana.append("Domingo")
+                else:
+                    diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+                
+                
         else:
-            diasSemana = ["LU", "MA", "MI", "JU", "VI", "SA", "DO"]
-            print(diasSemana)
+            diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
         
-
+        print(diasSemana)
+        
 
         print("\t\tTarjetas: ")
         tarjetas=containerPromo.find_elements(By.XPATH, './/div[contains(@class,"card-365")]')
@@ -207,7 +221,7 @@ for boton in seccion_categorias:
             promocion.tyc=tyc
             promocion.descripcion=descripcion
             promocion.guardar()
-
+        i+=1
         #driver.find_element(By.XPATH,"//html").click()
 
     driver.close()

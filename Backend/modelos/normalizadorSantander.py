@@ -56,11 +56,11 @@ def filtrarPorTipoTarjeta(lista, texto):
 def setearTarjeta(texto):
     tarjetasNecesarias = []
 
-    if texto == "Tarjetas Santander de crédito y débito Visa" or texto == "Tarjetas Débito y Crédito Santander Visa" or texto == "Tarjeta Santander de Débito y Crédito Visa" or texto == "Tarjetas Santander Visa Contactless de Débito y Crédito" or texto == "Tarjetas Santander de Crédito y Débito Visa" or texto == "Tarjetas Santander de Débito y Crédito Visa" or texto == "Tarjeta Santander de débito y crédito Visa" or texto == "Tarjeta Santander de Crédito y Débito Visa" or texto == "Tarjetas Santander Visa de crédito y débito" or texto == "Tarjetas Santander Visa Contactless" or texto == "Tarjetas Santander Visa" or texto == "Válido para Tarjetas Santander Visa Crédito y Débito.":
+    if texto == "Tarjetas Santander Débito y Crédito Visa" or texto == "Tarjetas Santander de crédito y débito Visa" or texto == "Tarjetas Santander de Débito" or texto == "Tarjetas Débito y Crédito Santander Visa" or texto == "Tarjeta Santander de Débito y Crédito Visa" or texto == "Tarjetas Santander Visa Contactless de Débito y Crédito" or texto == "Tarjetas Santander de Crédito y Débito Visa" or texto == "Tarjetas Santander de Débito y Crédito Visa" or texto == "Tarjeta Santander de débito y crédito Visa" or texto == "Tarjeta Santander de Crédito y Débito Visa" or texto == "Tarjetas Santander Visa de crédito y débito" or texto == "Tarjetas Santander Visa Contactless" or texto == "Tarjetas Santander Visa" or texto == "Válido para Tarjetas Santander Visa Crédito y Débito.":
         tarjetasNecesarias = (filtrarPorTipoTarjeta(tarjetas, "Débito"))
         tarjetasNecesarias = tarjetasNecesarias + (filtrarPorProcesadora(tarjetas, "Visa"))
     
-    elif texto == "Tarjetas Santander Débito" or texto == "Tarjetas Débito" or texto == "Tarjetas Santander Débito Contactless" or texto == "Tarjetas Santander Visa de Débito" or texto == "Tarjeta de Débito":
+    elif texto == "Tarjetas Santander Débito Tarjetas Santander Visa" or texto == "Tarjetas Santander Débito" or texto == "Tarjetas Débito" or texto == "Tarjetas Santander Débito Contactless" or texto == "Tarjetas Santander Visa de Débito" or texto == "Tarjeta de Débito":
         tarjetasNecesarias = filtrarPorTipoTarjeta(tarjetas, "Débito")
 
     elif texto == "Tarjetas Santander American Express" or texto == "Mastercard y American Express":
@@ -69,7 +69,7 @@ def setearTarjeta(texto):
     elif texto == "Tarjetas Santander Recargables":
         tarjetasNecesarias = (filtrarPorSegmento(tarjetas, "Recargable"))
 
-    elif texto == "Tarjetas Santander Mastercard" or texto == "Tarjetas MasterCard"or texto == "Tarjetas Santander MasterCard" or texto == "Tarjetas Santander Mastercard sin contacto":
+    elif texto == "Tarjeta Santander Mastercard" or texto == "Tarjetas Santander Mastercard" or texto == "Tarjetas MasterCard"or texto == "Tarjetas Santander MasterCard" or texto == "Tarjetas Santander Mastercard sin contacto":
         tarjetasNecesarias = (filtrarPorProcesadora(tarjetas, "Mastercard"))
 
     elif texto == "Tarjeta Women Visa" or texto == "Tarjeta Santander Women Visa":
