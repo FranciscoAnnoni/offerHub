@@ -79,10 +79,7 @@ class MisTarjetasFragment: Fragment() {
 
                 var gridViewAdapter = MisTarjetasAdapter(view.context, tarjetas)
                 tarjetasGridView.adapter = gridViewAdapter
-            } else{
-                findNavController().navigate(MisTarjetasFragmentDirections.actionMisTarjetasFragmentToCargadoTarjetasFragment())
             }
-
 
         }
 
