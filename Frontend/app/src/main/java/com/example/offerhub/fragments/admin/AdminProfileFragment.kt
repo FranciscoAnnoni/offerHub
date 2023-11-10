@@ -43,10 +43,6 @@ class AdminProfileFragment : Fragment() {
 
         rootView = view
 
-        binding.constraintProfile.setOnClickListener{
-            findNavController().navigate(R.id.action_adminProfileFragment_to_adminUserAccountFragment)
-        }
-
 
         binding.linearLogOut.setOnClickListener{
             val builder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)
