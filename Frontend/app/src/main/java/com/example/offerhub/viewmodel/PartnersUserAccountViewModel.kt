@@ -46,9 +46,33 @@ class PartnersUserAccountViewModel @Inject constructor(
     val userUid = usuario?.uid
     val instancia = Funciones()
 
-
     //OBTENEMOS EL USUAREIO EN CUESTION
     fun getUser() {
+        viewModelScope.launch {
+            _userPartner.emit(Resource.Loading())
+        }
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            try {
+                val instancia = Funciones()
+                val usuarioPartner = instancia.traerUsuarioPartner()
+
+                viewModelScope.launch {
+                    if(usuarioPartner != null){
+                        _userPartner.emit(Resource.Success(usuarioPartner))
+                    }else {
+                        viewModelScope.launch {
+                            _userPartner.emit(Resource.Error("error en visualizar usuario"))
+                        }
+                    }
+
+                }
+
+            } catch (e: Exception) {
+                Log.d("Resultado","ERROR")
+            }
+        }
 
     }
 
