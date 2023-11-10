@@ -114,7 +114,7 @@ class PartnersUserAccountFragment: Fragment() {
                         if (rootView != null) {
                             Snackbar.make(rootView, "Cambio de nombre Exitoso", Snackbar.LENGTH_SHORT).show()
                         }
-                        findNavController().navigate(R.id.action_userAccountFragment_to_profileFragment)
+                        findNavController().navigate(R.id.action_partnersUserAccountFragment_to_partnersProfileFragment)
 
                     }
 

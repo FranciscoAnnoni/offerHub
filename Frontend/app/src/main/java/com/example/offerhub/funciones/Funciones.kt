@@ -195,6 +195,10 @@ class Funciones {
         instanciaEscritura.editarAtributoDeClase("Usuario",userId, atributo,valorNuevo)
     }
 
+    fun editarPerfilPartner(userId: String, atributo: String, valorNuevo: String){
+        instanciaEscritura.editarAtributoDeClase("UsuarioPartner",userId, atributo,valorNuevo)
+    }
+
 
     suspend fun obtenerPromocionesFavoritas(usuario: Usuario,promosDisp:MutableList<Promocion> = mutableListOf()): MutableList<Promocion> = coroutineScope {
         val promocionesTotales = if(promosDisp.size>0) promosDisp else obtenerPromociones(usuario)

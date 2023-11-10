@@ -30,13 +30,12 @@ class PartnersUserAccountViewModel @Inject constructor(
     private val _userPartner = MutableStateFlow<Resource<UserPartner>>(Resource.Unspecified())
     val userPartner = _userPartner.asStateFlow()
 
-    private val _updateInfo = MutableStateFlow<Resource<Usuario>>(Resource.Unspecified())
+    private val _updateInfo = MutableStateFlow<Resource<UserPartner?>>(Resource.Unspecified())
     val updateInfo = _updateInfo.asStateFlow()
 
     val database: FirebaseDatabase =
         FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
     val referencia: DatabaseReference = database.getReference("/UsuarioPartner")
-
 
     init {
         getUser()
@@ -55,7 +54,6 @@ class PartnersUserAccountViewModel @Inject constructor(
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
             try {
-                val instancia = Funciones()
                 val usuarioPartner = instancia.traerUsuarioPartner()
 
                 viewModelScope.launch {
@@ -78,6 +76,43 @@ class PartnersUserAccountViewModel @Inject constructor(
 
 
     fun updateUser(nombreyApellido: String){
+        val areInputsValid = nombreyApellido.trim().isNotEmpty()
+
+        if (!areInputsValid){
+            viewModelScope.launch {
+                _userPartner.emit(Resource.Error("No pueden quedar campos vacios"))
+            }
+            return
+        }
+
+        viewModelScope.launch{
+            _updateInfo.emit(Resource.Loading())
+        }
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            try {
+                val usuarioPartner = instancia.traerUsuarioPartner()
+
+                userUid?.let { it1 -> instancia.editarPerfilPartner(it1,"nombre",nombreyApellido) }
+
+                viewModelScope.launch {
+                    if(usuario != null){
+                        delay(1000)
+                        _updateInfo.emit(Resource.Success(usuarioPartner))
+                    }else {
+                        viewModelScope.launch {
+                            _updateInfo.emit(Resource.Error("error de guardado"))
+                        }
+                    }
+
+                }
+
+            } catch (e: Exception) {
+                Log.d("Resultado","ERROR")
+            }
+        }
+
 
     }
 

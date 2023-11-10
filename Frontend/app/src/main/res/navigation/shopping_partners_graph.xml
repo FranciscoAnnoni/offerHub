@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_partnersProfileFragment_to_partnersSucursalesFragment"
             app:destination="@id/partnersSucursalesFragment" />
+        <action
+            android:id="@+id/action_partnersProfileFragment_to_legalsInfoFragmentPartners"
+            app:destination="@id/legalsInfoFragmentPartners" />
 
     </fragment>
     <fragment
@@ -95,6 +98,10 @@
         android:label="VerMotivoFragment" >
         <argument android:name="motivo" />
     </fragment>
+    <fragment
+        android:id="@+id/legalsInfoFragmentPartners"
+        android:name="com.example.offerhub.fragments.partners.LegalsInfoFragmentPartners"
+        android:label="LegalsInfoFragmentPartners" />
 </navigation>
 
 
