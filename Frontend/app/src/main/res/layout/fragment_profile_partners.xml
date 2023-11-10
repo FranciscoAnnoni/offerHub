@@ -126,7 +126,7 @@
                 android:background="@drawable/search_box_background">
 
                 <LinearLayout
-                    android:id="@+id/llTarjetas"
+                    android:id="@+id/llSucursales"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

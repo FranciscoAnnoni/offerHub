@@ -50,6 +50,9 @@ class PartnersProfileFragment : Fragment() {
             // findNavController().navigate()
         }
 
+        binding.llSucursales.setOnClickListener {
+            findNavController().navigate(R.id.action_partnersProfileFragment_to_partnersSucursalesFragment)
+        }
 
         binding.linearLogOut.setOnClickListener{
             val builder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)

@@ -54,7 +54,17 @@
         <action
             android:id="@+id/action_partnersProfileFragment_to_partnersUserAccountFragment"
             app:destination="@id/partnersUserAccountFragment" />
+        <action
+            android:id="@+id/action_partnersProfileFragment_to_partnersSucursalesFragment"
+            app:destination="@id/partnersSucursalesFragment" />
+
     </fragment>
+    <fragment
+        android:id="@+id/partnersSucursalesFragment"
+        android:name="com.example.offerhub.fragments.partners.PartnersSucursalesFragment"
+        android:label="PartnersSucursalesFragment"
+        tools:layout="@layout/fragment_partners_sucursales"
+        />
     <fragment
         android:id="@+id/partnersUserAccountFragment"
         android:name="com.example.offerhub.fragments.partners.PartnersUserAccountFragment"

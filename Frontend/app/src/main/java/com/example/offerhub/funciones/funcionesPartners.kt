@@ -135,6 +135,25 @@ class FuncionesPartners {
         })
     }
 
+    fun eliminarSucursalDeComercio(idComercio: String, sucursal: String) {
+        val database = FirebaseDatabase.getInstance("https://offerhub-proyectofinal-default-rtdb.firebaseio.com")
+        val referencia = database.getReference("/Comercio").child(idComercio).child("sucursales")
+
+        referencia.orderByValue().equalTo(sucursal).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (childSnapshot in snapshot.children) {
+                    childSnapshot.ref.removeValue()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejo básico de error: Imprimir el mensaje de error en la consola
+                println("Operación cancelada. Error: ${error.message}")
+            }
+        })
+    }
+
+
     suspend fun validarComercioNuevo(comercio: Comercio): Boolean {
         var instancia = LeerId()
         val resultado = comercio.cuil?.let { instancia.obtenerIdSinc("Comercio", "cuil", it) }
