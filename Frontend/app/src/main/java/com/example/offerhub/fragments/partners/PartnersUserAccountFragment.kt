@@ -184,10 +184,7 @@ class PartnersUserAccountFragment: Fragment() {
 // muestra la info del usuario Partner
     private fun showUserInformation(data: UserPartner) {
         binding.apply{
-
             edFirstName.setText(data.nombreDeEmpresa)
-            Log.d("Etiqueta nombre", edFirstName.toString())
-            Log.d("Etiqueta nombre", data.nombreDeEmpresa)
             edCuil.setText(data.cuil)
             edEmail.setText(data.email)
 
