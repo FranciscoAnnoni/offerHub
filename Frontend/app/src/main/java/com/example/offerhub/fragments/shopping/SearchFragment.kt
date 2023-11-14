@@ -310,24 +310,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         }
 
         coroutineScope.launch {
-            if (savedInstanceState != null) {
-                try{
-                    viewModel.textoBusqueda = savedInstanceState.getString("searchText", "")
-                    val currentFilters =
-                        savedInstanceState.getParcelable("currentFilters", FilterData::class.java)
-                    viewModel.filtrosActuales = currentFilters
-                    if (savedInstanceState.containsKey("searchResults")) {
-                        viewModel.promociones = savedInstanceState.getParcelableArrayList(
-                            "searchResults",
-                            Promocion::class.java
-                        ) ?: mutableListOf()
-                    }
-                    updateBadgeDrawable()
-                }catch (e: Exception) {
-                    Log.d("no hay parceable","sin parceable linea 300")
-                }
-            }
-        }.invokeOnCompletion {
             // Actualiza la interfaz de usuario con los datos restaurados
             if (viewModel.filtrosActuales==null && viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 binding.buscadores.setText(viewModel.textoBusqueda)
