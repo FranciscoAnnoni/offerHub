@@ -74,6 +74,10 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         val instancia = Funciones()
         val instanciaCanal = CanalNoti()
         getContext()?.let { instanciaCanal.createChannel(it) }
+        val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
+        if (promocion.url == null){
+            iconoEnlace.visibility = View.GONE
+        }
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -106,8 +110,6 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 binding.recyclerViewSucursales.visibility = View.GONE
             }
         }
-
-        val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
 
         // Agrega un OnClickListener al ImageView
         iconoEnlace.setOnClickListener {

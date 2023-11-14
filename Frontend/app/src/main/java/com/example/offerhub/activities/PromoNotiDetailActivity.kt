@@ -59,12 +59,17 @@ class PromoNotiDetailActivity : AppCompatActivity() {
         val listaTarjetasString = prefs.getString("listaString", null)
         val listaTarjetas: List<String> = listaTarjetasString?.split(",") ?: emptyList()
         var promocion: Promocion
+        val iconoEnlace = findViewById<ImageView>(R.id.icono_enlace)
         val activityContext = this
         CoroutineScope(Dispatchers.Main).launch {
             userViewModel = UserViewModelSingleton.getUserViewModel()
             promocion = promocionId?.let { LeerId().obtenerPromocionPorId(it) }!!
 
             val instancia = Funciones()
+
+            if (promocion.url == null){
+                iconoEnlace.visibility = View.GONE
+            }
 
             binding.imageClose.setOnClickListener {
                 // Redirige a la pantalla de inicio
@@ -86,7 +91,7 @@ class PromoNotiDetailActivity : AppCompatActivity() {
                     binding.promoTyC.visibility = View.GONE
                 }
             }
-            val iconoEnlace = findViewById<ImageView>(R.id.icono_enlace)
+
 
             // Agrega un OnClickListener al ImageView
             iconoEnlace.setOnClickListener {
