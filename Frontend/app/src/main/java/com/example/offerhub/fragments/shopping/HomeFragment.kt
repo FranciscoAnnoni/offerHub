@@ -86,7 +86,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var instancia = InterfaceSinc()
         var funciones = Funciones()
 
         val categoriasContainer = view.findViewById<LinearLayout>(R.id.categoriasContainer)
@@ -231,11 +230,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                         val promocionesDesordenadas: List<Promocion> =
                             userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
                         var promociones=promocionesDesordenadas.sortedBy { it.titulo!!.lowercase() }
-                        if (promociones.size > 0) {
+                        if (promociones.isNotEmpty()) {
                             val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
                             promosDispo.visibility = View.VISIBLE
                             val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
                             switch.visibility = View.VISIBLE
+                            cantPromos+=promociones.size
 
                             if (requireContext() != null) {
                                 val categoriaTitle = TextView(requireContext())
@@ -251,9 +251,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                                     false
                                 )
 
-                                // Obtén las promociones para esta categoría (reemplaza esto con tu lógica real)
-
-                                cantPromos+=promociones.size
                                 // Configura el adaptador para el RecyclerView
                                 val adapter = PromocionGridPorCategoriaAdapter(
                                     activity!!,

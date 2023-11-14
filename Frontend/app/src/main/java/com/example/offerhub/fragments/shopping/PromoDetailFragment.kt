@@ -11,6 +11,8 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -113,13 +115,51 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             val url = promocion.url // Reemplaza con tu enlace real
 
             // Configura la apariencia de la pestaña personalizada (opcional)
-            val builder = CustomTabsIntent.Builder()
-            builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary)) // Color de la barra de herramientas
+            try{
+                val builder = CustomTabsIntent.Builder()
+                builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary)) // Color de la barra de herramientas
 
-            // Abre la URL en una pestaña personalizada
-            val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
+                // Abre la URL en una pestaña personalizada
+                val customTabsIntent = builder.build()
+                customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
+            }catch (e: Exception) {
+                val toast = Toast.makeText(requireContext(), "url no disponible", Toast.LENGTH_SHORT)
+                toast.show()
+
+                // Usa un Handler para esperar el tiempo deseado antes de cancelar el Toast
+                Handler(Looper.getMainLooper()).postDelayed({
+                    toast.cancel()
+                }, 1500)
+            }
+
+
+
+            /*
+            // Crea un Intent para abrir el enlace en un navegador externo
+            val intent = Intent(Intent.ACTION_VIEW)
+            try{
+                intent.data = Uri.parse(url)
+                if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                    startActivity(intent)
+                }
+                else {
+                    // Maneja el caso en el que no se pueda abrir el navegador
+                    Toast.makeText(requireContext(), "No se pudo abrir el navegador", Toast.LENGTH_SHORT).show()
+                }
+            }catch (e: Exception) {
+                val toast = Toast.makeText(requireContext(), "url no disponible", Toast.LENGTH_SHORT)
+                toast.show()
+
+                // Usa un Handler para esperar el tiempo deseado antes de cancelar el Toast
+                Handler(Looper.getMainLooper()).postDelayed({
+                    toast.cancel()
+                }, 1500)
+            }
+
+*/
         }
+
+
         val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -226,6 +266,9 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
                 binding.btnNotificar.text=if (isNotificado()) "Eliminar Notificacion" else "Notificar"
             }
         }
+
+
+        promocion.id?.let { Log.d("id de la promo:", it) }
 
         binding.apply {
             var text =promocion.obtenerDesc()

@@ -5,6 +5,7 @@ import PromocionGridAdapter
 import SearchViewModel
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,6 +24,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -214,6 +216,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeBadge()
@@ -307,6 +310,24 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         }
 
         coroutineScope.launch {
+            if (savedInstanceState != null) {
+                try{
+                    viewModel.textoBusqueda = savedInstanceState.getString("searchText", "")
+                    val currentFilters =
+                        savedInstanceState.getParcelable("currentFilters", FilterData::class.java)
+                    viewModel.filtrosActuales = currentFilters
+                    if (savedInstanceState.containsKey("searchResults")) {
+                        viewModel.promociones = savedInstanceState.getParcelableArrayList(
+                            "searchResults",
+                            Promocion::class.java
+                        ) ?: mutableListOf()
+                    }
+                    updateBadgeDrawable()
+                }catch (e: Exception) {
+                    Log.d("no hay parceable","sin parceable linea 300")
+                }
+            }
+        }.invokeOnCompletion {
             // Actualiza la interfaz de usuario con los datos restaurados
             if (viewModel.filtrosActuales==null && viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 binding.buscadores.setText(viewModel.textoBusqueda)

@@ -97,7 +97,7 @@ class FuncionesPartners {
                 "Rechazado"
             )
         }
-        promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it, "nota", razon) }
+        promocion.id?.let { instancia.editarAtributoDeClase("/Promocion", it, "motivo", razon) }
     }
 
     fun registrarComercio(comercio: Comercio, sucursales: List<SucursalEscritura>?): String? {

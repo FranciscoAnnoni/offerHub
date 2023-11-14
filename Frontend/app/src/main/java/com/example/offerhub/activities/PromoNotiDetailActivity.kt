@@ -9,6 +9,8 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -17,7 +19,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.offerhub.Comercio
@@ -88,17 +93,26 @@ class PromoNotiDetailActivity : AppCompatActivity() {
                 // Define el enlace que deseas abrir en el navegador
                 val url = promocion.url // Reemplaza con tu enlace real
                 // Crea un Intent para abrir el enlace en un navegador externo
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
+                try{
+                    val builder = CustomTabsIntent.Builder()
+                    builder.setToolbarColor(ContextCompat.getColor(this@PromoNotiDetailActivity, R.color.colorPrimary)) // Color de la barra de herramientas
+
+                    // Abre la URL en una pestaña personalizada
+                    val customTabsIntent = builder.build()
+                    customTabsIntent.launchUrl(this@PromoNotiDetailActivity, Uri.parse(url))
+                }catch (e: Exception) {
+                    val toast = Toast.makeText(this@PromoNotiDetailActivity, "url no disponible", Toast.LENGTH_SHORT)
+                    toast.show()
+
+                    // Usa un Handler para esperar el tiempo deseado antes de cancelar el Toast
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        toast.cancel()
+                    }, 1500)
+                }
+
 
                 // Verifica si hay una actividad que pueda manejar el intent (navegador)
-                if (intent.resolveActivity(activityContext.packageManager) != null) {
-                    startActivity(intent)
-                }
-                else {
-                    // Maneja el caso en el que no se pueda abrir el navegador
-                    Toast.makeText(this@PromoNotiDetailActivity, "No se pudo abrir el navegador", Toast.LENGTH_SHORT).show()
-                }
+
             }
             val recyclerViewTarjetas = findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 

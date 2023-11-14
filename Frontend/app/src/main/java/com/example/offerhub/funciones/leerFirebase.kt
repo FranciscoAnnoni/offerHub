@@ -455,7 +455,6 @@ class LecturaBD {
                                 hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
                             } else { hastaFormateado = null }
                             val comercio: String? = data.child("comercio").getValue(String::class.java)
-                            val coroutineScope = CoroutineScope(Dispatchers.Main)
                             val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
                                 data.child("cuotas").getValue(String::class.java),
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
