@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.example.offerhub.Funciones
 import com.example.offerhub.Promocion
 import com.example.offerhub.R
@@ -25,15 +26,16 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
-class PromocionGridAdapter(private val context: Context, private var promociones: List<Promocion>,private var fragmentListener: PromocionFragmentListener) : BaseAdapter() {
+class PromocionGridAdapter(private val context: Context, public var promociones: List<Promocion>,private var fragmentListener: PromocionFragmentListener) : BaseAdapter() {
 
     private var currentPage = 1 // Página actual
-    private val promocionesPorPagina = 25
+    public val promocionesPorPagina = 25
     private var areCheckBoxesVisible = false
     private var useListener = true
     private var numCheckBoxesSeleccionados = 0
+    public var promocionesTotales:MutableList<Promocion> = mutableListOf()
     public var lista:MutableList<Promocion> = mutableListOf()
-    private val elementoCache = HashMap<Int, View>()
+    public val elementoCache = HashMap<Int, View>()
 
     fun setFragmentListener(listener: PromocionFragmentListener) {
         fragmentListener = listener
@@ -166,6 +168,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
             // Carga la imagen con Glide después de obtener o redimensionarla
             Glide.with(context)
                 .load(logo)
+                .override(80, 80) // Cambia las dimensiones de la imagen
+                .priority(Priority.LOW)
                 .placeholder(R.drawable.offerhub_logo_color)
                 .error(R.drawable.offerhub_logo_color)
                 .centerCrop()
@@ -175,6 +179,8 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         val isFavorite = userViewModel.favoritos.any { it.id == promocion.id }
         favIcon.setImageResource(getFavResource(isFavorite))
 
+            Log.d("POS",position.toString())
+            Log.d("LP",(promociones.size - 1).toString())
         if (position == promociones.size - 1) {
             cargarMasPromociones()
         }
@@ -200,10 +206,10 @@ class PromocionGridAdapter(private val context: Context, private var promociones
 
         val promocionesCargadas = mutableListOf<Promocion>()
 
-        if (startIndex < promociones.size) {
+        if (startIndex < promocionesTotales.size) {
             for (i in startIndex until endIndex) {
-                if (i < promociones.size) {
-                    promocionesCargadas.add(promociones[i])
+                if (i < promocionesTotales.size) {
+                    promocionesCargadas.add(promocionesTotales[i])
                 }
             }
         }
@@ -211,7 +217,7 @@ class PromocionGridAdapter(private val context: Context, private var promociones
         return promocionesCargadas
     }
 
-    private fun cargarMasPromociones() {
+    public fun cargarMasPromociones() {
         // Incrementa la página actual
         currentPage++
 

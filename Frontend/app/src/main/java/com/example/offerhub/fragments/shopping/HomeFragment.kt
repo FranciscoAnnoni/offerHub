@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.CheckBox
 import android.widget.GridView
 import android.widget.ImageView
@@ -46,6 +47,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Math.ceil
+import java.lang.Math.round
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener {
@@ -131,7 +133,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                             val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
                             switch.visibility = View.GONE
                         }
-                        val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas,this@HomeFragment)
+                        val adapter = PromocionGridAdapter(view.context, listOf(),this@HomeFragment)
+                        adapter.promocionesTotales= promocionesOrdenadas as MutableList<Promocion>
+                        adapter.cargarMasPromociones()
                         adapter.eliminarLista()
                         adapter.setFragment(this@HomeFragment)
                         listView.adapter = adapter
@@ -164,6 +168,30 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                             val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
                             bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
                         }
+                        /*val elementosVisibles = mutableSetOf<Int>()
+
+                        listView.setOnScrollListener(object : AbsListView.OnScrollListener {
+                            override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                                // Actualiza la lista de elementos visibles
+                                elementosVisibles.clear()
+                                for (i in firstVisibleItem until firstVisibleItem + visibleItemCount) {
+                                    elementosVisibles.add(i)
+                                }
+
+                                // Elimina elementos de la caché que ya no son visibles
+                                val keysToRemove = adapter.elementoCache.keys.filter { !elementosVisibles.contains(it) }.take(
+                                    Math.ceil(adapter.promociones.size*0.1).toInt()
+                                )
+                                for (key in keysToRemove) {
+                                    adapter.elementoCache.remove(key)
+                                }
+                            }
+
+                            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+                                // No es necesario implementar este método en este contexto
+                            }
+                        })*/
+
                         listView.setOnItemClickListener { parent, _, position, _ ->
                             val selectedPromo =
                                 adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
