@@ -76,7 +76,7 @@ class Funciones {
     }
 
     suspend fun obtenerPromociones(usuario: Usuario?): MutableList<Promocion> = coroutineScope {
-        val listaPromos: MutableList<Promocion> = mutableListOf()
+        var listaPromos: MutableList<Promocion> = mutableListOf()
         val deferredPromos = coroutineScope.async {
             val promosComunes = obtenerPromocionesComunes()
             if (promosComunes != null) {
@@ -89,6 +89,7 @@ class Funciones {
                 listaPromos.addAll(promos)
             }
         }
+            listaPromos = listaPromos.distinctBy { it.id } as MutableList<Promocion>
         }
         Log.d("DB - Obteniendo Promociones","Se estan descargando promociones de la DB")
         deferredPromos?.await()
