@@ -69,7 +69,13 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                     horizontalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
                     verticalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
                 }
+            binding.filterSearch.visibility = View.VISIBLE
             BadgeUtils.attachBadgeDrawable(badgeDrawable!!, binding.filterSearch)
+            binding.filterSearch.post { binding.filterSearch.invalidate() }.also {
+                if(binding.sergundaLinearLayoutBuscador.visibility == View.VISIBLE){
+                    binding.filterSearch.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 
@@ -107,8 +113,14 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 badgeDrawable?.clearNumber()
                 badgeDrawable?.backgroundColor =
                     ResourcesCompat.getColor(resources, android.R.color.transparent, null)
+                badgeDrawable?.backgroundColor =
+                    MaterialColors.getColor(
+                        requireView(),
+                        com.google.android.material.R.attr.colorError
+                    )
             }
         }
+        binding.filterSearch.invalidate()
     }
 
 
@@ -129,14 +141,19 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
     }
 
 
- /*   override fun onResume() {
+   override fun onResume() {
         super.onResume()
+
+           if(viewModel.filtrosActuales!=null){
+               onFiltersApplied(viewModel.filtrosActuales!!)
+           }
+       updateBadgeDrawable()
     }
 
     override fun onPause() {
         useArg = false
         super.onPause()
-    }*/
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -144,7 +161,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater)
-        initializeBadge()
         return binding.root
     }
     private fun showToast(message: String, duration: Long) {
@@ -164,7 +180,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
     override fun onFiltersApplied(filters: FilterData) {
         // Aplicar los filtros a las promociones en el ViewModel
-        Log.d("SearchFragment", "OnFiltersApplied")
         if(badgeDrawable==null){
             initializeBadge()
         }
@@ -201,6 +216,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeBadge()
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -289,23 +305,10 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 println("Error al obtener promociones: ${e.message}")
             }
         }
+
         coroutineScope.launch {
-            if (savedInstanceState != null) {
-                viewModel.textoBusqueda = savedInstanceState.getString("searchText", "")
-                val currentFilters =
-                    savedInstanceState.getParcelable("currentFilters", FilterData::class.java)
-                viewModel.filtrosActuales = currentFilters
-                if (savedInstanceState != null) {
-                    viewModel.promociones = savedInstanceState.getParcelableArrayList(
-                        "searchResults",
-                        Promocion::class.java
-                    ) ?: mutableListOf()
-                }
-                updateBadgeDrawable()
-            }
-        }.invokeOnCompletion {
             // Actualiza la interfaz de usuario con los datos restaurados
-            if (viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
+            if (viewModel.filtrosActuales==null && viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 binding.buscadores.setText(viewModel.textoBusqueda)
                 actualizarResultados(false)
             }
@@ -313,6 +316,10 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         }.also {
             if (viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 mostrarResultadosBusqueda()
+            }
+
+            if(viewModel.filtrosActuales!=null){
+                binding.progressBarResult.visibility=View.GONE
             }
         }
 
