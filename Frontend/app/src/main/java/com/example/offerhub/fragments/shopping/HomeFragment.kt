@@ -114,24 +114,23 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
             val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
             cargarTarjetas.visibility = View.GONE
             if (userViewModel.usuario!!.homeModoFull=="1") {
-                val promoFav = view.findViewById<ImageView>(R.id.promoFav)
                 promosContainer.visibility=View.VISIBLE
                 homeScrollView.visibility = View.GONE
                 listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
-                var datos: MutableList<String> = mutableListOf()
                 binding.botonGuardar.visibility = View.VISIBLE
                 binding.btnComparar.visibility=View.GONE
                 var checkPrendido: Boolean = false
                 // Llamar a la función que obtiene los datos.
-                val job = coroutineScope.launch {
+                coroutineScope.launch {
                     try {
                         var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo!!.lowercase() }
-                        if(promocionesOrdenadas.size==0){
+                        if(promocionesOrdenadas.isEmpty()){
                             mostrarCargarTarjetas()
                             val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
                             switch.visibility = View.GONE
                         }
+                        Log.d("Cantidad promos ", promocionesOrdenadas.size.toString())
                         val adapter = PromocionGridAdapter(view.context, listOf(),this@HomeFragment)
                         adapter.promocionesTotales= promocionesOrdenadas as MutableList<Promocion>
                         adapter.cargarMasPromociones()
@@ -162,34 +161,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
 
                         binding.btnComparar.setOnClickListener {
                             var promos =adapter.getSeleccion()
-                            var promo1 = promos[0] as Promocion
-                            var promo2 = promos[1] as Promocion
+                            var promo1 = promos[0]
+                            var promo2 = promos[1]
                             val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
                             bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
                         }
-                        /*val elementosVisibles = mutableSetOf<Int>()
 
-                        listView.setOnScrollListener(object : AbsListView.OnScrollListener {
-                            override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-                                // Actualiza la lista de elementos visibles
-                                elementosVisibles.clear()
-                                for (i in firstVisibleItem until firstVisibleItem + visibleItemCount) {
-                                    elementosVisibles.add(i)
-                                }
-
-                                // Elimina elementos de la caché que ya no son visibles
-                                val keysToRemove = adapter.elementoCache.keys.filter { !elementosVisibles.contains(it) }.take(
-                                    Math.ceil(adapter.promociones.size*0.1).toInt()
-                                )
-                                for (key in keysToRemove) {
-                                    adapter.elementoCache.remove(key)
-                                }
-                            }
-
-                            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
-                                // No es necesario implementar este método en este contexto
-                            }
-                        })*/
 
                         listView.setOnItemClickListener { parent, _, position, _ ->
                             val selectedPromo =
@@ -207,8 +184,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                     }
                 }
             } else {
-                //val listView = view.findViewById<GridView>(R.id.promocionesGridView)
-                //  val promoFav = view.findViewById<ImageView>(R.id.promoFav)
+
                 binding.btnComparar.visibility=View.GONE
                 // listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)

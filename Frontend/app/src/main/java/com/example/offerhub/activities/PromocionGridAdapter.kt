@@ -26,16 +26,16 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
-class PromocionGridAdapter(private val context: Context, public var promociones: List<Promocion>,private var fragmentListener: PromocionFragmentListener) : BaseAdapter() {
+class PromocionGridAdapter(private val context: Context, var promociones: List<Promocion>,private var fragmentListener: PromocionFragmentListener) : BaseAdapter() {
 
-    private var currentPage = 1 // Página actual
-    public val promocionesPorPagina = 25
+    private var currentPage = 0 // Página actual
+    val promocionesPorPagina = 25
     private var areCheckBoxesVisible = false
     private var useListener = true
     private var numCheckBoxesSeleccionados = 0
-    public var promocionesTotales:MutableList<Promocion> = mutableListOf()
-    public var lista:MutableList<Promocion> = mutableListOf()
-    public val elementoCache = HashMap<Int, View>()
+    var promocionesTotales:MutableList<Promocion> = mutableListOf()
+    var lista:MutableList<Promocion> = mutableListOf()
+    val elementoCache = HashMap<Int, View>()
 
     fun setFragmentListener(listener: PromocionFragmentListener) {
         fragmentListener = listener
@@ -203,7 +203,6 @@ class PromocionGridAdapter(private val context: Context, public var promociones:
         // Por ejemplo, si tus promociones están en una lista llamada "listaDePromociones":
         val startIndex = (page - 1) * pageSize
         val endIndex = startIndex + pageSize
-
         val promocionesCargadas = mutableListOf<Promocion>()
 
         if (startIndex < promocionesTotales.size) {
