@@ -1,6 +1,7 @@
 package com.example.offerhub.activities
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,12 +10,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.getSystemService
-import com.example.offerhub.Funciones
 import com.example.offerhub.LeerId
 import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
-import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,11 +57,19 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
         val descripcionTarjeta = gridViewItem.findViewById<TextView>(R.id.tvTarjetaDescripcion)
         val logoBanco = gridViewItem.findViewById<ImageView>(R.id.ivLogoBanco)
         val logoEmisora = gridViewItem.findViewById<ImageView>(R.id.logoEmisora)
-        if (tarjeta.procesadora == "Visa") {
-            logoEmisora.setImageResource(R.drawable.logo_visa)
-        }
-        if (tarjeta.procesadora == "Mastercard") {
-            logoEmisora.setImageResource(R.drawable.logo_mastercard)
+        if (tarjeta.procesadora !=null) {
+            val procesadora= tarjeta.procesadora!!.lowercase().replace(" ","")
+            val imageId = context.getResources()
+                .getIdentifier("logo_"+procesadora, "drawable", context.getPackageName())
+            if (imageId != 0) {
+                val drawable: Drawable? = context.getDrawable(imageId)
+
+                logoEmisora.setImageDrawable(drawable)
+
+            } else {
+                // Si el drawableId es 0, significa que no se encontró el recurso
+                // Puedes manejar este caso según tus necesidades, por ejemplo, establecer una imagen de respaldo.
+            }
         }
         val job = coroutineScope.launch {
             val entidad = leerBD.obtenerEntidadPorId(tarjeta.entidad!!)

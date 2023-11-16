@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.cardview.widget.CardView
@@ -35,6 +36,7 @@ import com.example.offerhub.funciones.getContrastColor
 import com.example.offerhub.funciones.getFavResource
 import com.example.offerhub.funciones.obtenerColorMayoritario
 import com.example.offerhub.funciones.removeAccents
+import com.example.offerhub.viewmodel.PromoNotiDetailViewModel
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +47,7 @@ import kotlinx.coroutines.launch
 class PromoNotiDetailActivity : AppCompatActivity() {
     var isTyCExpanded = false
     var userViewModel :UserViewModel=UserViewModel()
-
+    val viewModel by viewModels<PromoNotiDetailViewModel>()
     val binding by lazy {
         ActivityPromoNotiDetailBinding.inflate(layoutInflater)
     }
@@ -73,9 +75,14 @@ class PromoNotiDetailActivity : AppCompatActivity() {
 
             binding.imageClose.setOnClickListener {
                 // Redirige a la pantalla de inicio
-                val intent = Intent(this@PromoNotiDetailActivity, ShoppingActivity::class.java)
-                startActivity(intent)
+                viewModel.startActivity()
+
+                Intent(this@PromoNotiDetailActivity, ShoppingActivity::class.java).also { intent ->
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
                 this@PromoNotiDetailActivity.finish()
+
             }
             binding.tituloTyc.setOnClickListener {
                 isTyCExpanded = !isTyCExpanded

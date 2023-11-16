@@ -70,11 +70,10 @@ class FavFragment: Fragment(R.layout.fragment_fav), PromocionFragmentListener {
             try {
                 val usuarioActual = userViewModel.usuario!!
                 coroutineScope.launch {
-                    if(userViewModel.favoritos.isEmpty()){
+                    if(userViewModel.usuario==null){
                         userViewModel.favoritos = funciones.obtenerPromocionesFavoritas(usuarioActual)
                     }
-                }.invokeOnCompletion {
-                    if  (userViewModel.favoritos.isEmpty())  {
+                    if  (userViewModel.favoritos.size==0)  {
                         listView.visibility = View.GONE
                         tvNoFavoritos.visibility = View.VISIBLE
                     }else {
