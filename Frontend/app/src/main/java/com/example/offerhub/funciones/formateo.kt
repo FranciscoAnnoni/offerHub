@@ -1,14 +1,14 @@
 package com.example.offerhub.funciones
 
-import java.text.Normalizer
-import java.util.regex.Pattern
 import android.graphics.Bitmap
 import android.graphics.Color
 import com.example.offerhub.R
 import org.threeten.bp.LocalDate
-
+import org.threeten.bp.format.DateTimeFormatter
+import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.regex.Pattern
 
 fun removeAccents(input: String?): String {
     val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
@@ -76,3 +76,18 @@ fun formatearFecha(fecha: LocalDate?): String {
     return outputFormat.format(date)
 }
 
+
+fun obtenerFechaActual(): String? {
+    val currentDate = LocalDate.now()
+
+    // Definir un formato personalizado, por ejemplo, "dd/MM/yyyy"
+
+    // Definir un formato personalizado, por ejemplo, "dd/MM/yyyy"
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    // Formatear la fecha según el formato personalizado
+
+    // Formatear la fecha según el formato personalizado
+    val formattedDate = currentDate.format(formatter)
+    return formattedDate
+}
