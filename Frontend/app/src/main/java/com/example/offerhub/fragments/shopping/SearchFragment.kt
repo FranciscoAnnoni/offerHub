@@ -187,10 +187,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         }
         // 1. Obtener las promociones actuales desde el ViewModel (suponiendo que tengas una propiedad promociones en tu ViewModel)
         val promocionesActuales = viewModel.promociones
-        Log.d("Filtros que llegan - DESDE", filters.desde)
-        Log.d("Filtros que llegan - HASTA", filters.hasta)
-        Log.d("Filtros que llegan - TIPOS", filters.tiposPromocion.joinToString(","))
-        Log.d("Filtros que llegan - DIAS", filters.diasPromocion.joinToString(","))
         // 2. Aplicar los filtros según corresponda
         val promocionesFiltradas = viewModel.filtrarPorVigencia(filters.desde, filters.hasta)
         val promocionesFiltradasPorTipo = viewModel.filtrarPorTipoPromocion(filters.tiposPromocion)
@@ -205,7 +201,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         updateBadgeDrawable()
         // 4. Actualizar la lista de promociones en la interfaz de usuario (por ejemplo, en tu adaptador)
         adapter.vaciarCacheResultados()
-        adapter.actualizarDatos(promocionesResultantes)
+        adapter.actualizarDatos(promocionesResultantes.sortedBy { it.titulo!!.lowercase() })
         adapter.notifyDataSetChanged()
     }
 
@@ -242,7 +238,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
             }
         })
         var checkPrendido: Boolean = false
-        var instancia = InterfaceSinc()
         adapter = PromocionGridAdapter(view.context, listOf(),this@SearchFragment)
         adapter.eliminarLista()
         adapter.setFragment(this@SearchFragment)
@@ -286,7 +281,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 if (viewModel.filtrosActuales != null && useFilters==true) {
                     onFiltersApplied(viewModel.filtrosActuales!!)
                 }
-                adapter.actualizarDatos(viewModel.promociones)
+                adapter.actualizarDatos(viewModel.promociones.sortedBy { it.titulo!!.lowercase() })
                 // Notifica al GridView que los datos han cambiado
                 adapter.vaciarCacheResultados()
                 adapter.notifyDataSetChanged()
@@ -434,8 +429,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
         binding.btnCompararSearch.setOnClickListener {
             var promos =adapter.getSeleccion()
-            var promo1 = promos[0] as Promocion
-            var promo2 = promos[1] as Promocion
+            var promo1 = promos[0]
+            var promo2 = promos[1]
             val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
             bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
         }
