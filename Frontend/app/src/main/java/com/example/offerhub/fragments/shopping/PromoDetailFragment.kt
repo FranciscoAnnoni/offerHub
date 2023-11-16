@@ -331,7 +331,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
                 }
             }
-            var listaDefault= mapOf("LU" to "Lunes", "MA" to "Martes", "MI" to "Miercoles", "JU" to "Jueves", "VI" to "Viernes", "SA" to "Sabado", "DO" to "Domingo")
+            var listaDefault= mapOf("LU" to "Lunes", "MA" to "Martes", "MI" to "Miercoles", "Miércoles" to "Miercoles", "JU" to "Jueves", "VI" to "Viernes", "SA" to "Sabado", "Sábado" to "Sabado", "DO" to "Domingo")
             var lista= listOf<String?>()
             if(promocion.dias !=null) {
                 lista= promocion.dias as List<String>
