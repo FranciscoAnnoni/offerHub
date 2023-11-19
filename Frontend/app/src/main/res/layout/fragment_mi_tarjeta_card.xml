@@ -25,7 +25,6 @@
             android:layout_height="wrap_content">
      <ImageView
          android:id="@+id/ivLogoBanco"
-         android:src="@drawable/logo_banco_ciudad"
          android:layout_width="50dp"
          android:layout_height="50dp"
          android:layout_marginLeft="10dp"
@@ -34,7 +33,6 @@
 
          />
     <TextView
-        android:text="Banco Ciudad"
         android:id="@+id/tvNombreEntidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,7 +53,6 @@
             android:id="@+id/tvTarjetaDescripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Crédito"
             android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +61,6 @@
 
         <ImageView
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/logo_visa"
             android:id="@+id/logoEmisora"
             android:layout_width="60dp"
             android:layout_height="60dp"

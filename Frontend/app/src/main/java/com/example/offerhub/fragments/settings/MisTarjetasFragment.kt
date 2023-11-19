@@ -61,8 +61,8 @@ class MisTarjetasFragment: Fragment() {
             usuario = UserViewModelSingleton.getUserViewModel().usuario!!
             var tarjetas: MutableList<Tarjeta> = mutableListOf()
 
-            if (usuario.tarjetas != null ){
-                for (tarjetaId in usuario.tarjetas!!) {
+            if (uvm.usuario!!.tarjetas != null ){
+                for (tarjetaId in uvm.usuario!!.tarjetas!!) {
                     if (tarjetaId != null) {
                         val tarjetaObjeto = leerBD.obtenerTarjetaPorId(tarjetaId)
                         if (tarjetaObjeto != null) {

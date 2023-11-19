@@ -111,16 +111,16 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
             uvm = UserViewModelSingleton.getUserViewModel()
             val coroutineScope = CoroutineScope(Dispatchers.Main)
             var funciones = Funciones()
-            usuario = uvm.usuario!!
+
 
 
             coroutineScope.launch {
-                funciones.eliminarTodasLasTarjetasDeUsuario(usuario.id)
+                funciones.eliminarTodasLasTarjetasDeUsuario(uvm.usuario!!.id)
                 uvm.usuario!!.tarjetas!!.remove(tarjeta.id)
                 if (uvm.usuario!!.tarjetas != null) {
                     if(uvm.usuario!!.tarjetas!!.isNotEmpty()) {
                         funciones.agregarTarjetasAUsuario(
-                            usuario.id,
+                            uvm.usuario!!.id,
                             uvm.usuario!!.tarjetas!! as MutableList<String>
                         )
                     }
@@ -129,8 +129,8 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
                 uvm.listadoDePromosDisp=uvm.listadoDePromosDisp.filterNot { promo ->
                     (promo.tarjetas?.contains(tarjeta.id) == true)
                 }
-
                 UserViewModelCache().guardarUserViewModel(uvm)
+
             }
 
             this.removeTarjeta(tarjeta)
