@@ -1,5 +1,7 @@
 package com.example.offerhub.viewmodel
 
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +19,7 @@ import com.example.offerhub.util.validatePassword
 import com.example.offerhub.util.validatePasswords
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -70,9 +73,13 @@ class RegisterViewModel @Inject constructor(
                         saveUserInfo(it.uid,user)
                         //_register.value = Resource.Success(it)
                     }
-                }.addOnFailureListener {
+                }.addOnFailureListener { exception ->
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthUserCollisionException -> "El correo electrónico ya está en uso."
+                        else -> exception.message.toString()
+                    }
+                    _register.value = Resource.Error(errorMessage)
 
-                    _register.value = Resource.Error(it.message.toString())
                 }
 
         }else {
@@ -84,7 +91,6 @@ class RegisterViewModel @Inject constructor(
             }
 
         }
-
     }
 
     private fun saveUserInfo(userUid: String, user: User){

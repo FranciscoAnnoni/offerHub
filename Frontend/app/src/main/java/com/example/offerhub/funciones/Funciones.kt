@@ -63,6 +63,7 @@ class Funciones {
         val listaPromos: MutableList<Promocion> = mutableListOf()
         val promosDeferred = async {
             val promos = instanciaLectura.obtenerPromosPorTarjeta(null)
+            Log.d("promos sin tarjeta",promos.size.toString())
             for (promo in promos){
                 if((promo.estado!=null) && (promo.estado.lowercase() == "aprobado")){
                     listaPromos.add(promo)
@@ -75,20 +76,20 @@ class Funciones {
     }
 
     suspend fun obtenerPromociones(usuario: Usuario?): MutableList<Promocion> = coroutineScope {
-        val listaPromos: MutableList<Promocion> = mutableListOf()
-        var i = 0
+        var listaPromos: MutableList<Promocion> = mutableListOf()
         val deferredPromos = coroutineScope.async {
             val promosComunes = obtenerPromocionesComunes()
             if (promosComunes != null) {
                 listaPromos.addAll(promosComunes)
             }
-
+        Log.d("cantidad promos obtenidas",promosComunes.size.toString())
         usuario?.tarjetas?.map { tarjeta ->
             val promos = tarjeta?.let { instanciaLectura.obtenerPromosPorTarjeta(it) }
             if (promos != null) {
                 listaPromos.addAll(promos)
             }
         }
+            listaPromos = listaPromos.distinctBy { it.id } as MutableList<Promocion>
         }
         Log.d("DB - Obteniendo Promociones","Se estan descargando promociones de la DB")
         deferredPromos?.await()
@@ -193,6 +194,10 @@ class Funciones {
 
     fun editarPerfil(userId: String, atributo: String, valorNuevo: String){
         instanciaEscritura.editarAtributoDeClase("Usuario",userId, atributo,valorNuevo)
+    }
+
+    fun editarPerfilPartner(userId: String, atributo: String, valorNuevo: String){
+        instanciaEscritura.editarAtributoDeClase("UsuarioPartner",userId, atributo,valorNuevo)
     }
 
 

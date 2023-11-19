@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import com.example.offerhub.funciones.formatearFecha
+import com.example.offerhub.funciones.obtenerFechaActual
 import com.example.offerhub.viewmodel.UserViewModelSingleton
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -455,7 +456,6 @@ class LecturaBD {
                                 hastaFormateado = LocalDate.parse(vigenciaHastaString, formato)
                             } else { hastaFormateado = null }
                             val comercio: String? = data.child("comercio").getValue(String::class.java)
-                            val coroutineScope = CoroutineScope(Dispatchers.Main)
                             val instancia = Promocion(data.key,data.child("categoria").getValue(String::class.java),  comercio,
                                 data.child("cuotas").getValue(String::class.java),
                                 data.child("dias").getValue(object : GenericTypeIndicator<List<String?>>() {}),
@@ -469,7 +469,9 @@ class LecturaBD {
                                 desdeFormateado,
                                 hastaFormateado,
                                 data.child("estado").getValue(String::class.java))
-                            lista.add(instancia)
+                            if(hastaFormateado == null || hastaFormateado >= LocalDate.parse(obtenerFechaActual(),formato)){
+                                lista.add(instancia)
+                            }
                         }
 
                     }

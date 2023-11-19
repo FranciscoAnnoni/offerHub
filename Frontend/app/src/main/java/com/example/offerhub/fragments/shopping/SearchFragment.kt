@@ -5,6 +5,7 @@ import PromocionGridAdapter
 import SearchViewModel
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,6 +24,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -69,7 +71,13 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                     horizontalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
                     verticalOffsetWithText = ViewUtils.dpToPx(resources, 20f).toInt()
                 }
+            binding.filterSearch.visibility = View.VISIBLE
             BadgeUtils.attachBadgeDrawable(badgeDrawable!!, binding.filterSearch)
+            binding.filterSearch.post { binding.filterSearch.invalidate() }.also {
+                if(binding.sergundaLinearLayoutBuscador.visibility == View.VISIBLE){
+                    binding.filterSearch.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 
@@ -107,8 +115,14 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 badgeDrawable?.clearNumber()
                 badgeDrawable?.backgroundColor =
                     ResourcesCompat.getColor(resources, android.R.color.transparent, null)
+                badgeDrawable?.backgroundColor =
+                    MaterialColors.getColor(
+                        requireView(),
+                        com.google.android.material.R.attr.colorError
+                    )
             }
         }
+        binding.filterSearch.invalidate()
     }
 
 
@@ -129,14 +143,19 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
     }
 
 
- /*   override fun onResume() {
+   override fun onResume() {
         super.onResume()
+
+           if(viewModel.filtrosActuales!=null){
+               onFiltersApplied(viewModel.filtrosActuales!!)
+           }
+       updateBadgeDrawable()
     }
 
     override fun onPause() {
         useArg = false
         super.onPause()
-    }*/
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -144,7 +163,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater)
-        initializeBadge()
         return binding.root
     }
     private fun showToast(message: String, duration: Long) {
@@ -164,16 +182,11 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
     override fun onFiltersApplied(filters: FilterData) {
         // Aplicar los filtros a las promociones en el ViewModel
-        Log.d("SearchFragment", "OnFiltersApplied")
         if(badgeDrawable==null){
             initializeBadge()
         }
         // 1. Obtener las promociones actuales desde el ViewModel (suponiendo que tengas una propiedad promociones en tu ViewModel)
         val promocionesActuales = viewModel.promociones
-        Log.d("Filtros que llegan - DESDE", filters.desde)
-        Log.d("Filtros que llegan - HASTA", filters.hasta)
-        Log.d("Filtros que llegan - TIPOS", filters.tiposPromocion.joinToString(","))
-        Log.d("Filtros que llegan - DIAS", filters.diasPromocion.joinToString(","))
         // 2. Aplicar los filtros según corresponda
         val promocionesFiltradas = viewModel.filtrarPorVigencia(filters.desde, filters.hasta)
         val promocionesFiltradasPorTipo = viewModel.filtrarPorTipoPromocion(filters.tiposPromocion)
@@ -188,7 +201,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         updateBadgeDrawable()
         // 4. Actualizar la lista de promociones en la interfaz de usuario (por ejemplo, en tu adaptador)
         adapter.vaciarCacheResultados()
-        adapter.actualizarDatos(promocionesResultantes)
+        adapter.actualizarDatos(promocionesResultantes.sortedBy { it.titulo!!.lowercase() })
         adapter.notifyDataSetChanged()
     }
 
@@ -199,8 +212,10 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeBadge()
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -223,7 +238,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
             }
         })
         var checkPrendido: Boolean = false
-        var instancia = InterfaceSinc()
         adapter = PromocionGridAdapter(view.context, listOf(),this@SearchFragment)
         adapter.eliminarLista()
         adapter.setFragment(this@SearchFragment)
@@ -267,7 +281,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 if (viewModel.filtrosActuales != null && useFilters==true) {
                     onFiltersApplied(viewModel.filtrosActuales!!)
                 }
-                adapter.actualizarDatos(viewModel.promociones)
+                adapter.actualizarDatos(viewModel.promociones.sortedBy { it.titulo!!.lowercase() })
                 // Notifica al GridView que los datos han cambiado
                 adapter.vaciarCacheResultados()
                 adapter.notifyDataSetChanged()
@@ -289,23 +303,10 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
                 println("Error al obtener promociones: ${e.message}")
             }
         }
+
         coroutineScope.launch {
-            if (savedInstanceState != null) {
-                viewModel.textoBusqueda = savedInstanceState.getString("searchText", "")
-                val currentFilters =
-                    savedInstanceState.getParcelable("currentFilters", FilterData::class.java)
-                viewModel.filtrosActuales = currentFilters
-                if (savedInstanceState != null) {
-                    viewModel.promociones = savedInstanceState.getParcelableArrayList(
-                        "searchResults",
-                        Promocion::class.java
-                    ) ?: mutableListOf()
-                }
-                updateBadgeDrawable()
-            }
-        }.invokeOnCompletion {
             // Actualiza la interfaz de usuario con los datos restaurados
-            if (viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
+            if (viewModel.filtrosActuales==null && viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 binding.buscadores.setText(viewModel.textoBusqueda)
                 actualizarResultados(false)
             }
@@ -313,6 +314,10 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
         }.also {
             if (viewModel.textoBusqueda != null && viewModel.textoBusqueda!!.isNotEmpty()) {
                 mostrarResultadosBusqueda()
+            }
+
+            if(viewModel.filtrosActuales!=null){
+                binding.progressBarResult.visibility=View.GONE
             }
         }
 
@@ -424,8 +429,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), FilterFragment.Filter
 
         binding.btnCompararSearch.setOnClickListener {
             var promos =adapter.getSeleccion()
-            var promo1 = promos[0] as Promocion
-            var promo2 = promos[1] as Promocion
+            var promo1 = promos[0]
+            var promo2 = promos[1]
             val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
             bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
         }

@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.CheckBox
 import android.widget.GridView
 import android.widget.ImageView
@@ -46,6 +47,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Math.ceil
+import java.lang.Math.round
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener {
@@ -84,7 +86,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var instancia = InterfaceSinc()
         var funciones = Funciones()
 
         val categoriasContainer = view.findViewById<LinearLayout>(R.id.categoriasContainer)
@@ -113,25 +114,26 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
             val cargarTarjetas = view.findViewById<LinearLayout>(R.id.llCargarTarjetas)
             cargarTarjetas.visibility = View.GONE
             if (userViewModel.usuario!!.homeModoFull=="1") {
-                val promoFav = view.findViewById<ImageView>(R.id.promoFav)
                 promosContainer.visibility=View.VISIBLE
                 homeScrollView.visibility = View.GONE
                 listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
-                var datos: MutableList<String> = mutableListOf()
                 binding.botonGuardar.visibility = View.VISIBLE
                 binding.btnComparar.visibility=View.GONE
                 var checkPrendido: Boolean = false
                 // Llamar a la función que obtiene los datos.
-                val job = coroutineScope.launch {
+                coroutineScope.launch {
                     try {
                         var promocionesOrdenadas=userViewModel.listadoDePromosDisp.sortedBy { it.titulo!!.lowercase() }
-                        if(promocionesOrdenadas.size==0){
+                        if(promocionesOrdenadas.isEmpty()){
                             mostrarCargarTarjetas()
                             val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
                             switch.visibility = View.GONE
                         }
-                        val adapter = PromocionGridAdapter(view.context, promocionesOrdenadas,this@HomeFragment)
+                        Log.d("Cantidad promos ", promocionesOrdenadas.size.toString())
+                        val adapter = PromocionGridAdapter(view.context, listOf(),this@HomeFragment)
+                        adapter.promocionesTotales= promocionesOrdenadas as MutableList<Promocion>
+                        adapter.cargarMasPromociones()
                         adapter.eliminarLista()
                         adapter.setFragment(this@HomeFragment)
                         listView.adapter = adapter
@@ -159,11 +161,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
 
                         binding.btnComparar.setOnClickListener {
                             var promos =adapter.getSeleccion()
-                            var promo1 = promos[0] as Promocion
-                            var promo2 = promos[1] as Promocion
+                            var promo1 = promos[0]
+                            var promo2 = promos[1]
                             val bottomSheetDialog = CompararFragment.newInstance(promo1, promo2)
                             bottomSheetDialog.show(requireActivity().supportFragmentManager, "CompararFragment")
                         }
+
+
                         listView.setOnItemClickListener { parent, _, position, _ ->
                             val selectedPromo =
                                 adapter.getItem(position) as Promocion // Reemplaza "adapter" con el nombre de tu adaptador
@@ -180,8 +184,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                     }
                 }
             } else {
-                //val listView = view.findViewById<GridView>(R.id.promocionesGridView)
-                //  val promoFav = view.findViewById<ImageView>(R.id.promoFav)
+
                 binding.btnComparar.visibility=View.GONE
                 // listView.visibility = View.GONE
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -203,11 +206,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                         val promocionesDesordenadas: List<Promocion> =
                             userViewModel.listadoDePromosDisp.filter { it.categoria == categoria.nombre }.take(11)
                         var promociones=promocionesDesordenadas.sortedBy { it.titulo!!.lowercase() }
-                        if (promociones.size > 0) {
+                        if (promociones.isNotEmpty()) {
                             val promosDispo = view.findViewById<TextView>(R.id.tvPromocionesDisponibles)
                             promosDispo.visibility = View.VISIBLE
                             val switch = view.findViewById<ImageView>(R.id.switchHomeMode)
                             switch.visibility = View.VISIBLE
+                            cantPromos+=promociones.size
 
                             if (requireContext() != null) {
                                 val categoriaTitle = TextView(requireContext())
@@ -223,9 +227,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), PromocionFragmentListener
                                     false
                                 )
 
-                                // Obtén las promociones para esta categoría (reemplaza esto con tu lógica real)
-
-                                cantPromos+=promociones.size
                                 // Configura el adaptador para el RecyclerView
                                 val adapter = PromocionGridPorCategoriaAdapter(
                                     activity!!,

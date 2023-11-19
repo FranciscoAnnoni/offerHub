@@ -1,16 +1,12 @@
 package com.example.offerhub.fragments.settings
 
-import TarjetasListViewAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.ContextMenu
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -59,7 +55,7 @@ class MisTarjetasFragment: Fragment() {
         var leerBD = LeerId()
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         tarjetasGridView = view.findViewById<GridView>(R.id.gvMisTarjetas)
-        registerForContextMenu(tarjetasGridView)
+        //registerForContextMenu(tarjetasGridView)
         val job = coroutineScope.launch {
 
             usuario = UserViewModelSingleton.getUserViewModel().usuario!!
@@ -92,16 +88,16 @@ class MisTarjetasFragment: Fragment() {
         hideBottomNavigationView()
     }
 
-    override fun onCreateContextMenu(
+   /* override fun onCreateContextMenu(
         menu: ContextMenu,
         v: View,
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         requireActivity().menuInflater.inflate(R.menu.eliminar_tarjeta_menu, menu)
-    }
+    }*/
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
+    /*override fun onContextItemSelected(item: MenuItem): Boolean {
         uvm = UserViewModelSingleton.getUserViewModel()
         val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
         val position = info.position
@@ -139,5 +135,5 @@ class MisTarjetasFragment: Fragment() {
             return true
         }
         return true
-    }
+    }*/
 }

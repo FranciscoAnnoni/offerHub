@@ -11,6 +11,8 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -19,7 +21,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -70,6 +74,10 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
         val instancia = Funciones()
         val instanciaCanal = CanalNoti()
         getContext()?.let { instanciaCanal.createChannel(it) }
+        val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
+        if (promocion.url == null){
+            iconoEnlace.visibility = View.GONE
+        }
         binding.imageClose.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -103,24 +111,57 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             }
         }
 
-        val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
-
         // Agrega un OnClickListener al ImageView
         iconoEnlace.setOnClickListener {
             // Define el enlace que deseas abrir en el navegador
             val url = promocion.url // Reemplaza con tu enlace real
+
+            // Configura la apariencia de la pestaña personalizada (opcional)
+            try{
+                val builder = CustomTabsIntent.Builder()
+                builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary)) // Color de la barra de herramientas
+
+                // Abre la URL en una pestaña personalizada
+                val customTabsIntent = builder.build()
+                customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
+            }catch (e: Exception) {
+                val toast = Toast.makeText(requireContext(), "url no disponible", Toast.LENGTH_SHORT)
+                toast.show()
+
+                // Usa un Handler para esperar el tiempo deseado antes de cancelar el Toast
+                Handler(Looper.getMainLooper()).postDelayed({
+                    toast.cancel()
+                }, 1500)
+            }
+
+
+
+            /*
             // Crea un Intent para abrir el enlace en un navegador externo
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
+            try{
+                intent.data = Uri.parse(url)
+                if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                    startActivity(intent)
+                }
+                else {
+                    // Maneja el caso en el que no se pueda abrir el navegador
+                    Toast.makeText(requireContext(), "No se pudo abrir el navegador", Toast.LENGTH_SHORT).show()
+                }
+            }catch (e: Exception) {
+                val toast = Toast.makeText(requireContext(), "url no disponible", Toast.LENGTH_SHORT)
+                toast.show()
 
-            // Verifica si hay una actividad que pueda manejar el intent (navegador)
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                startActivity(intent)
-            } else {
-                // Maneja el caso en el que no se pueda abrir el navegador
-                Toast.makeText(requireContext(), "No se pudo abrir el navegador", Toast.LENGTH_SHORT).show()
+                // Usa un Handler para esperar el tiempo deseado antes de cancelar el Toast
+                Handler(Looper.getMainLooper()).postDelayed({
+                    toast.cancel()
+                }, 1500)
             }
+
+*/
         }
+
+
         val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -228,6 +269,9 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
             }
         }
 
+
+        promocion.id?.let { Log.d("id de la promo:", it) }
+
         binding.apply {
             var text =promocion.obtenerDesc()
             promoBenef.text = text
@@ -287,7 +331,7 @@ class PromoDetailFragment: Fragment(R.layout.fragment_promo_detail){
 
                 }
             }
-            var listaDefault= mapOf("LU" to "Lunes", "MA" to "Martes", "MI" to "Miercoles", "JU" to "Jueves", "VI" to "Viernes", "SA" to "Sabado", "DO" to "Domingo")
+            var listaDefault= mapOf("LU" to "Lunes", "MA" to "Martes", "MI" to "Miercoles", "Miércoles" to "Miercoles", "JU" to "Jueves", "VI" to "Viernes", "SA" to "Sabado", "Sábado" to "Sabado", "DO" to "Domingo")
             var lista= listOf<String?>()
             if(promocion.dias !=null) {
                 lista= promocion.dias as List<String>

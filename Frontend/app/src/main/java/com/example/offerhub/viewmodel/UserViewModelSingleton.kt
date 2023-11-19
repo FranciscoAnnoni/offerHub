@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.fragment.app.viewModels
 import com.example.offerhub.Funciones
+import com.example.offerhub.Promocion
 import com.example.offerhub.contexts.ApplicationContextProvider
 import com.example.offerhub.funciones.FuncionesPartners
 import com.google.firebase.auth.FirebaseAuth
@@ -46,15 +47,27 @@ object UserViewModelSingleton {
                     val currentUser = auth.currentUser
                     if(currentUser!=null) {
                         if(currentUser.email!="admin@offerhub.com"){
+                            Log.d("Desde uvm","1")
                         uvm.listadoDePromosDisp = Funciones().obtenerPromociones(uvm.usuario!!)
-                        uvm.favoritos = Funciones().obtenerPromocionesFavoritas(uvm.usuario!!)
-                        uvm.reintegros = Funciones().obtenerPromocionesReintegro(uvm.usuario!!)
+
                         uvm.tarjetasDisponibles = Funciones().obtenerTarjetasDisponibles()
                         } else {
                             uvm.listadoDePromosDisp = FuncionesPartners().obtenerPromosPendientes()
                         }
                     }
                 userViewModelCache.guardarUserViewModel(uvm)
+                }.invokeOnCompletion {
+
+                    val auth: FirebaseAuth = FirebaseAuth.getInstance() // Inicializa FirebaseAuth
+                    val currentUser = auth.currentUser
+                    var job=CoroutineScope(Dispatchers.Main).launch {
+                        if (currentUser != null && currentUser.email != "admin@offerhub.com") {
+                            uvm.favoritos = Funciones().obtenerPromocionesFavoritas(uvm.usuario!!,
+                                uvm.listadoDePromosDisp as MutableList<Promocion>
+                            )
+                            uvm.reintegros = Funciones().obtenerPromocionesReintegro(uvm.usuario!!,uvm.listadoDePromosDisp as MutableList<Promocion>)
+                        }
+                    }
                 }
                 initialize(uvm)
             }

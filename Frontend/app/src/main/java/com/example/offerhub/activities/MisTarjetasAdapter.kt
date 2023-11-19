@@ -1,26 +1,33 @@
 package com.example.offerhub.activities
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.getSystemService
+import android.widget.Toast
 import com.example.offerhub.Funciones
 import com.example.offerhub.LeerId
 import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
-import com.example.offerhub.funciones.obtenerColorMayoritario
+import com.example.offerhub.Usuario
 import com.example.offerhub.funciones.removeAccents
+import com.example.offerhub.viewmodel.UserViewModelCache
+import com.example.offerhub.viewmodel.UserViewModelSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuario: MutableList<Tarjeta>): BaseAdapter(){
+    private var uvm = UserViewModelSingleton.getUserViewModel()
+    private lateinit var usuario: Usuario
+
 
     override fun getCount(): Int {
         return tarjetasUsuario.size
@@ -59,11 +66,19 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
         val descripcionTarjeta = gridViewItem.findViewById<TextView>(R.id.tvTarjetaDescripcion)
         val logoBanco = gridViewItem.findViewById<ImageView>(R.id.ivLogoBanco)
         val logoEmisora = gridViewItem.findViewById<ImageView>(R.id.logoEmisora)
-        if (tarjeta.procesadora == "Visa") {
-            logoEmisora.setImageResource(R.drawable.logo_visa)
-        }
-        if (tarjeta.procesadora == "Mastercard") {
-            logoEmisora.setImageResource(R.drawable.logo_mastercard)
+        if (tarjeta.procesadora !=null) {
+            val procesadora= tarjeta.procesadora!!.lowercase().replace(" ","")
+            val imageId = context.getResources()
+                .getIdentifier("logo_"+procesadora, "drawable", context.getPackageName())
+            if (imageId != 0) {
+                val drawable: Drawable? = context.getDrawable(imageId)
+
+                logoEmisora.setImageDrawable(drawable)
+
+            } else {
+                // Si el drawableId es 0, significa que no se encontró el recurso
+                // Puedes manejar este caso según tus necesidades, por ejemplo, establecer una imagen de respaldo.
+            }
         }
         val job = coroutineScope.launch {
             val entidad = leerBD.obtenerEntidadPorId(tarjeta.entidad!!)
@@ -90,6 +105,40 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
                 // Puedes manejar este caso según tus necesidades, por ejemplo, establecer una imagen de respaldo.
             }
 
+        }
+
+        gridViewItem.findViewById<ImageView>(R.id.ivBorrarTarjeta).setOnClickListener {
+            uvm = UserViewModelSingleton.getUserViewModel()
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+            var funciones = Funciones()
+            usuario = uvm.usuario!!
+
+
+            coroutineScope.launch {
+                funciones.eliminarTodasLasTarjetasDeUsuario(usuario.id)
+                uvm.usuario!!.tarjetas!!.remove(tarjeta.id)
+                if (uvm.usuario!!.tarjetas != null) {
+                    if(uvm.usuario!!.tarjetas!!.isNotEmpty()) {
+                        funciones.agregarTarjetasAUsuario(
+                            usuario.id,
+                            uvm.usuario!!.tarjetas!! as MutableList<String>
+                        )
+                    }
+                }
+                UserViewModelCache().guardarUserViewModel(uvm)
+                uvm.listadoDePromosDisp=uvm.listadoDePromosDisp.filterNot { promo ->
+                    (promo.tarjetas?.contains(tarjeta.id) == true)
+                }
+
+                UserViewModelCache().guardarUserViewModel(uvm)
+            }
+
+            this.removeTarjeta(tarjeta)
+
+            // Notifica al adaptador que los datos han cambiado
+            this.notifyDataSetChanged()
+
+            Toast.makeText(context, "Tarjeta Eliminada", Toast.LENGTH_LONG).show()
         }
 
         return gridViewItem
