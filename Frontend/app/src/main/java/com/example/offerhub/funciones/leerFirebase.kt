@@ -469,7 +469,7 @@ class LecturaBD {
                                 desdeFormateado,
                                 hastaFormateado,
                                 data.child("estado").getValue(String::class.java))
-                            if(hastaFormateado == null || hastaFormateado >= LocalDate.parse(obtenerFechaActual(),formato)){
+                            if(hastaFormateado == null || hastaFormateado >= LocalDate.parse("2023-11-28",formato)){
                                 lista.add(instancia)
                             }
                         }
