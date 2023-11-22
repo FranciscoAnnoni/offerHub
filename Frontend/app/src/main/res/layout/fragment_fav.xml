@@ -45,15 +45,59 @@
         android:id="@+id/tvNoFavoritos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="13dp"
         android:text="En este momento no tenés favoritos"
         android:layout_centerInParent="true"
         app:layout_constraintTop_toBottomOf="@id/tvFavoritos"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:gravity="center_vertical"
         android:textAlignment="center"
         android:padding="4dp"
         android:visibility="gone"
         />
+
     </GridLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/tvNoFavoritos2"
+        android:layout_width="530dp"
+        android:layout_height="230dp"
+        android:layout_marginTop="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/fav"
+        tools:ignore="MissingConstraints"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="239dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="434dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

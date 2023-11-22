@@ -61,6 +61,7 @@ class FavFragment: Fragment(R.layout.fragment_fav), PromocionFragmentListener {
         var funciones = Funciones()
         val listView = view.findViewById<GridView>(R.id.gvFavoritos) // Reemplaza "listView" con el ID de tu ListView en el XML.
         val tvNoFavoritos = view.findViewById<TextView>(R.id.tvNoFavoritos)
+        val tvNoFavoritos2 = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.tvNoFavoritos2)
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         var datos: MutableList<Promocion> = mutableListOf()
         val userViewModel = UserViewModelSingleton.getUserViewModel()
@@ -76,9 +77,11 @@ class FavFragment: Fragment(R.layout.fragment_fav), PromocionFragmentListener {
                     if  (userViewModel.favoritos.size==0)  {
                         listView.visibility = View.GONE
                         tvNoFavoritos.visibility = View.VISIBLE
+                        tvNoFavoritos2.visibility= View.VISIBLE
                     }else {
                         listView.visibility = View.VISIBLE
                         tvNoFavoritos.visibility = View.GONE
+                        tvNoFavoritos2.visibility = View.GONE
                         val adapter = PromocionGridAdapter(view.context, userViewModel.favoritos,this@FavFragment)
                         listView.adapter = adapter
 
