@@ -25,6 +25,7 @@
     <color name="g_blue100">#B8D9FA</color>
     <color name="g_red">#FF0000</color>
     <color name="g_gray500">#969899</color>
+    <color name="g_gray700">#606060</color>
     <color name="g_orange_yellow">#F8BA00</color>
     <color name="colorAccent">#ac86f4</color>
     <color name="g_light_purple">#ac86f4</color>

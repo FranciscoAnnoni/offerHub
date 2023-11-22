@@ -107,4 +107,14 @@
         android:name="com.example.offerhub.fragments.partners.RegisterPartnersFragment2"
         android:label="RegisterPartnersFragment2"
         tools:layout="@layout/fragment_register_partners2"/>
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.example.offerhub.fragments.loginRegister.LoadingFragment"
+        android:label="LoadingFragment"
+        tools:layout="@layout/fragment_loading">
+        <action
+            android:id="@+id/action_loadingFragment_to_introductionFragment"
+            app:destination="@id/introductionFragment"
+            app:enterAnim="@android:anim/accelerate_interpolator" />
+    </fragment>
 </navigation>
