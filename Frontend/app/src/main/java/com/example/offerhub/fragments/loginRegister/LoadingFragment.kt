@@ -41,8 +41,7 @@ class LoadingFragment:Fragment(R.layout.fragment_loading) {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launchWhenStarted {
-            delay(5000)
-
+            delay(2500)
             findNavController().navigate(R.id.action_loadingFragment_to_introductionFragment)
         }
 
