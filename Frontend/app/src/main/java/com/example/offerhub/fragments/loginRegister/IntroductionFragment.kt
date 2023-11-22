@@ -46,6 +46,7 @@ class IntroductionFragment:Fragment(R.layout.fragment_introduction) {
 
                 when(it){
                     SHOPPING_ACTIVITY_PARTNERS ->{
+                        hide()
                         Intent(requireActivity(), ShoppingPartnersActivity::class.java).also { intent ->
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
@@ -53,6 +54,7 @@ class IntroductionFragment:Fragment(R.layout.fragment_introduction) {
                     }
 
                     SHOPPING_ACTIVITY ->{
+                        hide()
                         Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
@@ -60,6 +62,7 @@ class IntroductionFragment:Fragment(R.layout.fragment_introduction) {
                     }
 
                     SHOPPING_ACTIVITY_ADMIN ->{
+                        hide()
                         Intent(requireActivity(), ShoppingAdminActivity::class.java).also { intent ->
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
@@ -67,6 +70,7 @@ class IntroductionFragment:Fragment(R.layout.fragment_introduction) {
                     }
 
                     ACCOUNT_OPTIONS_FRAGMENT -> {
+                        hide()
                         findNavController().navigate(R.id.action_introductionFragment_to_loginFragment)
                     }
                     else -> Unit
@@ -76,13 +80,14 @@ class IntroductionFragment:Fragment(R.layout.fragment_introduction) {
 
         binding.botonStart.setOnClickListener{
             viewModel.startButtonClick()
+            hide()
             findNavController().navigate(R.id.action_introductionFragment_to_loginFragment)
         }
     }
 
     private fun hide() {
         binding.apply {
-            carga.visibility = View.VISIBLE
+            carga.visibility = View.INVISIBLE
             botonStart.visibility = View.INVISIBLE
             logoIntro.visibility = View.INVISIBLE
             tituloIntroduccion.visibility = View.INVISIBLE

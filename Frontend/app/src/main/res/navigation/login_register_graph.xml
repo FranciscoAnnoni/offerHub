@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/login_register_graph"
-    app:startDestination="@id/introductionFragment">
+    app:startDestination="@id/loadingFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -114,7 +114,7 @@
         tools:layout="@layout/fragment_loading">
         <action
             android:id="@+id/action_loadingFragment_to_introductionFragment"
-            app:destination="@id/introductionFragment"
-            app:enterAnim="@android:anim/accelerate_interpolator" />
+            app:destination="@id/introductionFragment" />
+
     </fragment>
 </navigation>

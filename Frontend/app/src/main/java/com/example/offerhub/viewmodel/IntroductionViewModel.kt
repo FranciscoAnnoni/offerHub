@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.offerhub.Funciones
 import com.example.offerhub.R
+import com.example.offerhub.databinding.FragmentIntroductionBinding
 import com.example.offerhub.util.Constants.INTRODUCTION_KEY
 import com.example.offerhub.util.Constants.USER_STATUS
 import com.google.firebase.auth.FirebaseAuth
@@ -65,10 +66,12 @@ class IntroductionViewModel @Inject constructor (
 
 
         } else if (isButtonChecked) {
+
             viewModelScope.launch {
                 _navigate.emit(ACCOUNT_OPTIONS_FRAGMENT)
             }
         } else {
+
             Unit
         }
     }
@@ -78,5 +81,8 @@ class IntroductionViewModel @Inject constructor (
         sharedPreferences.edit().putBoolean(INTRODUCTION_KEY,true).apply()
     }
 
+
+
 }
+
 

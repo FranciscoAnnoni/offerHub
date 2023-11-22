@@ -28,7 +28,6 @@ import kotlinx.coroutines.delay
 class LoadingFragment:Fragment(R.layout.fragment_loading) {
     private lateinit var binding: FragmentLoadingBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +41,7 @@ class LoadingFragment:Fragment(R.layout.fragment_loading) {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launchWhenStarted {
-            delay(6500)
+            delay(5000)
 
             findNavController().navigate(R.id.action_loadingFragment_to_introductionFragment)
         }
