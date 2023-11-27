@@ -1,6 +1,7 @@
 package com.example.offerhub.fragments.loginRegister
 
 import UserViewModel
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -135,6 +136,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         lifecycleScope.launchWhenStarted {
+            val alertDialog = AlertDialog.Builder(context)
+                .setTitle("Aguarde un instante")
+                .setMessage("Estamos descargando las promociones de sus tarjetas. Esto puede demorar unos minutos. No cierre la aplicación.")
+                .setCancelable(true).create()
             viewModel.login.collect {
                 when (it) {
                     is Resource.Loading -> {
@@ -142,6 +147,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     }
                     is Resource.Success -> {
                         CoroutineScope(Dispatchers.Main).launch {
+                            alertDialog.show()
                             val userViewModel: UserViewModel by viewModels()
                             val userViewModelCache = UserViewModelCache()
                             val userViewModelCacheado = userViewModelCache.cargarUserViewModel()
@@ -162,6 +168,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 Snackbar.LENGTH_SHORT
                             ).show()
                             binding.btnLogin.revertAnimation()
+                            alertDialog.dismiss()
                             binding.btnLogin.setBackgroundResource(R.drawable.rounded_button_background)
 
                             Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
