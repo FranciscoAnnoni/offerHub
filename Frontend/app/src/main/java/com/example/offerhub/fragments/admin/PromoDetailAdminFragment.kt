@@ -129,24 +129,7 @@ class PromoDetailAdminFragment: Fragment(R.layout.fragment_promo_detail_admin){
                 FuncionesPartners().rechazarPromocion(promocion,comentario?:"")
             })
         }
-        val iconoEnlace = view.findViewById<ImageView>(R.id.icono_enlace)
 
-        // Agrega un OnClickListener al ImageView
-        iconoEnlace.setOnClickListener {
-            // Define el enlace que deseas abrir en el navegador
-            val url = promocion.url // Reemplaza con tu enlace real
-            // Crea un Intent para abrir el enlace en un navegador externo
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-
-            // Verifica si hay una actividad que pueda manejar el intent (navegador)
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                startActivity(intent)
-            } else {
-                // Maneja el caso en el que no se pueda abrir el navegador
-                Toast.makeText(requireContext(), "No se pudo abrir el navegador", Toast.LENGTH_SHORT).show()
-            }
-        }
         val recyclerViewTarjetas = view.findViewById<RecyclerView>(R.id.recyclerViewTarjetas)
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
