@@ -249,7 +249,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Notificar un Error"
+                        android:text="Reportar un Problema"
                         android:textColor="@color/g_gray700"
                         android:textStyle="bold" />
 
