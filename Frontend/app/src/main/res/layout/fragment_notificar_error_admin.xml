@@ -20,7 +20,7 @@
                 android:id="@+id/rapLayourLegal"
                 style="@style/titulos"
                 android:layout_marginTop="25dp"
-                android:text="Errores Notificados"
+                android:text="Errores Reportados"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

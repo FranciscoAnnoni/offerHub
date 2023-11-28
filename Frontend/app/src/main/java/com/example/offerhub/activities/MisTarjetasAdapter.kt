@@ -12,11 +12,15 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
 import com.example.offerhub.LeerId
 import com.example.offerhub.R
 import com.example.offerhub.Tarjeta
 import com.example.offerhub.Usuario
+import com.example.offerhub.databinding.FragmentMisTarjetasBinding
+import com.example.offerhub.fragments.settings.MisTarjetasFragment
 import com.example.offerhub.funciones.removeAccents
 import com.example.offerhub.viewmodel.UserViewModelCache
 import com.example.offerhub.viewmodel.UserViewModelSingleton
@@ -24,7 +28,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuario: MutableList<Tarjeta>): BaseAdapter(){
+
+class MisTarjetasAdapter(
+    private val context: Context,
+    val tarjetasUsuario: MutableList<Tarjeta>
+
+    ): BaseAdapter(){
     private var uvm = UserViewModelSingleton.getUserViewModel()
     private lateinit var usuario: Usuario
 
@@ -97,7 +106,6 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
 
             if (drawableId != 0) {
                 val drawable: Drawable? = context.getDrawable(drawableId)
-
                 logoBanco.setImageDrawable(drawable)
 
             } else {
@@ -113,7 +121,6 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
             var funciones = Funciones()
 
 
-
             coroutineScope.launch {
                 funciones.eliminarTodasLasTarjetasDeUsuario(uvm.usuario!!.id)
                 uvm.usuario!!.tarjetas!!.remove(tarjeta.id)
@@ -125,6 +132,7 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
                         )
                     }
                 }
+
                 UserViewModelCache().guardarUserViewModel(uvm)
                 uvm.listadoDePromosDisp=uvm.listadoDePromosDisp.filterNot { promo ->
                     (promo.tarjetas?.contains(tarjeta.id) == true)
@@ -139,12 +147,18 @@ class MisTarjetasAdapter(private val context: Context, private val tarjetasUsuar
             this.notifyDataSetChanged()
 
             Toast.makeText(context, "Tarjeta Eliminada", Toast.LENGTH_LONG).show()
+
         }
 
+
         return gridViewItem
+
+
+
     }
 
     fun removeTarjeta(tarjeta: Tarjeta) {
         tarjetasUsuario.remove(tarjeta)
     }
+
 }

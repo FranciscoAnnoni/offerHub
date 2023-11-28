@@ -19,6 +19,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:layout_marginEnd="20dp"
                 android:id="@+id/ivClose"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -30,6 +31,7 @@
                 app:tint="@color/violeta" />
 
             <LinearLayout
+                android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:id="@+id/linearLayourLegal"
                 android:layout_width="wrap_content"
@@ -99,6 +101,63 @@
         android:padding="15dp"
         />
     </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/sinTarjetasAnimacion"
+        android:layout_width="530dp"
+        android:layout_height="230dp"
+        android:layout_marginTop="160dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/tarjetas"
+        tools:ignore="MissingConstraints"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/sinTarjetasTexto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="En este momento no tenés Tarjetas"
+        android:layout_centerInParent="true"
+        app:layout_constraintTop_toBottomOf="@id/guideline5"
+        android:textSize="20dp"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:padding="4dp"
+        android:visibility="gone"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="239dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="434dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

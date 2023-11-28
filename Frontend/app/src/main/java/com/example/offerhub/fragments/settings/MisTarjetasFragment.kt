@@ -1,6 +1,9 @@
 package com.example.offerhub.fragments.settings
 
+import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,7 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.offerhub.Funciones
@@ -25,7 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MisTarjetasFragment: Fragment() {
+class MisTarjetasFragment: Fragment(){
     private lateinit var binding: FragmentMisTarjetasBinding
     private lateinit var tarjetasGridView: GridView
     private lateinit var usuario: Usuario
@@ -51,6 +56,7 @@ class MisTarjetasFragment: Fragment() {
             findNavController().navigate(R.id.action_misTarjetasFragment_to_cargadoTarjetasFragment)
         }
 
+
         var funciones = Funciones()
         var leerBD = LeerId()
         val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -63,11 +69,18 @@ class MisTarjetasFragment: Fragment() {
 
             if (uvm.usuario!!.tarjetas != null ){
                 for (tarjetaId in uvm.usuario!!.tarjetas!!) {
+
                     if (tarjetaId != null) {
+
                         val tarjetaObjeto = leerBD.obtenerTarjetaPorId(tarjetaId)
                         if (tarjetaObjeto != null) {
+                            hideAnimacion()
                             tarjetas.add(tarjetaObjeto)
+
                         } else {
+
+                            showAnimacion()
+
                             // ayuda para logear error
                         }
                     }
@@ -75,9 +88,17 @@ class MisTarjetasFragment: Fragment() {
 
                 var gridViewAdapter = MisTarjetasAdapter(view.context, tarjetas)
                 tarjetasGridView.adapter = gridViewAdapter
+
+                if (gridViewAdapter.tarjetasUsuario.isEmpty()) {
+                    showAnimacion()
+                }
+
+
             }
 
+
         }
+
 
     }
 
@@ -86,6 +107,20 @@ class MisTarjetasFragment: Fragment() {
         super.onResume()
 
         hideBottomNavigationView()
+    }
+
+    private fun hideAnimacion() {
+        binding.apply {
+            sinTarjetasAnimacion.visibility = View.GONE
+            sinTarjetasTexto.visibility = View.GONE
+        }
+    }
+
+    fun showAnimacion(){
+        binding.apply {
+            sinTarjetasAnimacion.visibility = View.VISIBLE
+            sinTarjetasTexto.visibility = View.VISIBLE
+        }
     }
 
    /* override fun onCreateContextMenu(
@@ -136,4 +171,6 @@ class MisTarjetasFragment: Fragment() {
         }
         return true
     }*/
+
+
 }

@@ -80,8 +80,7 @@
             <TextView
                 android:id="@+id/privacidad"
                 style="@style/textoChicoNegro"
-                android:layout_marginTop="48dp"
-                android:text="Reporte aqui su problema:"
+                android:layout_marginTop="38dp"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +90,7 @@
             <TextView
 
                 android:id="@+id/legales1"
-                android:layout_width="325dp"
+                android:layout_width="335dp"
                 android:layout_height="90dp"
                 android:gravity="center"
                 android:text="Esperemos que no sea necesario, pero en caso de que haya tenido un problema o simplemente desee opinar sobre la aplicación puede hacerlo en la casilla de abajo."
@@ -109,7 +108,7 @@
                 android:gravity="start"
                 android:hint="Describa aquí su problema."
                 android:padding="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="25dp"
                 app:layout_constraintEnd_toEndOf="@+id/rightGuideline"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"
                 app:layout_constraintTop_toBottomOf="@id/legales1"
