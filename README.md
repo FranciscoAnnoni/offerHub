@@ -1,6 +1,6 @@
 # 💳 OfferHub - Final Project
 
-OfferHub is a mobile application built entirely in **Kotlin**. The app is designed to centralize promotions and offers, helping users stay updated with the best deals available in their area. Whether for retail, dining, or online shopping, OfferHub offers an intuitive way for users to easily access relevant deals in one place.
+OfferHub is a mobile application built entirely in **Kotlin** for **Android**. The app is designed to centralize promotions and offers, helping users stay updated with the best deals available in their area. Whether for retail, dining, or online shopping, OfferHub offers an intuitive way for users to easily access relevant deals in one place.
 
 ## Project Overview
 
@@ -14,13 +14,13 @@ OfferHub is a mobile application built entirely in **Kotlin**. The app is design
 - **Smooth Performance**: Fast and responsive mobile experience.
 
 ## Tech Stack
-- **Kotlin**: The programming language used to build the app.
-- **MVVM Architecture**: Clean architecture for maintainability and scalability.
-- **Jetpack Components**: Utilized various Jetpack components like Navigation, LiveData, and ViewModel.
-- **Room Database**: Local data storage for user preferences and offers.
-- **Retrofit**: For consuming REST APIs to fetch the latest offers.
-- **Glide/Coil**: For image loading and caching.
-
+- **Kotlin (Android Studio)**: The primary programming language and IDE used to build the app.
+- **Git**: For branch management and version control.
+- **Firebase Database**: Stores user preferences and offers.
+- **MVC Architecture**: Model-View-Controller design pattern used for app structure.
+- **Python**: Used for web scraping to retrieve promotional information from various banks.
+- **Base64**: For storing promotional images as Base64 encoded strings.
+  
 ## Team Members
 
 - **Francisco Annoni**
@@ -56,6 +56,3 @@ For detailed information about the project architecture, design decisions, and A
 - **Social Media Integration**: Allow sharing of offers on different platforms.
 - **Discount Notifications**: Send personalized notifications based on the user's preferences.
 
-## Contributing
-
-We welcome contributions! Feel free to fork this repository, submit issues, and create pull requests to help improve **OfferHub**.
