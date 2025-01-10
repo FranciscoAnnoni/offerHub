@@ -29,14 +29,18 @@ OfferHub is a mobile application built entirely in **Kotlin** for **Android**. T
 
 ## Documentation
 For detailed information about the project architecture, design decisions, and API documentation, you can check out our project documentation:
-[**Click here to access the project documentation**](https://docs.google.com/document/d/1sHzieSJsoFeI-snZNbIES4yhVpl9YU6w/edit?usp=sharing&ouid=102602029413091202755&rtpof=true&sd=true)
+[**Click here to access the project documentation**](https://docs.google.com/document/d/1sHzieSJsoFeI-snZNbIES4yhVpl9YU6w/edit?usp=sharing&ouid=102602029413091202755&rtpof=true&sd=true).
+
+Here is the link to the user manual for the finalized app, with screenshots of the app itself and instructions on how to use the features for easy understanding by users:
+[**Click here to access the project User Manual**](https://docs.google.com/document/d/1udmQvrRu8kk2FZNYnPcXSiQ1QypfRvfbgsLMGLyimEQ/edit?usp=sharing).
+
 
 ### CONAIISI 2023
 This paper details the development and challenges of the OfferHub project, an app that centralizes promotions:
-[**The Paper:"OfferHub: la plataforma que facilita a los usuarios la búsqueda de promociones"**](https://docs.google.com/document/d/1kW0kcr7fDQksjBLd-7-TzzEsLCebgNy3qcTXEK_L-aA/edit?usp=sharing)
-
+[**The Paper:"OfferHub: la plataforma que facilita a los usuarios la búsqueda de promociones"**](https://docs.google.com/document/d/1kW0kcr7fDQksjBLd-7-TzzEsLCebgNy3qcTXEK_L-aA/edit?usp=sharing).
+.
 [**The poster:**]([https://docs.google.com/document/d/1sHzieSJsoFeI-snZNbIES4yhVpl9YU6w/edit?usp=sharing&ouid=102602029413091202755&rtpof=true&sd=true](https://drive.google.com/file/d/1vPIxCvorzvhNv5a2lwpy-_UZ5FMpj79Y/view))
-
+.
 
 ## Screenshots
 
