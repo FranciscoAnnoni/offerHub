@@ -38,9 +38,9 @@ Here is the link to the user manual for the finalized app, with screenshots of t
 ### CONAIISI 2023
 This paper details the development and challenges of the OfferHub project, an app that centralizes promotions:
 [**The Paper:"OfferHub: la plataforma que facilita a los usuarios la búsqueda de promociones"**](https://docs.google.com/document/d/1kW0kcr7fDQksjBLd-7-TzzEsLCebgNy3qcTXEK_L-aA/edit?usp=sharing).
-.
-[**The poster:**]([https://docs.google.com/document/d/1sHzieSJsoFeI-snZNbIES4yhVpl9YU6w/edit?usp=sharing&ouid=102602029413091202755&rtpof=true&sd=true](https://drive.google.com/file/d/1vPIxCvorzvhNv5a2lwpy-_UZ5FMpj79Y/view))
-.
+
+[**The poster:**](https://drive.google.com/file/d/1SlZQGVpgatcDDQ5IDcOQkQyomUmGgv6W/view?usp=sharing)
+
 
 ## Screenshots
 
