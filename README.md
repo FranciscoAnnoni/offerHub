@@ -40,7 +40,7 @@ This paper details the development and challenges of the OfferHub project, an ap
 [**The Paper:"OfferHub: la plataforma que facilita a los usuarios la búsqueda de promociones"**](https://docs.google.com/document/d/1kW0kcr7fDQksjBLd-7-TzzEsLCebgNy3qcTXEK_L-aA/edit?usp=sharing)
 
 This is the poster of the project presented at the CONAISSI conference, providing an overview of the OfferHub application, its features, and insights.
-[**The poster:**](https://drive.google.com/file/d/1SlZQGVpgatcDDQ5IDcOQkQyomUmGgv6W/view?usp=sharing)
+[**The Poster**](https://drive.google.com/file/d/1SlZQGVpgatcDDQ5IDcOQkQyomUmGgv6W/view?usp=sharing)
 
 
 ## Screenshots
