@@ -25,9 +25,9 @@ OfferHub is a mobile application built entirely in **Kotlin**. The app is design
 
 - **Francisco Annoni**
 - **Sofia Azcoaga**
-- **Facundo Toledo Fernandez**
+- **Facundo Toledo**
 - **Juan Martin Pereira**
-- **Axel Grifin**
+- **Axel Uriel Grimberg**
 
 ## Screenshots
 
